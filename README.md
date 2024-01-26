@@ -1,3 +1,3 @@
-# CSCI 5709 Group 2 
+# CSCI 5709 Group 2 Project 
 
 
