@@ -13,5 +13,5 @@
 
 ## Repository Links
 
-Master Branch - https://git.cs.dal.ca/pabbu/csci-5709-grp-02
-Krishna Vaibhav Yadlapalli - https://git.cs.dal.ca/pabbu/csci-5709-grp-02/-/tree/krishna-vaibhav-yadlapalli
+- Master Branch - https://git.cs.dal.ca/pabbu/csci-5709-grp-02
+- Krishna Vaibhav Yadlapalli - https://git.cs.dal.ca/pabbu/csci-5709-grp-02/-/tree/krishna-vaibhav-yadlapalli
