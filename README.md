@@ -8,7 +8,7 @@
 | Tejas Pabbu                         | B00961226 |
 | Venkata Sreenivas Prasad Kasibhatla | B00972626 |
 | Jahnavi Gajjala                     | B00969773 |
-| Piyatam Reddy Somagattu             | B00972715 |
+| Priyatam Reddy Somagattu             | B00972715 |
 | Praveen Kumar Reddy Burla           | B00975106 |
 
 ## Repository Links
