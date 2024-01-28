@@ -2,14 +2,13 @@
 
 ## Group Members
 
-| Name                       | ID        |
-| -------------------------- | --------- |
-| Krishna Vaibhav Yadlapalli | B00968342 |
-| Tejas Pabbu                | B00961226 |
-|                            |           |
-|                            |           |
-|                            |           |
-|                            |           |
+| Name                                | ID        |
+| ----------------------------------- | --------- |
+| Krishna Vaibhav Yadlapalli          | B00968342 |
+| Tejas Pabbu                         | B00961226 |
+| Venkata Sreenivas Prasad Kasibhatla | B00972626 |
+|                                     |           |
+|                                     |           |
 
 ## Repository Links
 
