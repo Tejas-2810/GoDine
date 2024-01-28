@@ -7,7 +7,7 @@
 | Krishna Vaibhav Yadlapalli          | B00968342 |
 | Tejas Pabbu                         | B00961226 |
 | Venkata Sreenivas Prasad Kasibhatla | B00972626 |
-|                                     |           |
+| Jahnavi Gajjala                     | B00969773 |
 |                                     |           |
 |                                     |           |
 
