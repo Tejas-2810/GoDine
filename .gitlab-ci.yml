@@ -1,6 +1,6 @@
 stages:
+  - run
   - build
-  # -test
   - deploy
 
 image: node:18.18.2
@@ -14,18 +14,20 @@ cache:
   paths:
     - godine/node_modules/
 
-build:
-  stage: build
+run:
+  stage: run
   artifacts:
     paths:
       - build
   script:
     - cd godine
     - npm install
+    - echo  "Stage run Successful".
 
 deploy:
   stage: deploy
   script:
+    - cd godine
     - npm run build
     - echo  "Stage Deploy Successful".
 # test_async:
