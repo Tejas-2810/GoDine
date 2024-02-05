@@ -1,17 +1,14 @@
-
 stages:
-    - build
-    # -test
-    - deploy
+  - build
+  # -test
+  - deploy
 
 image: node:18.18.2
-
 
 # services:
 #   - mysql:latest
 #   - redis:latest
 #   - postgres:latest
-
 
 cache:
   paths:
@@ -19,25 +16,18 @@ cache:
 
 build:
   stage: build
+  artifacts:
+    paths:
+      - build
   script:
     - cd godine
     - npm install
 
 deploy:
-    stage: deploy
-    script:
-    - echo  "Stage Deploy Successful".
-
-build_project:
-  stage: build
+  stage: deploy
   script:
     - npm run build
-  artifacts:
-    paths:
-      - build
-  only:
-      - main
-      - developer 
+    - echo  "Stage Deploy Successful".
 # test_async:
 #   script:
 #     - npm install
