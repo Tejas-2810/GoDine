@@ -9,7 +9,9 @@ function App() {
         <p>
           Welcome to <code>GoDine</code>.
         </p>
-
+        <i>
+          Site Under Development.
+        </i>
       </header>
     </div>
   );
