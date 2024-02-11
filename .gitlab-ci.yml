@@ -28,7 +28,7 @@ deploy:
     stage: deploy
     script:
       - cd godine
-      - npm start
+      - npm install
       - echo  "Stage Deploy Successful".
 # test_async:
 #   script:
