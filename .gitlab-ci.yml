@@ -1,10 +1,12 @@
 stages:
-  - run
   - build
   - deploy
 
 image: node:18.18.2
 
+before_script:
+    - npm install
+    - CI=false
 # services:
 #   - mysql:latest
 #   - redis:latest
@@ -14,22 +16,24 @@ cache:
   paths:
     - godine/node_modules/
 
-run:
-  stage: run
-  artifacts:
+
+build:
+  stage: deploy
+    artifacts:
     paths:
       - build
   script:
     - cd godine
-    - npm install
-    - echo  "Stage run Successful".
+    - npm run build
+    - echo "Build Successful."
+
 
 deploy:
-  stage: deploy
-  script:
-    - cd godine
-    - npm run build
-    - echo  "Stage Deploy Successful".
+    stage: deploy
+    script:
+      - cd godine
+      - npm start
+      - echo  "Stage Deploy Successful".
 # test_async:
 #   script:
 #     - npm install
@@ -44,3 +48,9 @@ deploy:
 #   stage: deploy
 #   script: echo "Define your deployment script!"
 #   environment: production
+
+
+# test:
+#     stage: test
+#     script: npm run test
+
