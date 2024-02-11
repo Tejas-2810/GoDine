@@ -18,7 +18,7 @@ cache:
 
 
 build:
-  stage: deploy
+  stage: build
   script:
     - cd godine
     - npm run build
