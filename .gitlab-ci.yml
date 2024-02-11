@@ -5,7 +5,6 @@ stages:
 image: node:18.18.2
 
 before_script:
-    - npm install
     - CI=false
 # services:
 #   - mysql:latest
