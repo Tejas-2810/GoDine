@@ -1,0 +1,53 @@
+.h1{
+    text-shadow: 5px 5px #000000 !important;
+
+}
+
+.b1{
+    background-image: url('../images/bg2.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: bottom;
+}
+
+.b1 {
+    position: relative;
+}
+
+.b1::before {
+    content: "";
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.363);
+}
+        
+    .quote {
+        top: 50%;
+        left: 50%;
+        color: rgb(255, 255, 255);
+        text-align: center;
+        font-weight: 500;
+        text-shadow: 0 1px 0 1px rgb(0, 0, 0), 0 0 10px rgba(0, 0, 0, 0.952);
+    }
+
+.card {
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    margin: 1rem;
+    padding: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.952);
+}
+
+.dropdown:hover>.dropdown-menu {
+    display: block;
+  }
+  
+  .dropdown>.dropdown-toggle:active {
+    /*Without this, clicking will make it sticky*/
+      pointer-events: none;
+  }
