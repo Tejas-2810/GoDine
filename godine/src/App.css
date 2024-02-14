@@ -24,15 +24,14 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.main{
+  position: relative;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.nav{
+  position: absolute;
+  z-index: -1 !important;
 }
+
+
+
