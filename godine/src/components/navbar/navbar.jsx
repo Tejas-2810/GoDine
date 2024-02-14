@@ -10,7 +10,9 @@ const Navb = () => {
     const redirect = () => {
         navigate('/profile');
     }
-
+    const moves = () => {
+        navigate('/wishlist');
+    }
     return (
         <Navbar bg="transparent" variant="dark" expand="lg">
             <Navbar.Brand href="/">
@@ -24,6 +26,7 @@ const Navb = () => {
                     <Nav.Link className="text-dark tw">About</Nav.Link>
                     <Nav.Link onClick={redirect} className="text-dark tw">Profile</Nav.Link>
                     <Nav.Link className="text-dark tw" >Contact</Nav.Link>
+                    <Nav.Link onClick={moves} className="text-dark tw">WishList</Nav.Link>
                 </Nav>
 
 
