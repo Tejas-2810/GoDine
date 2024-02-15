@@ -8,10 +8,10 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
-    <div className='main'>
+    <div>
       <Router>
-        <Navbar className="nav" />
-        <Routes>
+        <Navbar />
+        <Routes >
           <Route path="/" element={<Home/>} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/wishlist" element={<WishList />} />
