@@ -1,3 +1,80 @@
-.cb{
-    margin-top: 15vh;
+.bg {
+    background-image: url('https://previews.123rf.com/images/dstarky/dstarky1701/dstarky170100727/69328391-vector-seamless-pattern-line-fast-food-for-menu-cafes-restaurants-bars.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: bottom;
+}
+.cb {
+    padding-top: 15vh;
+}
+
+.h1{
+    text-shadow: 5px 5px #000000 !important;
+
+}
+
+.b1{
+
+}
+
+.b1 {
+    position: relative;
+}
+.b1::before{
+    content: "";
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.363);
+}
+.form-control {
+    background-color: rgba(0, 0, 0, 0.336) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(10px);
+
+}
+.outline{
+    background-color: rgba(255, 255, 255, 0.336);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem !important;
+    margin-left: 1vh !important;
+
+}
+
+.form-control::placeholder {
+    color: white ;
+}
+
+
+.dropdown:hover>.dropdown-menu {
+    display: block;
+  }
+  
+  .dropdown>.dropdown-toggle:active {
+    /*Without this, clicking will make it sticky*/
+      pointer-events: none;
+  }
+
+  .form-control{
+    width: 10rem !important;
+}
+
+input[type="text"],
+input[type="text"]:focus,
+select,
+select:focus {
+    background-color: rgba(0, 0, 0, 0.336);
+    backdrop-filter: blur(20px);
+    color: white;
+    border-radius: 3rem !important;
+    min-width: 2rem !important;
+}
+select,
+select:focus {
+    background-color: rgba(0, 0, 0, 0.336);
+    backdrop-filter: blur(20px);
+    color: white;
+    border-radius: 3rem !important;
 }

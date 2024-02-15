@@ -67,14 +67,14 @@ const Profile = () => {
                 <div className="info m-5 glass">
                     <h4 className="text-center m-3">Personal Information</h4>
                     <div className="d-flex justify-content-center my-5">
-                        <div className=" row col-4 align-items-end">
+                        <div className=" row col-md-7 align-items-end">
                                 <div className="form-label fw-bolder text-center">Name</div>
                                 <div className="form-label fw-bolder text-center">Age</div>
                                 <div className="form-label fw-bolder text-center">Email</div>
                                 <div className="form-label fw-bolder text-center">Phone</div>
                                 <div className="form-label fw-bolder text-center">Address</div>
                         </div>
-                        <div className="col-8">
+                        <div className="col-md-5">
                             {isEditing ? (
                                 <>
                                     <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} />
