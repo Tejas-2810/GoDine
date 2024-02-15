@@ -39,28 +39,28 @@ const RestaurantCard = ({ restaurant }) => {
     };
 
     return (
-        <div className="card mb-3" style={{ maxWidth: '540px' }}>
+        <div className="card c mb-3" style={{ maxWidth: '540px' }}>
             <div className="g-0">
                 <div className="w-100">
                     <img src={restaurant.imageUrl} alt={restaurant.name} className="img-fluid" />
                 </div>
                 <div className="card-body">
-                    <div className="card-title-area">
-                        <h5 className="card-title">{restaurant.name}</h5>
+                    <div className="card-title-area c-title-area">
+                        <h5 className="card-title c-title ">{restaurant.name}</h5>
                         <FontAwesomeIcon 
                             icon={faHeartSolid} 
                             style={{
                                 color: isFavorite ? 'red' : 'white',
                                 border: isFavorite ? 'none' : '2px solid black',
-                                borderRadius: '100%', // Makes it rounded
+                                borderRadius: '100%', 
                                 padding: '2px'
                             }}
                             onClick={toggleFavorite}
-                            className="heart-icon"
+                            className="heart-icon h-icon"
                         />
                     </div>
-                    <p className="card-text">Rating: {restaurant.rating}</p>
-                    <div className="card-text">
+                    <p className="card-text c-t">Rating: {restaurant.rating}</p>
+                    <div className="card-text c-t">
                         {restaurant.tags && restaurant.tags.map((tag, index) => (
                             <span key={index} 
                                 style={{ 
@@ -83,3 +83,5 @@ const RestaurantCard = ({ restaurant }) => {
 };
 
 export default RestaurantCard;
+
+
