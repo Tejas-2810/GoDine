@@ -11,12 +11,18 @@ before_script:
 #   - redis:latest
 #   - postgres:latest
 
-build:
+front-end:
   stage: build
   script:
     - cd godine
     - npm install
     - npm run build
+    - echo "Build Successful."
+back-end:
+  stage: build
+  script:
+    - cd godine_server
+    - npm install
     - echo "Build Successful."
 # deploy:
 #   stage: deploy
