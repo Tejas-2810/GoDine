@@ -22,8 +22,12 @@
     width: 100%;
 }
 .navbar {
-    backdrop-filter: blur(20px);
+    position: fixed;
+    backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(10px);
+    z-index: 3;
+    width: 100%;
+    top:0;
 }
 
 .form-control {

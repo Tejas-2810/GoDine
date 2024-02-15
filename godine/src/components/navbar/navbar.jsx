@@ -14,7 +14,7 @@ const Navb = () => {
         navigate('/wishlist');
     }
     return (
-        <Navbar bg="transparent" variant="dark" expand="lg">
+        <Navbar className='navbar' bg="transparent" variant="dark" expand="lg">
             <Navbar.Brand href="/">
                 <img className="mx-3" src={logo} alt="Logo" height={50}/>
                GoDine

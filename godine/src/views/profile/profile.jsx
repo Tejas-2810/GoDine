@@ -20,7 +20,8 @@ const Profile = () => {
     };
 
     return (
-        <div className="row d-flex background">
+        <div className=" background">
+            <div className="row d-flex my-5">
             <div className="col-md-4 ">
                 <div className="card display m-5 glass">
                     <div className="card-body">
@@ -103,6 +104,7 @@ const Profile = () => {
 
 
                 </div>
+            </div>
             </div>
         </div>
     );
