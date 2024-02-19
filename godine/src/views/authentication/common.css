@@ -1,0 +1,30 @@
+.signin-page, .signup-page, .forgot-password-page, .reset-password-page{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('../../images/bg3.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+.signin-card, .signup-card, .forgot-password-card, .reset-password-card{
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    margin: 0px 1rem;
+}
+
+.glass{
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0px 8px 32px 0px rgba(168, 168, 168, 0.37);
+}
+
+/* 
+https://upstackhq.com/blog/software-development/how-to-get-a-parameter-from-a-url-in-react
+ */
