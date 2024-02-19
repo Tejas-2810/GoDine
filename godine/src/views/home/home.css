@@ -13,9 +13,6 @@
 
 }
 
-.b1{
-
-}
 
 .b1 {
     position: relative;
@@ -77,4 +74,9 @@ select:focus {
     backdrop-filter: blur(20px);
     color: white;
     border-radius: 3rem !important;
+}
+
+.pcontainer{
+    margin: auto;
+    margin-top: 5rem;
 }
