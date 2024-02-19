@@ -1,21 +1,13 @@
-import React, {useState, useEffect} from 'react'
-import logo from '../../images/logo.png'
-import {Navbar} from "react-bootstrap"
+import React, {useState} from 'react'
+import {useParams, Navigate} from 'react-router-dom'
+import axios from 'axios'
 
 function ResetPassword() {
     const [newPassword, setNewPassword] = useState('');
     const [validNewPassword, setValidNewPassword] = useState(true);
     const [passwordMatched, setPasswordMatched] = useState(true);
 
-    const [referenceToken, setReferenceToken] = useState('');
-
-    useEffect(() => {
-        const urlString = window.location.search;
-        const urlParams = new URLSearchParams(urlString);
-
-        const token = urlParams.get('token');;
-        setReferenceToken(token);
-    })
+    const {token} = useParams();
 
     function validatePasswordAndSet(e) {
         const pwd = e.target.value;
@@ -45,20 +37,27 @@ function ResetPassword() {
         e.preventDefault();
 
         const pwd = newPassword;
+        console.log(`token: ${token}`);
 
         if(pwd !== '' && validNewPassword && passwordMatched){
-            alert('Password reset successful!');
-            console.log(`reference token: ${referenceToken}`);
-            // hit server api
-            // const response = await fetch('https://express-t4.onrender.com/api/reset-password', {
-            //     method: 'POST',
-            //     headers: {},
-            //     body: JSON.stringify({password: pwd})
-            // })
-            // .then((response) => {console.log(response); return response.data;})
-            // .catch(err => {
-            //     console.log(err);
+            console.log(`reference token: ${token}`);
             
+            // todo: update url
+            const url = `http://localhost:8080/api/auth/resetPassword/${token}`;
+            const data = {password: pwd};
+            const response = await axios.patch(url, data)
+                    .then((response) => {return response;})
+                    .catch((err) => {console.log(err); return err.response;});
+            
+            console.log(response);
+            if(response.status === 200){
+                alert('Password reset successful');
+                <Navigate to='/signin' />
+            } else if(response.status === 400){
+                alert('Invalid token or expired token');
+            } else{
+                alert('Please try again after sometime');
+            }
         }
         else{
             alert('Please enter valid password');
@@ -67,13 +66,6 @@ function ResetPassword() {
 
     return (
         <div className='reset-password-page'>
-            <Navbar className='navbar' bg="transparent" variant="dark" expand="lg">
-                <Navbar.Brand href="/reset-password">
-                    <img className="mx-3" src={logo} alt="Logo" height={50}/>
-                GoDine
-                </Navbar.Brand>
-            </Navbar>
-
             <div className='container'>
                 <div className='row justify-content-center'>
                     <div className='col-sm-6'>
