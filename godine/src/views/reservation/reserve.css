@@ -1,0 +1,20 @@
+.cfooter{
+    background-color: rgb(196, 185, 207);
+}
+.card-reserve{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+
+}
+
+
+
+@media (max-width: 767px) {
+    /* Add padding for mobile screens */
+    .fcontainer {
+        margin-left: 25% !important;
+    }
+}
