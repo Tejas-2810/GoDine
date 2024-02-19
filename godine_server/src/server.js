@@ -1,24 +1,22 @@
-// server.js
+require('dotenv').config(); // Import the dotenv module to access the environment variables
+const express = require('express'); // Import the express module
+const mongoose = require('mongoose'); // Import the mongoose module
+const { connectToDatabase } = require('./database/db'); // Import the connectToDatabase function
+const userRoutes = require('./routes/userRoutes'); // Import the userRoutes
+const authRoutes = require('./routes/authRoutes'); // Import the authRoutes
 
-const express = require('express');
-const mongoose = require('mongoose');
-const { connectToDatabase } = require('./database/db'); 
-const userRoutes = require('./routes/userRoutes');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
+const app = express(); // Create a new express application
+const PORT = process.env.PORT || 3000; // Set the port to the environment variable PORT or 3000
 
 app.use(express.json());
 
-// Connect to MongoDB
 async function startServer() {
     try {
-        await connectToDatabase();
+        await connectToDatabase(); // Connect to the database
+        
+        app.use('/users', userRoutes); // Create a base URL for the user routes
+        app.use('/api/auth', authRoutes); // Create a base URL for the auth routes
 
-        // Routes
-        app.use('/users', userRoutes);
-
-        // Start the server
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });
