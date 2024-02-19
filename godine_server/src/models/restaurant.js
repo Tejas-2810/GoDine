@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // Create a new restaurant schema
 const restaurantSchema = new mongoose.Schema(
   {
-    RestaurantID: mongoose.Schema.Types.ObjectId,
+    restaurantID: mongoose.Schema.Types.ObjectId,
     restaurantName: {
       type: String,
       required: true,
@@ -14,7 +14,7 @@ const restaurantSchema = new mongoose.Schema(
     },
     availability: {
       type: [String],
-      enum: ["morning", "evening", "night"],
+      enum: ["morning", "afternoon", "night"],
       required: true,
     },
     operatingHours: {

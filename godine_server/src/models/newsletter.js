@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // Create a new newsletter schema
 const newsletterSchema = new mongoose.Schema(
   {
-    User: {
+    userID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users", // Reference to the Users collection
       required: true,
