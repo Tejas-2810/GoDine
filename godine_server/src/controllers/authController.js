@@ -2,7 +2,6 @@ const bcrypt = require("bcryptjs"); // Import the bcryptjs module to hash passwo
 const jwt = require("jsonwebtoken"); // Import the jsonwebtoken module to create and verify tokens
 const User = require("../models/users"); // Import the User model
 const transporter = require("../config/nodemailer"); // Import the nodemailer transporter
-const crypto = require("crypto"); // Import the crypto module to create a hash of the reset token
 
 //Create a new user
 exports.signup = async (req, res) => {
@@ -88,17 +87,10 @@ exports.forgotPassword = async (req, res) => {
 //Reset password
 exports.resetPassword = async (req, res) => {
   const resetToken = req.params.token;
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
+  let user = await User.findOne({ passwordResetExpires: { $gt: Date.now() } });
 
-  const user = await User.findOne({
-    passwordResetToken: hashedToken,
-    passwordResetExpires: { $gt: Date.now() },
-  });
-
-  if (!user) {
+  // Find user by comparing hashed tokens
+  if (!user || !(await bcrypt.compare(resetToken, user.passwordResetToken))) {
     return res.status(400).json({ message: "Token is invalid or has expired" });
   }
 
