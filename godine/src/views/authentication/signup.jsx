@@ -1,6 +1,4 @@
 import React, {useState} from 'react'
-import logo from '../../images/logo.png'
-import {Navbar} from "react-bootstrap"
 import './common.css'
 import axios from 'axios';
 
@@ -18,6 +16,8 @@ function Signup() {
     const [password, setPassword] = useState('');
     const [validPassword, setValidPassword] = useState(true);
     const [passwordMatch, setPasswordMatch] = useState(true);
+
+    const [toggleValue, setToggleValue] = useState('user');
 
     function validateFirstNameAndSet(e){
         const inputFn = e.target.value;
@@ -92,7 +92,7 @@ function Signup() {
             && validFirstName && validLastName && validEmail && validPassword && passwordMatch){
             // todo: add it in env
             const url = `http://localhost:8080/api/auth/signup`;
-            const data = {firstName: firstName, lastName: lastName, email: email, password: password};
+            const data = {firstName: firstName, lastName: lastName, email: email, password: password, role: toggleValue};
 
             const response = await axios.post(url, data)
                     .then((response) => {console.log(response); return response;}) 
@@ -120,50 +120,57 @@ function Signup() {
         }
     }
 
+    function handleToggle(){
+        setToggleValue(prevValue => prevValue === 'user' ? 'restaurant owner' : 'user');
+    }
+
+
     return (
         <div className='signup-page'>
-            <Navbar className='navbar' bg="transparent" variant="dark" expand="lg">
-                <Navbar.Brand href="/signup">
-                    <img className="mx-3" src={logo} alt="Logo" height={50}/>
-                GoDine
-                </Navbar.Brand>
-            </Navbar>
-
             <div className='container'>
                 <div className='row justify-content-center'>
                     <div className='col-md-6'>
                         <div className='card signup-card glass'>
                         <div className="tab-content">
-                                    <h2 style={{color: "#333333"}}>Sign Up</h2>
-                                    <form>
-                                        <div className='form-group m-1'>
-                                            <label>First Name</label>
-                                            <input type='text' className='form-control' placeholder='Enter first name' onInput={validateFirstNameAndSet}/>
-                                            {validFirstName ? null : <small style={{color: 'red'}}>Please enter a valid first name</small>}
-                                        </div>
-                                        <div className='form-group m-1'>
-                                            <label>Last Name</label>
-                                            <input type='text' className='form-control' placeholder='Enter last name' onInput={validateLastNameAndSet}/>
-                                            {validLastName ? null : <small style={{color: 'red'}}>Please enter a valid last name</small>}
-                                        </div>
-                                        <div className='form-group m-1'>
-                                            <label>Email</label>
-                                            <input type='text' className='form-control' placeholder='Enter email' onInput={validateEmailAndSet}/>
-                                            {validEmail ? null : <small style={{color: 'red'}}>Please enter a valid email</small>}
-                                        </div>
-                                        <div className='form-group m-1'>
-                                            <label>Password</label>
-                                            <input type='password' className='form-control' placeholder='Enter password' onInput={validatePasswordAndSet}/>
-                                            {validPassword ? null : <small style={{color: 'red'}}>Passwords must be minimum 8 characters</small>}
-                                        </div>
-                                        <div className='form-group m-1'>
-                                            <label>Confirm password</label>
-                                            <input type='password' className='form-control' placeholder='Confirm password' onInput={validateConfirmPassword}/>
-                                            {passwordMatch ? null : <small style={{color: 'red'}}>Passwords do not match</small>}
-                                        </div>
-                                        <button type='submit' className='btn btn-primary m-1' onClick={handleSubmit} >Submit</button>
-                                    </form>
-                                    </div>
+                            <h2 style={{color: "#333333"}}>Sign Up</h2>
+                            <form>
+                                <div className='form-group m-1'>
+                                    <label>First Name</label>
+                                    <input type='text' className='form-control' placeholder='Enter first name' onInput={validateFirstNameAndSet}/>
+                                    {validFirstName ? null : <small style={{color: 'red'}}>Please enter a valid first name</small>}
+                                </div>
+                                <div className='form-group m-1'>
+                                    <label>Last Name</label>
+                                    <input type='text' className='form-control' placeholder='Enter last name' onInput={validateLastNameAndSet}/>
+                                    {validLastName ? null : <small style={{color: 'red'}}>Please enter a valid last name</small>}
+                                </div>
+                                <div className='form-group m-1'>
+                                    <label>Email</label>
+                                    <input type='text' className='form-control' placeholder='Enter email' onInput={validateEmailAndSet}/>
+                                    {validEmail ? null : <small style={{color: 'red'}}>Please enter a valid email</small>}
+                                </div>
+                                <div className='form-group m-1'>
+                                    <label>Password</label>
+                                    <input type='password' className='form-control' placeholder='Enter password' onInput={validatePasswordAndSet}/>
+                                    {validPassword ? null : <small style={{color: 'red'}}>Passwords must be minimum 8 characters</small>}
+                                </div>
+                                <div className='form-group m-1'>
+                                    <label>Confirm password</label>
+                                    <input type='password' className='form-control' placeholder='Confirm password' onInput={validateConfirmPassword}/>
+                                    {passwordMatch ? null : <small style={{color: 'red'}}>Passwords do not match</small>}
+                                </div>
+
+                                {/* //todo: toggle button to add role, user or manager */}
+                                <div className='toggle-container'>
+                                    <label className='switch'>
+                                        <input type='checkbox' onChange={handleToggle} />
+                                        <span className='slider round' />
+                                    </label>
+                                    <span className='toggle-value'>{toggleValue}</span>
+                                </div>
+                                <button type='submit' className='btn btn-primary m-1' onClick={handleSubmit} >Submit</button>
+                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,4 @@
 import React, {useState} from 'react'
-import logo from '../../images/logo.png'
-import {Navbar} from "react-bootstrap"
 import { Link } from 'react-router-dom'
 import './common.css'
 import axios from 'axios';
@@ -67,11 +65,13 @@ function Signin() {
             }
             else if(response.status === 500){
                 alert('Internal server error!');
+                console.log("Response: ",response.data.message);
             }
             else{
                 alert('Please again later!');
+                console.log("Response: ",response.data.message);
             }
-            console.log("Response: ",response.data.message);
+            
         }
         else{
             alert('Invalid email or password');
@@ -81,13 +81,6 @@ function Signin() {
 
     return (
         <div className='signin-page'>
-            <Navbar className='navbar' bg="transparent" variant="dark" expand="lg">
-                <Navbar.Brand href="/signin">
-                    <img className="mx-3" src={logo} alt="Logo" height={50}/>
-                GoDine
-                </Navbar.Brand>
-            </Navbar>
-
             <div className='container'>
                 <div className='row justify-content-center'>
                     <div className='col-sm-6'>
