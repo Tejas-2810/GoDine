@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 // Create a new reservation schema
 const reservationSchema = new mongoose.Schema(
   {
-    Reservation_ID: mongoose.Schema.Types.ObjectId,
-    User_ID: {
+    reservationID: mongoose.Schema.Types.ObjectId,
+    userID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users", // Reference to the Users collection
       required: true,

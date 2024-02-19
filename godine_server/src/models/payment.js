@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 // Create a new payment schema
 const paymentSchema = new mongoose.Schema(
   {
-    PaymentID: mongoose.Schema.Types.ObjectId,
-    UserID: {
+    paymentID: mongoose.Schema.Types.ObjectId,
+    userID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users", // Reference to the Users collection
       required: true,
