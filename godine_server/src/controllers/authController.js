@@ -4,6 +4,7 @@ const User = require("../models/users"); // Import the User model
 const transporter = require("../config/nodemailer"); // Import the nodemailer transporter
 const crypto = require("crypto"); // Import the crypto module to create a hash of the reset token
 
+//Create a new user
 exports.signup = async (req, res) => {
   const { userID, username, email, password, isRestaurantOwner } = req.body;
   const user = await User.findOne({ email }).select("+password");
@@ -51,6 +52,7 @@ exports.signin = async (req, res) => {
   }
 };
 
+//Forgot password
 exports.forgotPassword = async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
@@ -83,6 +85,7 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
+//Reset password
 exports.resetPassword = async (req, res) => {
   const resetToken = req.params.token;
   const hashedToken = crypto
