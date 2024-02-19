@@ -8,6 +8,7 @@ import Signup from './views/authentication/signup';
 import ForgotPassword from './views/authentication/forgotPassword';
 import ResetPassword from './views/authentication/resetPassword';
 import WishList from './views/wishlist/wishlist';
+import P404 from './views/p404/p404';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/wishlist" element={<WishList />} />
+          <Route path="*" element={<P404 />} />
         </Routes>
       </Router>
     </div>

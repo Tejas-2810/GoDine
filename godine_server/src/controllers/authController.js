@@ -2,22 +2,27 @@ const bcrypt = require("bcryptjs"); // Import the bcryptjs module to hash passwo
 const jwt = require("jsonwebtoken"); // Import the jsonwebtoken module to create and verify tokens
 const User = require("../models/users"); // Import the User model
 const transporter = require("../config/nodemailer"); // Import the nodemailer transporter
+const { v4: uuidv4 } = require("uuid");
 
 //Create a new user
 exports.signup = async (req, res) => {
-  const { userID, username, email, password, isRestaurantOwner } = req.body;
+  const uniqueId = uuidv4();
+  const { firstName, lastName, email, password, role } = req.body;
   const user = await User.findOne({ email }).select("+password");
   if (user) {
     return res.status(401).json({ message: "User already exists" });
   }
 
   try {
+    const name = firstName + " " + lastName;
+    const userID = uniqueId;
+    console.log(userID, name, email, password, role);
     const newUser = await User.create({
       userID,
-      username,
+      name,
       email,
       password,
-      isRestaurantOwner,
+      role,
     });
     // Create a token for JWT_EXPIRES_IN duration (6 minutes)
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
@@ -45,7 +50,7 @@ exports.signin = async (req, res) => {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
 
-    res.status(200).json({ token });
+    res.status(200).json({ token, role: user.role });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
