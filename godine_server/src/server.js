@@ -1,13 +1,20 @@
 require('dotenv').config(); // Import the dotenv module to access the environment variables
 const express = require('express'); // Import the express module
+const cors  = require('cors');
 const mongoose = require('mongoose'); // Import the mongoose module
 const { connectToDatabase } = require('./database/db'); // Import the connectToDatabase function
 const userRoutes = require('./routes/userRoutes'); // Import the userRoutes
 const authRoutes = require('./routes/authRoutes'); // Import the authRoutes
 
+var corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200
+}
+
 const app = express(); // Create a new express application
 const PORT = process.env.PORT || 3000; // Set the port to the environment variable PORT or 3000
 
+app.use(cors(corsOptions));
 app.use(express.json());
 
 async function startServer() {

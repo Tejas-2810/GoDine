@@ -3,6 +3,10 @@ import React from 'react';
 import Profile from './views/profile/profile';
 import Home from './views/home/home';
 import Navbar from './components/navbar/navbar';
+import Signin from './views/authentication/signin';
+import Signup from './views/authentication/signup';
+import ForgotPassword from './views/authentication/forgotPassword';
+import ResetPassword from './views/authentication/resetPassword';
 import WishList from './views/wishlist/wishlist';
 import Reserve from './views/reservation/reserve';
 import P404 from './views/p404/p404';
@@ -15,6 +19,10 @@ function App() {
         <Navbar />
         <Routes >
           <Route path="/" element={<Home/>} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/wishlist" element={<WishList />} />
           <Route path="/reserve" element={<Reserve />} />
