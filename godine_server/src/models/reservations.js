@@ -3,14 +3,14 @@ const mongoose = require("mongoose");
 // Create a new reservation schema
 const reservationSchema = new mongoose.Schema(
   {
-    reservationID: mongoose.Schema.Types.ObjectId,
+    restaurantID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Restaurants", // Reference to the Restaurants collection
+      required: true,
+    },
     userID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users", // Reference to the Users collection
-      required: true,
-    },
-    restaurantName: {
-      type: String,
       required: true,
     },
     reservationTime: {
