@@ -18,7 +18,7 @@ const Home = () => {
 
                 <div className="  p-5  ">
                     <form className='input-group bar container' onSubmit={handleSubmit}>
-                        <input type="text" className='form-control' placeholder="Search Restaurants or Food. . . . ." aria-label="Input group example" aria-describedby="basic-addon1" required />
+                        <input type="text" className='form-control search-control' placeholder="Search Restaurants or Food. . . . ." aria-label="Input group example" aria-describedby="basic-addon1" required />
                         <select className='form-select' aria-label="Select Cuisine" style={{ backgroundColor: 'rgba(0, 0, 0, 0.336)', backdropFilter: 'blur(20px)', color: 'white', borderRadius: '1rem' }} >
                             <option value="1">Any Cuisine</option>
                             <option value="2">Italian</option>
