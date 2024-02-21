@@ -26,7 +26,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.363);
 }
-.form-control {
+.search-control {
     background-color: rgba(0, 0, 0, 0.336) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(10px);
@@ -40,7 +40,7 @@
 
 }
 
-.form-control::placeholder {
+.search-control::placeholder {
     color: white ;
 }
 
@@ -54,7 +54,7 @@
       pointer-events: none;
   }
 
-  .form-control{
+  .search-control{
     width: 10rem !important;
 }
 
@@ -78,5 +78,5 @@ select:focus {
 
 .pcontainer{
     margin: auto;
-    margin-top: 5rem;
+    margin-top: 5rem !important;
 }

@@ -17,7 +17,10 @@ const Navb = () => {
                break;
             case '3':
                 navigate('/reserve');
-                break;        
+                break;    
+            case '4':
+                navigate('/contact');
+                break;    
            default:
                navigate('/');
                break;
@@ -35,7 +38,7 @@ const Navb = () => {
                     <Nav.Link onClick={() => redirect()} className="text-dark tw">Home</Nav.Link>
                     <Nav.Link onClick={() => redirect('3')} className="text-dark tw">Reserve</Nav.Link>
                     <Nav.Link onClick={() => redirect('1')} className="text-dark tw">Profile</Nav.Link>
-                    <Nav.Link className="text-dark tw" >Contact</Nav.Link>
+                    <Nav.Link onClick={() => redirect('4')} className="text-dark tw" >Contact</Nav.Link>
                     <Nav.Link onClick={() => redirect('2')} className="text-dark tw">WishList</Nav.Link>
                 </Nav>
             </Navbar.Collapse>

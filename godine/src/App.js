@@ -10,6 +10,7 @@ import ResetPassword from './views/authentication/resetPassword';
 import WishList from './views/wishlist/wishlist';
 import Reserve from './views/reservation/reserve';
 import P404 from './views/p404/p404';
+import Contact from './views/contact/contact';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/wishlist" element={<WishList />} />
           <Route path="/reserve" element={<Reserve />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<P404 />} />
         </Routes>
       </Router>
