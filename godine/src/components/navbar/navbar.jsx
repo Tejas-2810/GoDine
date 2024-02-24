@@ -21,6 +21,9 @@ const Navb = () => {
             case '4':
                 navigate('/contact');
                 break;    
+            case '5':
+                navigate('/faq');
+                break;
            default:
                navigate('/');
                break;
@@ -40,6 +43,7 @@ const Navb = () => {
                     <Nav.Link onClick={() => redirect('1')} className="text-dark tw">Profile</Nav.Link>
                     <Nav.Link onClick={() => redirect('4')} className="text-dark tw" >Contact</Nav.Link>
                     <Nav.Link onClick={() => redirect('2')} className="text-dark tw">WishList</Nav.Link>
+                    <Nav.Link onClick={() => redirect('5')} className="text-dark tw">FAQ</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
