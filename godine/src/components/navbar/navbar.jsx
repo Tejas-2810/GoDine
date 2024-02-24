@@ -38,12 +38,12 @@ const Navb = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse className='justify-content-end' id="basic-navbar-nav ">
                 <Nav className="m-4 h6 text-center ">
-                    <Nav.Link onClick={() => redirect()} className="text-dark tw">Home</Nav.Link>
-                    <Nav.Link onClick={() => redirect('3')} className="text-dark tw">Reserve</Nav.Link>
-                    <Nav.Link onClick={() => redirect('1')} className="text-dark tw">Profile</Nav.Link>
-                    <Nav.Link onClick={() => redirect('4')} className="text-dark tw" >Contact</Nav.Link>
-                    <Nav.Link onClick={() => redirect('2')} className="text-dark tw">WishList</Nav.Link>
-                    <Nav.Link onClick={() => redirect('5')} className="text-dark tw">FAQ</Nav.Link>
+                    <Nav.Link onClick={() => redirect()} className="tw">Home</Nav.Link>
+                    <Nav.Link onClick={() => redirect('3')} className="tw">Reserve</Nav.Link>
+                    <Nav.Link onClick={() => redirect('1')} className="tw">Profile</Nav.Link>
+                    <Nav.Link onClick={() => redirect('4')} className="tw" >Contact</Nav.Link>
+                    <Nav.Link onClick={() => redirect('2')} className="tw">WishList</Nav.Link>
+                    <Nav.Link onClick={() => redirect('5')} className="tw">FAQ</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

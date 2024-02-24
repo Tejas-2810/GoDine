@@ -1,9 +1,12 @@
 .text-dark {
-    position: relative;
-    padding: 0;
+
 }
 
-
+.tw{
+    position: relative;
+    padding: 0;
+    color: white;
+}
 .tw::after {
     content: "";
     position: absolute;
@@ -22,6 +25,7 @@
     width: 100%;
 }
 .navbar {
+    background-color: rgba(0, 0, 0, 0.363) !important;
     position: fixed;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(10px);
@@ -31,7 +35,7 @@
 }
 
 .form-control {
-    background-color: rgba(0, 0, 0, 0.336);
+    background-color: rgba(0, 0, 0, 0.829);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(10px);
 }
