@@ -13,12 +13,12 @@
 
 ## Authors
 
-* [Krishna Vaibhav Yadlapalli](kr732880@dal.ca) 
-* [Tejas Pabbu](tj970639@dal.ca) 
-* [Venkata Sreenivas Prasad Kasibhatla](vn769140@dal.ca) 
-* [Jahnavi Gajjala](jh707761@dal.ca) 
-* [Priyatam Somagattu](priyatam.somagattu@dal.ca) 
-* [Praveen Kumar Reddy Burla](pr441109@dal.ca) 
+* [Krishna Vaibhav Yadlapalli](kr732880@dal.ca) - Designer and Developer
+* [Tejas Pabbu](tj970639@dal.ca) - Scrum Master and Designer
+* [Venkata Sreenivas Prasad Kasibhatla](vn769140@dal.ca) - Copywriter and Documents Manager
+* [Jahnavi Gajjala](jh707761@dal.ca) - Copywriter and Documents Manager  
+* [Priyatam Somagattu](priyatam.somagattu@dal.ca) - Designer and Developer
+* [Praveen Kumar Reddy Burla](pr441109@dal.ca) - Testing and Documents Manager
 
 
 ## Deployment
@@ -1025,30 +1025,38 @@ The code above was created by adapting the code from [Forms](https://getbootstra
 - Background image in the header [ChatGPT 4](https://openai.com/gpt-4)
   
   - **Prompt:** generate background images for a website that is used to make reservations at a restaurant and the image should be in 16:9 ratio and generate max possible resolution and this image should make a elegant first impression
-  - Site Url - https://krishnavaibhav.netlify.app/
+  - Site Url - https://godine-group2.netlify.app/
   - _Note: The AI chat url cannot be provided because "Sharing conversations with images is not yet supported" by the chatGPT4_
+
     <img src="https://godine-group2.netlify.app/static/media/bg2.e550bc18f36216b54fbb.png" width="50%" height="50%">
+
 
 - Image used in the carousel in the Homepage [ChatGPT 4](https://openai.com/gpt-4)
  
   - **Prompt:** decrease the details of the image as the users just scan the website rather look into every detail make image so the it is catchy to the user eye
-  - Site Url - https://krishnavaibhav.netlify.app/
+  - Site Url - https://godine-group2.netlify.app/
   - _Note: The AI chat url cannot be provided because "Sharing conversations with images is not yet supported" by the chatGPT4_
+
     <img src="https://godine-group2.netlify.app/static/media/bg.ef78e4d09c4fd768ae7d.png" width="50%" height="50%">
+
 
 - Image used in the carousel in the Homepage [ChatGPT 4](https://openai.com/gpt-4)
  
   - **Prompt:** generate some image with dark colour pallet or any pallet so that white text can be visible
-  - Site Url - https://krishnavaibhav.netlify.app/
+  - Site Url - https://godine-group2.netlify.app/
   - _Note: The AI chat url cannot be provided because "Sharing conversations with images is not yet supported" by the chatGPT4_
+
   - <img src="https://godine-group2.netlify.app/static/media/bg1.ce28f6586532a7cf338e.png" width="50%" height="50%">
+
  
 - Image used in the carousel in the Homepage [ChatGPT 4](https://openai.com/gpt-4)
   
   - **Prompt:** generate logo with minimalistic look for restaurant reservation booking website with not more than 3 colors.
-  - Site Url - https://krishnavaibhav.netlify.app/
+  - Site Url - https://godine-group2.netlify.app/
   - _Note: The AI chat url cannot be provided because "Sharing conversations with images is not yet supported" by the chatGPT4_
+
     <img src="https://godine-group2.netlify.app/static/media/logo.246875b8ca6eaaf866d6.png" width="30%">
+
  
 #### Other Stock Images used
  
