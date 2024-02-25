@@ -79,7 +79,7 @@ const restaurants = [
 ];
 const WishList = () => {
     return (
-        <div>
+        <div className="pcontainer">
             <h1 className="wishlist-header">Wishlist Restaurants</h1>
             <RestaurantsList restaurants={restaurants} />
         </div>

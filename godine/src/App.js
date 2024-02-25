@@ -11,12 +11,14 @@ import WishList from './views/wishlist/wishlist';
 import Reserve from './views/reservation/reserve';
 import P404 from './views/p404/p404';
 import Contact from './views/contact/contact';
+import Faq from './views/faq/faq';
+import Footer from './components/footer/footer';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
     <div>
-      <Router>
+      <Router >
         <Navbar />
         <Routes >
           <Route path="/" element={<Home/>} />
@@ -28,8 +30,10 @@ function App() {
           <Route path="/wishlist" element={<WishList />} />
           <Route path="/reserve" element={<Reserve />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<Faq />} />
           <Route path="*" element={<P404 />} />
         </Routes>
+        <Footer  />
       </Router>
     </div>
   );
