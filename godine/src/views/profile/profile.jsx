@@ -78,19 +78,19 @@ const Profile = () => {
                         <div className="col-md-5">
                             {isEditing ? (
                                 <>
-                                    <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} />
-                                    <input type="text" className="form-control" value={age} onChange={(e) => setAge(e.target.value)} />
-                                    <input type="text" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                    <input type="text" className="form-control" value={phone} onChange={(e) => setPhone(e.target.value)} />
-                                    <input type="text" className="form-control" value={address} onChange={(e) => setAddress(e.target.value)} />
+                                    <input type="text-dark" className="form-control form-control-p" value={name} onChange={(e) => setName(e.target.value)} />
+                                    <input type="text-dark" className="form-control form-control-p" value={age} onChange={(e) => setAge(e.target.value)} />
+                                    <input type="text-dark" className="form-control form-control-p" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                    <input type="text-dark" className="form-control form-control-p" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                                    <input type="text-dark" className="form-control form-control-p" value={address} onChange={(e) => setAddress(e.target.value)} />
                                 </>
                             ) : (
                                 <>
-                                    <div className="form-control">{name}</div>
-                                    <div className="form-control">{age}</div>
-                                    <div className="form-control">{email}</div>
-                                    <div className="form-control">{phone}</div>
-                                    <div className="form-control">{address}</div>
+                                    <div className="form-control form-control-p">{name}</div>
+                                    <div className="form-control form-control-p">{age}</div>
+                                    <div className="form-control form-control-p">{email}</div>
+                                    <div className="form-control form-control-p">{phone}</div>
+                                    <div className="form-control form-control-p">{address}</div>
                                 </>
                             )}
                         </div>
