@@ -1,0 +1,56 @@
+.background{
+    /* background-image: url('https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'); */
+    padding: 20px;
+    /* max-height: 40vh; */
+    background: linear-gradient(to bottom, #682a00, #f3f3f3);
+    background-size: 100% 100%;
+    background-repeat: repeat;
+    margin-bottom: 10rem;
+    }
+
+
+
+.avatar{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto;
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* profile card text css  */
+
+
+.info{
+    text-align: left;
+    border: 1px solid rgba(0, 0, 0, 0.137);
+    border-radius: 10px;
+    padding: 1rem;
+
+}
+
+.glass{
+    background-color: rgba(0, 0, 0, 0.452) !important;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(15px);
+}
+
+.form-control{
+    background-color: rgba(255, 255, 255, 0.815) !important;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(100px);
+
+}
+.form-control-p{
+    color: white !important;
+}
+
+
+
+
+/* citations : bootstrap cards, glassmorphism, https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1
+          : https://www.npmjs.com/package/react-bootstrap-icons
+            : https://www.npmjs.com/package/react-bootstrap
+*/
