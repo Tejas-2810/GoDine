@@ -5,7 +5,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 const Faq = () => {
 
     return (
-        <div class="accordion accordion-flush pcontainer container" id="accordionFlushExample">
+        <div class="accordion accordion-flush pcontainer faq container" id="accordionFlushExample">
             <h1 className='text-center'> Frequently Asked Questions </h1>
             <div class="accordion-item">
                 <h2 class="accordion-header" id="flush-headingOne">
