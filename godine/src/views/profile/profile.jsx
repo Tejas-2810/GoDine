@@ -22,9 +22,9 @@ const Profile = () => {
     return (
         <div className="text-white">
             <div className="background">
-            <div className="row d-flex my-5">
+            <div className="row d-flex pcontainer">
             <div className="col-md-4 ">
-                <div className="card display m-5 glass">
+                <div className="card display glass">
                     <div className="card-body">
                         <div>
                             <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" className="avatar" />
@@ -65,7 +65,7 @@ const Profile = () => {
                 </div>
             </div>
             <div className="col-md-8">
-                <div className="info m-5 glass">
+                <div className="info mx-5 glass">
                     <h4 className="text-center m-3">Personal Information</h4>
                     <div className="d-flex justify-content-center my-5">
                         <div className=" row col-md-7 align-items-end">

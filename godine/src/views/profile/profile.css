@@ -2,9 +2,10 @@
     /* background-image: url('https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'); */
     padding: 20px;
     /* max-height: 40vh; */
-        background: linear-gradient(to bottom, #682a00, #f3f3f3);
-        background-size: 100% 100%;
-        background-repeat: repeat;
+    background: linear-gradient(to bottom, #682a00, #f3f3f3);
+    background-size: 100% 100%;
+    background-repeat: repeat;
+    margin-bottom: 10rem;
     }
 
 
