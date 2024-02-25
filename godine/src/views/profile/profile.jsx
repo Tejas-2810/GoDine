@@ -20,7 +20,8 @@ const Profile = () => {
     };
 
     return (
-        <div className=" background">
+        <div className="text-white">
+            <div className="background">
             <div className="row d-flex my-5">
             <div className="col-md-4 ">
                 <div className="card display m-5 glass">
@@ -29,9 +30,9 @@ const Profile = () => {
                             <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" className="avatar" />
                         </div>
                         <div>
-                            <h5 className="card-title">{name}</h5>
-                            <div className="social-accounts">
-                                <a href="#" className="social-link">
+                            <h5 className="card-title text-center text-light">{name}</h5>
+                            <div className="social-accounts text-center ">
+                                <a href="#" className="social-link px-4">
                                     <Icon.Facebook
                                         iconName="Facebook"
                                         color="royalblue"
@@ -40,7 +41,7 @@ const Profile = () => {
                                     />
                                     <i className="fab fa-facebook"></i>
                                 </a>
-                                <a href="#" className="social-link">
+                                <a href="#" className="social-link px-4">
                                     <Icon.Twitter
                                         iconName="Twitter"
                                         color="#1DA1F2"
@@ -49,7 +50,7 @@ const Profile = () => {
                                     />
                                     <i className="fab fa-twitter"></i>
                                 </a>
-                                <a href="#" className="social-link">
+                                <a href="#" className="social-link px-4">
                                     <Icon.Instagram
                                         iconName="Instagram"
                                         color=" #cd486b"
@@ -104,6 +105,7 @@ const Profile = () => {
 
 
                 </div>
+            </div>
             </div>
             </div>
         </div>
