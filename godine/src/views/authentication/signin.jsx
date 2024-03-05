@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
-import { Link } from 'react-router-dom'
+import React, {useState, useRef} from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import useAuth from '../../hooks/useAuth';
 import './common.css'
 import axios from 'axios';
 
@@ -9,6 +10,12 @@ function Signin() {
 
     const [password, setPassword] = useState('');
     const [validPassword, setValidPassword] = useState(true);
+    const requestCancelRef = useRef(null);
+
+    const { setAuthData } = useAuth();
+
+    const navigate = useNavigate();
+    const location = useLocation();
 
     function validateEmailAndSet(e) {
         const email = e.target.value;
@@ -43,39 +50,66 @@ function Signin() {
 
         const userEmail = email;
         const pwd = password;
+        const from = location.state;
+
+        const server_url = process.env.SERVER_URL || "http://localhost";
+        const server_port = process.env.SERVER_PORT || "8080";
+
+        requestCancelRef.current?.abort();
+        requestCancelRef.current = new AbortController();
 
         // send the email and password to the server
         if(userEmail !== '' && pwd !== '' && validEmail && validPassword){
-            // todo: set url for server
-            const url = `http://localhost:8080/api/auth/signin`;            
-            const data = {email: userEmail,password: pwd};
+            const url = `${server_url}:${server_port}/api/auth/signin`;
+            const data = {email: userEmail, password: pwd};
 
-            const response = await axios.post(url,data)
-            .then((response) => {console.log(response);return response;})
-            .catch((err) => {console.log(err); return err.response;});
-            
-            console.log(response.data);
+            const response = await axios.post(url,data, {signal: requestCancelRef.current?.signal})
+            .then((response) => response)
+            .catch((err) => err);
 
-            // todo: consume the auth token and role
-            if(response.status === 200 && response.data.token){
-                console.log('Login successful! with 200 ', response.data.token);;
+            // when request is aborted
+            if(axios.isCancel(response)){
+                console.log("Signin Request Aborted");
+                return;
             }
-            else if(response.status === 401){
+
+            if(response.status === 200 && response.data?.token && response.data?.role){
+                const token = response.data.token;
+                // todo: check the updated response
+                const responseExpiryTime = response.data.JWTExpiryMin;
+                // default expiry of 20 mins in milliseconds
+                const defaultExpiryTime = 20*60*1000;
+                const expiryTime = responseExpiryTime ? responseExpiryTime: defaultExpiryTime;
+                const role = response.data.role;
+
+                setAuthData(token, expiryTime, role);
+
+                // navigate to respective webpages as per role
+                if(role === 'user'){
+                    navigate(from?.pathname ? from.pathname: '/', {replace: true});
+                }
+                else if(role === 'restaurant owner'){
+                    // todo: redirect to restaurant owner dashboard
+                    navigate('/', {replace: true});
+                }
+                else{
+                    navigate('/', {replace: true});
+                }
+
+                return;
+            }
+            if(response.status === 401){
                 alert(response.data.message);
             }
-            else if(response.status === 500){
+            if(response.status === 500){
                 alert('Internal server error!');
-                console.log("Response: ",response.data.message);
             }
             else{
-                alert('Please again later!');
-                console.log("Response: ",response.data.message);
+                alert('Please again later after sometime!');
             }
-            
         }
         else{
             alert('Invalid email or password');
-            window.location.reload();
         }
     }
 
@@ -85,7 +119,7 @@ function Signin() {
                 <div className='row justify-content-center'>
                     <div className='col-sm-6'>
                         <div className='card signin-card glass'>
-                            <h1 style={{color: "#333333"}}>Log In</h1>
+                            <h1 style={{color: "#333333"}}>Sign In</h1>
                             <form>
                                 <div className='form-group m-1'>
                                     <label>Email</label>
