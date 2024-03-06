@@ -1,11 +1,14 @@
-import React, {useState} from 'react'
-import {useParams, Navigate} from 'react-router-dom'
+import React, {useState, useRef} from 'react'
+import {useParams, useNavigate} from 'react-router-dom'
 import axios from 'axios'
 
 function ResetPassword() {
     const [newPassword, setNewPassword] = useState('');
     const [validNewPassword, setValidNewPassword] = useState(true);
     const [passwordMatched, setPasswordMatched] = useState(true);
+
+    const reqCancelRef = useRef(null);
+    const navigate = useNavigate();
 
     const {token} = useParams();
 
@@ -39,28 +42,39 @@ function ResetPassword() {
         const pwd = newPassword;
         console.log(`token: ${token}`);
 
+        reqCancelRef.current?.abort();
+        reqCancelRef.current = new AbortController();
+
         if(pwd !== '' && validNewPassword && passwordMatched){
             console.log(`reference token: ${token}`);
             
             // todo: update url
             const url = `http://localhost:8080/api/auth/resetPassword/${token}`;
             const data = {password: pwd};
-            const response = await axios.patch(url, data)
-                    .then((response) => {return response;})
-                    .catch((err) => {console.log(err); return err.response;});
+            const response = await axios.patch(url, data, {signal: reqCancelRef.current?.signal})
+                    .then((response) => response.response)
+                    .catch((err) => err.response);
             
             console.log(response);
+            if(axios.isCancel(reqCancelRef)){
+                console.log('Reset password request aborted');
+                return;
+            }
+
             if(response.status === 200){
                 alert('Password reset successful');
-                <Navigate to='/signin' />
+                navigate('/signin', {replace: true});
+                return;
             } else if(response.status === 400){
-                alert('Invalid token or expired token');
+                alert('Invalid token or expired token, please try again!');
+                navigate('/forgot-password');
             } else{
                 alert('Please try again after sometime');
             }
         }
         else{
             alert('Please enter valid password');
+            window.location.reload();
         }
     }
 
