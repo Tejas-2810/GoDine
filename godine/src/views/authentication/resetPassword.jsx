@@ -53,7 +53,15 @@ function ResetPassword() {
             const data = {password: pwd};
             const response = await axios.patch(url, data, {signal: reqCancelRef.current?.signal})
                     .then((response) => response.response)
-                    .catch((err) => err.response);
+                    .catch((err) => {
+                        if(axios.isCancel(err)){
+                            return err;
+                        }
+                        if(axios.isAxiosError(err)){
+                            return err.response;
+                        }
+                        return err;
+                    });
             
             console.log(response);
             if(axios.isCancel(reqCancelRef)){

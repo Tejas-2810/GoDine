@@ -65,7 +65,15 @@ function Signin() {
 
             const response = await axios.post(url,data, {signal: requestCancelRef.current?.signal})
             .then((response) => response)
-            .catch((err) => err);
+            .catch((err) => {
+                if(axios.isCancel(err)){
+                    return err;
+                }
+                if(axios.isAxiosError(err)){
+                    return err.response;
+                }
+                return err;
+            });
 
             // when request is aborted
             if(axios.isCancel(response)){
@@ -95,13 +103,12 @@ function Signin() {
                 else{
                     navigate('/', {replace: true});
                 }
-
                 return;
             }
-            if(response.status === 401){
+            else if(response.status === 401){
                 alert(response.data.message);
             }
-            if(response.status === 500){
+            else if(response.status === 500){
                 alert('Internal server error!');
             }
             else{

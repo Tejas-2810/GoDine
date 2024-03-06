@@ -39,7 +39,15 @@ function ForgotPassword() {
             const data = {email: em};
             const response = await axios.post(url, data, {signal: reqCancelRef.current?.signal})
                     .then((response) => response.response)
-                    .catch((err) => err.response);
+                    .catch((err) => {
+                        if(axios.isCancel(err)){
+                            return err;
+                        }
+                        if(axios.isAxiosError(err)){
+                            return err.response;
+                        }
+                        return err;
+                    });
 
             // in case request is aborted
             if(axios.isCancel(response)){
