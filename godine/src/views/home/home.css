@@ -1,9 +1,4 @@
-.bg {
-    background-image: url('https://previews.123rf.com/images/dstarky/dstarky1701/dstarky170100727/69328391-vector-seamless-pattern-line-fast-food-for-menu-cafes-restaurants-bars.jpg');
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: bottom;
-}
+
 .cb {
     padding-top: 15vh;
 }
@@ -13,12 +8,36 @@
 
 }
 
-.b1{
+.bg1{
+    background-image: url('../../images/bg1.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: bottom;
+    border-image: fill lineat-gradient(#0001,#000) !important;
+    image-rendering:optimizeQuality
 
 }
+.bg1::after{
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(0, 0, 0);
+    opacity: 0.5;
 
+}
+.bg1{
+    position: relative;
+    margin: 0;
+
+
+}
+.hs{
+    z-index: 1;
+    position: relative;
+}
 .b1 {
     position: relative;
+
 }
 .b1::before{
     content: "";
@@ -29,7 +48,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.363);
 }
-.form-control {
+.search-control {
     background-color: rgba(0, 0, 0, 0.336) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(10px);
@@ -43,9 +62,6 @@
 
 }
 
-.form-control::placeholder {
-    color: white ;
-}
 
 
 .dropdown:hover>.dropdown-menu {
@@ -57,24 +73,99 @@
       pointer-events: none;
   }
 
-  .form-control{
+  .search-control{
     width: 10rem !important;
 }
 
-input[type="text"],
-input[type="text"]:focus,
-select,
-select:focus {
+.form-control-h[type="text"],
+.form-control-h[type="text"]:focus,
+.form-control-h,
+.form-control-h:focus {
     background-color: rgba(0, 0, 0, 0.336);
     backdrop-filter: blur(20px);
     color: white;
     border-radius: 3rem !important;
     min-width: 2rem !important;
 }
-select,
-select:focus {
+.form-control-h,
+.form-control-h:focus {
     background-color: rgba(0, 0, 0, 0.336);
     backdrop-filter: blur(20px);
     color: white;
     border-radius: 3rem !important;
+}
+
+.pcontainer{
+    margin: auto;
+    margin-top: 7rem !important;
+}
+.hcontainer{
+    margin-top: 0 !important;
+}
+
+.quote {
+    top: 50%;
+    left: 50%;
+    color: rgb(255, 255, 255);
+    text-shadow: #000000;
+    text-align: center;
+    font-weight: 500;
+    text-shadow: 0 0 3px #ff9100, 0 0 5px #000000;
+}
+
+
+.form-control-home{
+width: 10rem !important;
+}
+
+.form-select-h[type="text"],
+.form-select-h[type="text"]:focus,
+.form-select-h,
+.form-select-h:focus {
+background-color: rgba(0, 0, 0, 0.336) !important;
+backdrop-filter: blur(20px);
+color: rgb(0, 0, 0);
+border-radius: 3rem !important;
+min-width: 2rem !important;
+}
+.form-select-h,
+.form-select-h:focus {
+background-color: rgba(0, 0, 0, 0.336);
+backdrop-filter: blur(20px);
+color: white;
+border-radius: 3rem !important;
+}
+.outline{
+    color: white;
+background-color: rgba(0, 0, 0, 0.336);
+backdrop-filter: blur(20px);
+border-radius: 1rem !important;
+margin-right: 1vh !important;
+
+}
+
+.bar {
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 3rem;
+}
+
+.h1{
+text-shadow: 5px 5px #000000 !important;
+}
+
+.type{
+/* Add hover effect */
+cursor: pointer;
+transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.type:hover {
+background-color: rgba(255, 237, 75, 0.5);
+transform: rotate(10deg);
+}
+
+.form-control-h::placeholder{
+color: white !important;
 }

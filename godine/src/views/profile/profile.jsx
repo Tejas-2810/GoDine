@@ -20,18 +20,19 @@ const Profile = () => {
     };
 
     return (
-        <div className=" background">
-            <div className="row d-flex my-5">
+        <div className="text-white">
+            <div className="background">
+            <div className="row d-flex pcontainer">
             <div className="col-md-4 ">
-                <div className="card display m-5 glass">
+                <div className="card display glass">
                     <div className="card-body">
                         <div>
                             <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" className="avatar" />
                         </div>
                         <div>
-                            <h5 className="card-title">{name}</h5>
-                            <div className="social-accounts">
-                                <a href="#" className="social-link">
+                            <h5 className="card-title text-center text-light">{name}</h5>
+                            <div className="social-accounts text-center ">
+                                <a href="#" className="social-link px-4">
                                     <Icon.Facebook
                                         iconName="Facebook"
                                         color="royalblue"
@@ -40,7 +41,7 @@ const Profile = () => {
                                     />
                                     <i className="fab fa-facebook"></i>
                                 </a>
-                                <a href="#" className="social-link">
+                                <a href="#" className="social-link px-4">
                                     <Icon.Twitter
                                         iconName="Twitter"
                                         color="#1DA1F2"
@@ -49,7 +50,7 @@ const Profile = () => {
                                     />
                                     <i className="fab fa-twitter"></i>
                                 </a>
-                                <a href="#" className="social-link">
+                                <a href="#" className="social-link px-4">
                                     <Icon.Instagram
                                         iconName="Instagram"
                                         color=" #cd486b"
@@ -64,7 +65,7 @@ const Profile = () => {
                 </div>
             </div>
             <div className="col-md-8">
-                <div className="info m-5 glass">
+                <div className="info mx-5 glass">
                     <h4 className="text-center m-3">Personal Information</h4>
                     <div className="d-flex justify-content-center my-5">
                         <div className=" row col-md-7 align-items-end">
@@ -77,19 +78,19 @@ const Profile = () => {
                         <div className="col-md-5">
                             {isEditing ? (
                                 <>
-                                    <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} />
-                                    <input type="text" className="form-control" value={age} onChange={(e) => setAge(e.target.value)} />
-                                    <input type="text" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                    <input type="text" className="form-control" value={phone} onChange={(e) => setPhone(e.target.value)} />
-                                    <input type="text" className="form-control" value={address} onChange={(e) => setAddress(e.target.value)} />
+                                    <input type="text-dark" className="form-control form-control-p" value={name} onChange={(e) => setName(e.target.value)} />
+                                    <input type="text-dark" className="form-control form-control-p" value={age} onChange={(e) => setAge(e.target.value)} />
+                                    <input type="text-dark" className="form-control form-control-p" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                    <input type="text-dark" className="form-control form-control-p" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                                    <input type="text-dark" className="form-control form-control-p" value={address} onChange={(e) => setAddress(e.target.value)} />
                                 </>
                             ) : (
                                 <>
-                                    <div className="form-control">{name}</div>
-                                    <div className="form-control">{age}</div>
-                                    <div className="form-control">{email}</div>
-                                    <div className="form-control">{phone}</div>
-                                    <div className="form-control">{address}</div>
+                                    <div className="form-control form-control-p">{name}</div>
+                                    <div className="form-control form-control-p">{age}</div>
+                                    <div className="form-control form-control-p">{email}</div>
+                                    <div className="form-control form-control-p">{phone}</div>
+                                    <div className="form-control form-control-p">{address}</div>
                                 </>
                             )}
                         </div>
@@ -104,6 +105,7 @@ const Profile = () => {
 
 
                 </div>
+            </div>
             </div>
             </div>
         </div>

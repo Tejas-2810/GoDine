@@ -1,8 +1,14 @@
 .background{
-    background-image: url('https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+    /* background-image: url('https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'); */
     padding: 20px;
-    max-height: 40vh;
-}
+    /* max-height: 40vh; */
+    background: linear-gradient(to bottom, #682a00, #f3f3f3);
+    background-size: 100% 100%;
+    background-repeat: repeat;
+    margin-bottom: 10rem;
+    }
+
+
 
 .avatar{
     width: 100px;
@@ -26,9 +32,9 @@
 }
 
 .glass{
-    background-color: rgba(255, 255, 255, 0.452) !important;
+    background-color: rgba(0, 0, 0, 0.452) !important;
     box-shadow: 0 0 100px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(50px);
+    backdrop-filter: blur(15px);
 }
 
 .form-control{
@@ -36,6 +42,9 @@
     box-shadow: 0 0 100px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(100px);
 
+}
+.form-control-p{
+    color: white !important;
 }
 
 

@@ -3,10 +3,9 @@ const mongoose = require("mongoose");
 // Create a new promotions schema
 const promotionsSchema = new mongoose.Schema(
   {
-    PromotionsID: mongoose.Schema.Types.ObjectId,
-    Restaurant_ID: {
+    restaurant_ID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Restaurant", // Reference to the Restaurant collection
+      ref: "Restaurants", // Reference to the Restaurant collection
       required: true,
     },
     description: {
