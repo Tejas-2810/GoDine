@@ -1,4 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState, useRef} from 'react'
+import {useNavigate} from 'react-router-dom'
+import useAuth from '../../hooks/useAuth';
 import './common.css'
 import axios from 'axios';
 
@@ -18,6 +20,10 @@ function Signup() {
     const [passwordMatch, setPasswordMatch] = useState(true);
 
     const [toggleValue, setToggleValue] = useState('user');
+
+    const { setAuthData } = useAuth();
+    const reqCancelRef = useRef(null);
+    const navigate = useNavigate();
 
     function validateFirstNameAndSet(e){
         const inputFn = e.target.value;
@@ -55,7 +61,6 @@ function Signup() {
         if (emailRegex.test(email)) {
             setValidEmail(true);
             setEmail(email);
-            
         }
         else {
             setValidEmail(false);
@@ -88,31 +93,55 @@ function Signup() {
     async function handleSubmit(e){
         e.preventDefault();
 
+        reqCancelRef.current?.abort();
+        reqCancelRef.current = new AbortController();
+
         if(firstName !== '' && lastName !== '' && email !== '' && password !== '' 
             && validFirstName && validLastName && validEmail && validPassword && passwordMatch){
             // todo: add it in env
             const url = `http://localhost:8080/api/auth/signup`;
             const data = {firstName: firstName, lastName: lastName, email: email, password: password, role: toggleValue};
 
-            const response = await axios.post(url, data)
-                    .then((response) => {console.log(response); return response;}) 
-                    .catch((err) => {console.log(err); return err.response;});
-            
-            // ! remove this
+            const response = await axios.post(url, data, {signal: reqCancelRef.current?.signal})
+                    .then((response) => response) 
+                    .catch((err) => {
+                        if(axios.isCancel(err)){
+                            return err;
+                        }
+                        if(axios.isAxiosError(err)){
+                            return err.response;
+                        }
+                        return err;
+                    });
+
+            if(axios.isCancel(response)){
+                console.log("Sign up request aborted");
+                return;
+            }
+
             console.log(response);
 
-            if(response.status === 201){
+            if(response.status === 201 && response.data?.token && response.data?.data?.user?.role){
                 console.log('User created successfully');
-                alert('User created successfully');
+                const token =  response.data.token;
+                // default expiry time = 20 mins
+                const defaultExpiryTime = 20*60*1000;
+                // todo: check updated signup response with expiry time
+                const responseExpiryTime = null
+                const expiryTime = responseExpiryTime ? responseExpiryTime: defaultExpiryTime;
+                const role = response.data.data.user.role;
+                
+                setAuthData(token, expiryTime, role);
+                // todo: extend it to navigate to respective pages after signup
+                navigate('/signin', {replace: true});
             }
             else if(response.status === 401){
-                console.log("User already exists");
-                alert(response.data.message);
+                alert("User already exists");
             }
             else{
-                console.log('Error creating user');
                 alert("Error creating user, please try again later.")
             }
+            window.location.reload();
         }
         else{
             alert("Invalid field(s), please enter valid values.");
@@ -160,13 +189,13 @@ function Signup() {
                                     {passwordMatch ? null : <small style={{color: 'red'}}>Passwords do not match</small>}
                                 </div>
 
-                                {/* //todo: toggle button to add role, user or manager */}
                                 <div className='toggle-container'>
+                                    <span className='toggle-value'>User</span>
                                     <label className='switch'>
                                         <input type='checkbox' onChange={handleToggle} />
                                         <span className='slider round' />
                                     </label>
-                                    <span className='toggle-value'>{toggleValue}</span>
+                                    <span className='toggle-value'>Restaurant owner</span>
                                 </div>
                                 <button type='submit' className='btn btn-primary m-1' onClick={handleSubmit} >Submit</button>
                             </form>
