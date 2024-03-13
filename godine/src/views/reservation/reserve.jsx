@@ -102,13 +102,37 @@ const Reserve = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="m-5">
-                            <button type="submit" className="btn btn-primary">Submit</button>
+                        <div className="m-5 text-right">
+                            <button type="submit" className="btn btn-primary float-right">Submit</button>
                         </div>
                         </form>
                 </div>
             </div>
-        </div>
+            <div>
+                <div className="col-md-2"></div>
+                    <form className="m-5 fcontainer ">
+                        <h4>Review Form</h4>
+                        <div className="form-group">
+                            <label htmlFor="ratingInput">Rate your experience</label>
+                            <div class="rating mx-5"> <input type="radio" name="rating" value="5" id="5"/>
+                            <label for="5">☆</label> <input type="radio" name="rating" value="4" id="4"/>
+                            <label for="4">☆</label> <input type="radio" name="rating" value="3" id="3"/>
+                            <label for="3">☆</label> <input type="radio" name="rating" value="2" id="2"/>
+                            <label for="2">☆</label> <input type="radio" name="rating" value="1" id="1"/>
+                            <label for="1">☆</label>
+                </div>
+                        <div className="form-group">
+                            <textarea className="form-control rc" id="commentInput" placeholder="Enter your comment"></textarea>
+                        </div>
+
+                        </div>
+                        <div className="m-3 d-flex justify-content-end ">
+                            <button type="submit" className="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
     );
 }
 
