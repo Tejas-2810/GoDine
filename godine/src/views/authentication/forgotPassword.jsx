@@ -1,10 +1,14 @@
-import React, {useState} from 'react'
+import React, {useState, useRef} from 'react'
+import {useNavigate} from 'react-router-dom'
 import './common.css'
 import axios from 'axios';
 
 function ForgotPassword() {
     const [email, setEmail] = useState('');
     const [validEmail, setValidEmail] = useState(true);
+    const reqCancelRef = useRef(null);
+
+    const navigate = useNavigate();
 
     function validateEmailAndSet(e){
         const email = e.target.value;
@@ -24,26 +28,40 @@ function ForgotPassword() {
         e.preventDefault();
 
         const em = email;
+        const server_url = process.env.SERVER_URL || "http://localhost";
+        const server_port = process.env.SERVER_PORT || "8080";
+
+        reqCancelRef.current?.abort();
+        reqCancelRef.current = new AbortController();
 
         if(em !== '' && validEmail){
-            const url = `http://localhost:8080/api/auth/forgotPassword`;
+            const url = `${server_url}:${server_port}/api/auth/forgotPassword`;
             const data = {email: em};
-            const response = await axios.post(url, data)
-                    .then((response) => {return response;})
-                    .catch((err) => {return err.response;});
-            
-            console.log(response);
-            if(response.status === 200 || response.data.status === "success"){
-                alert('Password reset link sent to your email');
+            const response = await axios.post(url, data, {signal: reqCancelRef.current?.signal})
+                    .then((response) => response.response)
+                    .catch((err) => {
+                        if(axios.isCancel(err)){
+                            return err;
+                        }
+                        if(axios.isAxiosError(err)){
+                            return err.response;
+                        }
+                        return err;
+                    });
+
+            // in case request is aborted
+            if(axios.isCancel(response)){
+                console.log('Forgot password aborted');
+                return;
             }
-            else if(response.status === 404){
-                console.log("user not found");
-                alert('User not found');
-                window.location.reload();
-            } else{
-                console.log("internal server error");
+
+            if(response.status === 404 || response.status === 200 || response.data.status === "success"){
+                alert('Password reset link may be sent to the email provided');
+            }
+            else{
                 alert('Please try again after sometime');
             }
+            navigate('/signin', {replace: true});
         } else{
             alert('Please enter valid email');
             window.location.reload();
