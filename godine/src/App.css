@@ -24,3 +24,12 @@
   color: white;
 }
 
+.r {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  }
+  
+.b {
+  margin-top: auto;
+  }
