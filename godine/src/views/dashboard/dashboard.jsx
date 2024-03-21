@@ -3,10 +3,10 @@ import CanvasJSReact from '@canvasjs/react-charts';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
-
 class Dashboard extends Component {
     render() {
         const bar= {
+            backgroundColor: null,
             title: {
                 text: "Income chart"
             },
@@ -25,6 +25,8 @@ class Dashboard extends Component {
             ]
         }
         const pie = {
+
+            backgroundColor: null,
 			exportEnabled: true,
 			animationEnabled: true,
 			title: {
@@ -45,7 +47,7 @@ class Dashboard extends Component {
 			}]
 		}
         const line = {
-			theme: "light2",
+			backgroundColor: null,
 			animationEnabled: true,
 			exportEnabled: true,
 			title: {
@@ -103,7 +105,7 @@ class Dashboard extends Component {
                     </div>
                     <div className='col-md-6'>
                         <form className='form'>
-                            <h1 className=''>Add A Restaurant</h1>
+                            <h1 className='text-center'>Add A Restaurant</h1>
                             <div className='form-group'>
                                 <label htmlFor='restaurantName'>Restaurant Name</label>
                                 <input type='text' className='form-control' id='restaurantName' />
