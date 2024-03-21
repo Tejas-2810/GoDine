@@ -83,7 +83,7 @@
 .form-control-h:focus {
     background-color: rgba(0, 0, 0, 0.336);
     backdrop-filter: blur(20px);
-    color: white;
+    color: white !important;
     border-radius: 3rem !important;
     min-width: 2rem !important;
 }

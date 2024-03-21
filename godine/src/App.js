@@ -14,7 +14,9 @@ import Contact from './views/contact/contact';
 import Faq from './views/faq/faq';
 import Footer from './components/footer/footer';
 import History from './views/history/history';
+import Search from './views/result/results';
 import RequireAuth from './utils/RequireAuth';
+
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -40,6 +42,7 @@ function App() {
           <Route path="/reserve" element={<Reserve />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<Faq />} />
+          <Route path="/search" element={<Search />} />
           <Route path="*" element={<P404 />} />
         </Routes>
       </Router>
