@@ -12,4 +12,6 @@ router.delete(
   reservationController.deleteReservation
 );
 
+router.post('/book/:restaurantID', checkAuth, reservationController.createReservation);
+
 module.exports = router;
