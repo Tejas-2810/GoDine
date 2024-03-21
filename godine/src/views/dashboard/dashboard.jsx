@@ -80,7 +80,7 @@ class Dashboard extends Component {
                     <div className='col-md-6 '>
                         <div className='row my-auto justify-content-center'>
                         <div className='card col-md-3 mx-5 '>
-                            <div className='card-body text-center'>
+                            <div className='card-body text</select>-center'>
                                 <h5 className='card-title'>Average Order Value</h5>
                                 <p className='card-text'>$ 50</p>
                             </div>
@@ -124,7 +124,19 @@ class Dashboard extends Component {
                             </div>
                             <div className='form-group'>
                                 <label htmlFor='contactNumber'>Contact Number</label>
-                                <input type='text' className='form-control' id='contactNumber' />
+                                <div className='input-group'>
+                                <div className='input-group-append'>
+                                        <select className='custom-select'>
+                                            <option value='1'>+1</option>
+                                            <option value='2'>+91</option>
+                                            <option value='3'>+111</option>
+                                            <option value='4'>+71</option>
+                                            <option value='5'>+60</option>
+                                        </select>
+                                    </div>
+                                    <input type='text' className='form-control' id='contactNumber' />
+  
+                                </div>
                             </div>
                             <div className='form-group'>
                                 <label htmlFor='seatingCapacity'>Seating Capacity</label>
