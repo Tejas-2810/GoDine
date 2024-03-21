@@ -99,9 +99,9 @@ class Dashboard extends Component {
                         </div>
                         </div>
 
-                        <div className='my-2'> <CanvasJSChart options={bar}/></div>
-                        <div className='my-2'> <CanvasJSChart options={pie}/></div>
-                        <div className='my-2'> <CanvasJSChart options={line}/></div>
+                        <div className='my-2 m-5 p-5'> <CanvasJSChart options={bar}/></div>
+                        <div className='my-2 m-5 p-5'> <CanvasJSChart options={pie}/></div>
+                        <div className='my-2 m-5 p-5'> <CanvasJSChart options={line}/></div>
                     </div>
                     <div className='col-md-6'>
                         <form className='form'>
