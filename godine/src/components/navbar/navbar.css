@@ -30,14 +30,14 @@
     top:0;
 }
 
-.form-control {
+.form-control-h {
     background-color: rgba(0, 0, 0, 0.336) !important;
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(10px);
     border-radius: 3rem !important;
     min-width: 2rem !important;
 }
 
-.form-control-::placeholder {
+.form-control-h::placeholder {
     color: white !important;
 }
