@@ -9,6 +9,8 @@ const newsletterRoutes = require("./routes/newsletterRoutes"); // Import the new
 const restaurantRoutes = require("./routes/restaurantRoutes"); // Import the restaurantRoutes
 const paymentRoutes = require("./routes/paymentRoutes");
 const userReservationRoutes = require("./routes/userReservationRoutes");
+const discountPromotionsRoutes = require("./routes/discountsPromotionsRoutes");
+const contactFormRoutes = require("./routes/contactFormRoutes");
 var corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200,
@@ -30,6 +32,9 @@ async function startServer() {
     app.use("/api/restaurants", restaurantRoutes); // Create a base URL for the restaurant routes
     app.use("/api/user-reservation", userReservationRoutes);
     app.use("/api/payments", paymentRoutes);
+    app.use("/api/discountsPromotions", discountPromotionsRoutes);
+    app.use("/uploads", express.static("uploads"));
+    app.use("/contact", contactFormRoutes);
 
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
