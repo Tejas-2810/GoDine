@@ -15,7 +15,9 @@ import Faq from './views/faq/faq';
 import Footer from './components/footer/footer';
 import History from './views/history/history';
 import Search from './views/result/results';
+import Dashboard from './views/dashboard/dashboard';
 import RequireAuth from './utils/RequireAuth';
+
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -38,6 +40,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/wishlist" element={<WishList />} />
           </Route>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/history" element={<History />} />
           <Route path="/reserve" element={<Reserve />} />
           <Route path="/contact" element={<Contact />} />
