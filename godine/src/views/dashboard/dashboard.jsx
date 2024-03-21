@@ -78,11 +78,11 @@ class Dashboard extends Component {
             <div className='cb'>
                 <div className='row'>
                     <div className='col-md-6 '>
-                        <div className='row my-auto justify-content-center'>
-                        <div className='card col-md-3 mx-5 '>
-                            <div className='card-body text</select>-center'>
-                                <h5 className='card-title'>Average Order Value</h5>
-                                <p className='card-text'>$ 50</p>
+                        <div className='row my-auto justify-content-evenly my-auto mx-3'>
+                        <div className='card col-md-3  '>
+                            <div className='card-body text-center '>
+                                <h5 className=' card-title'>Average Order Value</h5>
+                                <p className=' card-text'>$ 50</p>
                             </div>
                         </div>
                         <div className='card col-md-3 mx-5'>
@@ -103,7 +103,7 @@ class Dashboard extends Component {
                         <div className='my-2 m-5 p-5'> <CanvasJSChart options={pie}/></div>
                         <div className='my-2 m-5 p-5'> <CanvasJSChart options={line}/></div>
                     </div>
-                    <div className='col-md-6'>
+                    <div className='col-md-6 p-5'>
                         <form className='form'>
                             <h1 className='text-center'>Add A Restaurant</h1>
                             <div className='form-group'>
@@ -149,6 +149,9 @@ class Dashboard extends Component {
                             <div className='form-group'>
                                 <label htmlFor='photos'>Upload Photos</label>
                                 <input type='file' className='form-control-file' id='photos' />
+                            </div>
+                            <div className='form-group text-center'>
+                                <button type='submit' className='btn btn-primary'>Add Restaurant</button>
                             </div>
                         </form>
                     </div>
