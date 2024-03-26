@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 // Create a new user schema
 const userSchema = new mongoose.Schema(
   {
-
     name: {
       type: String,
       required: true,
@@ -21,12 +20,15 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["admin", "restaurant owner", "user"],
+      enum: ["restaurant owner", "user"],
       default: "user",
     },
-    wishlist: { 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: 'Restaurants' },
+    wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Restaurants",
+      },
+    ],
 
     passwordResetToken: String,
     passwordResetExpires: Date,
