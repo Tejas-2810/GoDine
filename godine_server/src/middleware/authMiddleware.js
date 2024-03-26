@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 exports.checkAuth = async (req, res, next) => {
   let token;
 

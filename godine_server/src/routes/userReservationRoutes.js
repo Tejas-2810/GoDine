@@ -1,17 +1,24 @@
 const express = require("express");
 const reservationController = require("../controllers/userReservationController");
 const router = express.Router();
-
+const { checkAuth } = require("../middleware/authMiddleware");
 
 router.get("/history/:userId", reservationController.getReservationHistory);
 
-router.post("/review/:userId/:reservationId", reservationController.postReservationReview);
+router.post(
+  "/review/:userId/:reservationId",
+  reservationController.postReservationReview
+);
 
 router.delete(
   "/delete/:userId/:reservationId",
   reservationController.deleteReservation
 );
 
-router.post('/book/:restaurantID', checkAuth, reservationController.createReservation);
+router.post(
+  "/book/:restaurantID",
+  checkAuth,
+  reservationController.createReservation
+);
 
 module.exports = router;

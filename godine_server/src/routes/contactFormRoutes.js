@@ -1,9 +1,13 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const contactFormController = require('../controllers/contactFormController');
-const { checkAuth } = require('../middlewares/authMiddleware');
+const contactFormController = require("../controllers/contactFormController");
+const { checkAuth } = require("../middleware/authMiddleware");
 
 // Route for submitting contact inquiries
-router.post('/inquiries', checkAuth, contactFormController.createContactInquiry);
+router.post(
+  "/inquiries",
+  checkAuth,
+  contactFormController.createContactInquiry
+);
 
 module.exports = router;
