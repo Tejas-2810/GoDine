@@ -67,6 +67,10 @@ exports.updateNewsletterSubscription = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 69a3b61448991ee3b4131910cdaf457350405006
 exports.addRestaurantToWishlist = async (req, res) => {
   try {
     const userID = req.params.userID;
