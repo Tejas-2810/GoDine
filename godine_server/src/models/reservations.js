@@ -13,7 +13,7 @@ const reservationSchema = new mongoose.Schema(
       ref: "Users", // Reference to the Users collection
       required: true,
     },
-    reservationTime: {
+    reservationDateTime: {
       type: Date,
       required: true,
     },

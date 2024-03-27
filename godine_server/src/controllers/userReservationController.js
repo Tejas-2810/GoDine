@@ -55,18 +55,19 @@ exports.postReservationReview = async (req, res) => {
 };
 
 exports.createReservation = async (req, res) => {
-  if (!req.user) {
-    return res.status(401).json({ message: 'You must be logged in to make a reservation.' });
+
+  const { restaurantID, reservationDate, reservationTime, noOfGuests, userID } = req.body; 
+
+  if (!restaurantID || !reservationTime || !noOfGuests || !userID) {
+    return res.status(400).json({ message: 'Please provide all required fields.' });
   }
-  const { reservationTime, noOfGuests, } = req.body;
-  const restaurantID = req.params.restaurantID; 
 
   const newReservation = new Reservation({
-    restaurantID,                
-    userID: req.user._id,       
-    reservationTime,
+    restaurantID,
+    userID,
+    reservationDateTime: new Date(`${reservationDate}T${reservationTime}`),
     noOfGuests,
-    status: "Active"            
+    status: "Active"
   });
 
   try {
@@ -79,3 +80,4 @@ exports.createReservation = async (req, res) => {
     res.status(500).json({ message: 'Error creating reservation: ' + error.message });
   }
 };
+
