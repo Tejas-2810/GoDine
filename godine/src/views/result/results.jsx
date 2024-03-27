@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './results.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 const Results = () => {
+    
+    
     return (
         <div className='container cb'>
             <section>
