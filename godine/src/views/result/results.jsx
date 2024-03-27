@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './results.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
+import { useSearchParams } from 'react-router-dom';
 
 const Results = () => {
+    const [searchParams] = useSearchParams();
+    console.log("testing",searchParams.get('c')); // Output: Any Cuisine
+
+
+
+
+    
     return (
         <div className='container cb'>
             <section>
