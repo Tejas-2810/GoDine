@@ -5,31 +5,24 @@ import Slide from "../../components/slider/slide";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import useSearch from "../../hooks/useSearch";
+import { useNavigate, createSearchParams } from "react-router-dom";
 
 const Home = () => {
-    const { setsearchResult } = useSearch();
-    const [restaurants, setRestaurants] = useState([]);
-
+    // const [searchResult, setsearchResult] = useState([]);
+    // const [restaurants, setRestaurants] = useState([]);
+    const [cuisine, setCuisine] = useState("Any Cuisine");
+    const [location, setLocation] = useState("Select Location");
+    const [keyword, setKeyword] = useState("");
+    const navigate = useNavigate();
     const redirect = () => {
-        window.location.href = "/search";
-    }
-    const [location, setLocation] = useState("0");
+        navigate({
+            pathname: "/search",
+            search: createSearchParams({ c:cuisine, l:location, K:keyword }).toString()
+
+        });
+    };
     const handleLocation = (e) => {
         setLocation(e.target.value);
-    };
-
-    const fetchData = () => {
-        axios.get("http://localhost:3000/restaurants")
-            .then((response) => {
-                setRestaurants(response.data);
-                // setsearchResult(response.data);
-                console.log("state data: ", restaurants);
-                console.log(response.data);
-                // redirect();
-            })
-            .catch(error => {
-                console.error("Error fetching data from API:", error);
-            });
     };
 
     const handleSubmit = async (e) => {
@@ -37,10 +30,9 @@ const Home = () => {
         if (location === "0") {
             alert("Please select a valid location");
         } else {
-            fetchData();
+            redirect();
         }
     };
-
 
     return (
         <div className='hcontainer'>
