@@ -3,17 +3,13 @@ const mongoose = require("mongoose");
 // Create a new promotions schema
 const promotionsSchema = new mongoose.Schema(
   {
-    restaurant_ID: {
+    restaurantID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Restaurants", // Reference to the Restaurant collection
+      ref: "Restaurants", 
       required: true,
     },
     description: {
       type: String,
-      required: true,
-    },
-    discountPrice: {
-      type: Number,
       required: true,
     },
     validity: {

@@ -32,7 +32,7 @@ const Header = () => {
                 <div className=" m-5 p-5  ">
                     <form className='input-group bar container' onSubmit={handleSubmit}>
                         <Button type="submit" className='outline ' variant="warning" >Search</Button>
-                        <input type="text" className='form-control' placeholder="Search Restaurants or Food. . . . ." aria-label="Input group example" aria-describedby="basic-addon1" required />
+                        <input type="text" className='form-control form-controlh' placeholder="Search Restaurants or Food. . . . ." aria-label="Input group example" aria-describedby="basic-addon1" required />
                         <select className='form-select' aria-label="Select Cuisine" style={{ backgroundColor: 'rgba(0, 0, 0, 0.336)', backdropFilter: 'blur(20px)', color: 'white', borderRadius: '1rem' }} >
                             <option value="1">Any Cuisine</option>
                             <option value="2">Italian</option>

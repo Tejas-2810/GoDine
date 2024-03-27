@@ -13,15 +13,20 @@ import P404 from './views/p404/p404';
 import Contact from './views/contact/contact';
 import Faq from './views/faq/faq';
 import Footer from './components/footer/footer';
+import History from './views/history/history';
+import Search from './views/result/results';
+import Dashboard from './views/dashboard/dashboard';
 import RequireAuth from './utils/RequireAuth';
+
+
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
-    <div>
+    <div className="r">
       <Router >
         <Navbar />
-        <Routes >
+        <Routes>
 
           {/* public routes */}
           <Route path="/" element={<Home/>} />
@@ -35,14 +40,16 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/wishlist" element={<WishList />} />
           </Route>
-          
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/history" element={<History />} />
           <Route path="/reserve" element={<Reserve />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<Faq />} />
+          <Route path="/search" element={<Search />} />
           <Route path="*" element={<P404 />} />
         </Routes>
-        <Footer  />
       </Router>
+      <Footer className="b"/>
     </div>
   );
 }

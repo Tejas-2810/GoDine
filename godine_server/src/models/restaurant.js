@@ -1,30 +1,54 @@
 const mongoose = require("mongoose");
 
-// Create a new restaurant schema
-const restaurantSchema = new mongoose.Schema(
-  {
-    restaurantName: {
-      type: String,
-      required: true,
+const restaurantSchema = new mongoose.Schema({
+  restaurantName: {
+    type: String,
+    required: true,
+  },
+  restaurantAddress: {
+    type: String,
+    required: true,
+  },
+  pricing: {
+    type: String,
+    required: true,
+  },
+  cuisine: {
+    type: String,
+    required: true,
+  },
+  operatingHours: {
+    type: String,
+    required: true,
+  },
+  contactNumber: {
+    type: String,
+    required: true,
+  },
+  seatingCapacity: {
+    type: Number,
+    required: true,
+  },
+  features: {
+    acceptsReservations: {
+      type: Boolean,
+      default: false,
     },
-    restaurantAddress: {
-      type: String,
-      required: true,
+    outdoorSeating: {
+      type: Boolean,
+      default: false,
     },
-    operatingHours: {
-      type: String,
-      required: true,
-    },
-    averagePrice: {
-      type: Number,
-      required: true,
+    wifiAvailable: {
+      type: Boolean,
+      default: false,
     },
   },
-  { collection: "Restaurants" }
-);
+  menu: [{ type: String }], 
+  photos: [{ type: String }], 
+}, {
+  collection: "Restaurants"
+});
 
-// Create a new restaurant model
 const restaurant = mongoose.model("Restaurants", restaurantSchema);
 
-// Export the restaurant model
 module.exports = restaurant;
