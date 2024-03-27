@@ -1,8 +1,33 @@
-import React from "react";
+import React,{useState} from "react";
 import Carousel from "react-bootstrap/Carousel";
 import Card from "react-bootstrap/Card";
 import "./reserve.css";
+import axios from "axios"; 
 const Reserve = () => {
+
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        date: "",
+        time: "",
+        guests: 0
+    });
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post("https://www.localhost:/wp-content/api/user-reservation/book", formData);
+            alert("Reservation created successfully!");
+        } catch (error) {
+            console.error("Error creating reservation:", error);
+            alert("Error creating reservation. Please try again.");
+        }
+    };
     return (
         <div className="pcontainer container ">
             <div className="row" >
@@ -67,32 +92,32 @@ const Reserve = () => {
                     </Card>
                 </div>
                 <div className="col-md-4">
-                    <form className="m-5 fcontainer">
+                    <form onSubmit={handleSubmit} className="m-5 fcontainer">
                         <h4>Reservation Form</h4>
                         <div className="form-group">
                             <label htmlFor="nameInput">Name</label>
-                            <input type="text" className="form-control" id="nameInput" placeholder="Enter name" />
+                            <input type="text" className="form-control" id="nameInput" value={formData.name} onChange={handleChange} placeholder="Enter name" />
                         </div>
                         <div className="form-group">
                             <label htmlFor="emailInput">Email</label>
-                            <input type="email" className="form-control" id="emailInput" placeholder="Enter email" />
+                            <input type="email" className="form-control" id="emailInput" value={formData.email} onChange={handleChange} placeholder="Enter email" />
                         </div>
                         <div className="form-group">
                             <label htmlFor="phoneInput">Phone</label>
-                            <input type="text" className="form-control" id="phoneInput" placeholder="Enter phone" />
+                            <input type="text" className="form-control" id="phoneInput" value={formData.phone} onChange={handleChange} placeholder="Enter phone" />
                         </div>
                         <div className="form-group">
                             <label htmlFor="dateInput">Date</label>
-                            <input type="date" className="form-control" id="dateInput" placeholder="Enter date" />
+                            <input type="date" className="form-control" id="dateInput" value={formData.date} onChange={handleChange} placeholder="Enter date" />
                         </div>
                         <div className="form-group">
                             <label htmlFor="timeInput">Time</label>
-                            <input type="time" className="form-control" id="timeInput" placeholder="Enter time" />
+                            <input type="time" className="form-control" id="timeInput" value={formData.time} onChange={handleChange} placeholder="Enter time" />
                         </div>
                         <div className="form-group">
                             <label htmlFor="guestsInput">Number of guests (max 5)</label>
                             <div className="dropdown">
-                                <button className="form-control dropdown-toggle" type="button" id="guestsInput" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button className="form-control dropdown-toggle" type="button" id="guestsInput" value={formData.guests} onChange={handleChange} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     0
                                 </button>
                                 <div className="dropdown-menu" aria-labelledby="guestsInput">

@@ -16,8 +16,7 @@ router.delete(
 );
 
 router.post(
-  "/book/:restaurantID",
-  checkAuth,
+  "/book",
   reservationController.createReservation
 );
 

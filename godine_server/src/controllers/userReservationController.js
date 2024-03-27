@@ -58,7 +58,7 @@ exports.createReservation = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: 'You must be logged in to make a reservation.' });
   }
-  const { reservationTime, noOfGuests } = req.body;
+  const { reservationTime, noOfGuests, } = req.body;
   const restaurantID = req.params.restaurantID; 
 
   const newReservation = new Reservation({

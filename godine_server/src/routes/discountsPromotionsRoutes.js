@@ -8,7 +8,7 @@ const {
   isUser,
 } = require("../middleware/authMiddleware");
 
-router.get("/discounts", checkAuth, discountController.getAllDiscounts);
+router.get("/discounts", discountController.getAllDiscounts);
 router.get("/discounts/:discountId", discountController.getDiscountById);
 
 //router.get("/promotions", promotionsController.getAllPromotions);

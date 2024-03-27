@@ -11,6 +11,7 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const userReservationRoutes = require("./routes/userReservationRoutes");
 const discountPromotionsRoutes = require("./routes/discountsPromotionsRoutes");
 const contactFormRoutes = require("./routes/contactFormRoutes");
+const { ensureUploadsDirectoryExists } = require("./init"); 
 var corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200,
@@ -21,6 +22,8 @@ const PORT = process.env.PORT || 3000; // Set the port to the environment variab
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+ensureUploadsDirectoryExists();
 
 async function startServer() {
   try {
@@ -33,7 +36,7 @@ async function startServer() {
     app.use("/api/user-reservation", userReservationRoutes);
     app.use("/api/payments", paymentRoutes);
     app.use("/api/discountsPromotions", discountPromotionsRoutes);
-    app.use("/uploads", express.static("uploads"));
+    app.use("/public/upload", express.static('public/upload'));
     app.use("/contact", contactFormRoutes);
 
     app.listen(PORT, () => {

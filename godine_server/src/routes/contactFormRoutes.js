@@ -6,7 +6,6 @@ const { checkAuth } = require("../middleware/authMiddleware");
 // Route for submitting contact inquiries
 router.post(
   "/inquiries",
-  checkAuth,
   contactFormController.createContactInquiry
 );
 

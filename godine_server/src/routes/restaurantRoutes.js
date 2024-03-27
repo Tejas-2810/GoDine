@@ -4,44 +4,36 @@ const router = express.Router();
 const restaurantController = require("../controllers/restaurantController");
 const { checkAuth } = require("../middleware/authMiddleware");
 
-// Restaurant Dashboard
-router.get("/myrestaurants", checkAuth, restaurantController.getMyRestaurants);
-
+const FILE_TYPE_MAP = {
+  "image/png": "png",
+  "image/jpeg": "jpeg",
+  "image/jpg": "jpg",
+};
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, "public/upload");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+    const fileName = file.originalname.split(".").join("-");
+    const extension = FILE_TYPE_MAP[file.mimetype];
+    cb(null, `${fileName}-${Date.now()}.${extension}`);
   },
 });
 
 const upload = multer({ storage: storage });
 
+// Restaurant Dashboard
 router.post(
   "/createRestaurants",
-  checkAuth,
   upload.fields([
-    { name: "menu", maxCount: 1 },
+    { name: "menu", maxCount: 3 },
     { name: "photos", maxCount: 5 },
   ]),
   restaurantController.createRestaurant
 );
 
-router.put(
-  "/updateRestaurant/:restaurantID",
-  checkAuth,
-  upload.fields([
-    { name: "menu", maxCount: 1 },
-    { name: "photos", maxCount: 5 },
-  ]),
-  restaurantController.updateRestaurantById
-);
-
-router.put("/:restaurantID", restaurantController.updateRestaurantById);
-
 // Restaurant Page
-router.get("/:restaurantID", restaurantController.getRestaurantById);
+router.get("/:id", restaurantController.getRestaurantById);
 
 //Home page
 router.get("/", restaurantController.getAllRestaurantsForHomePage);
