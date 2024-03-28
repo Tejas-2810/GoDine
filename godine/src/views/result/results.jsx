@@ -6,26 +6,12 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import { useSearchParams } from "react-router-dom";
 
 const Results = () => {
-  function filterRestaurants(data, rest_name, rest_loc, rest_cuis) {
-    if (
-      data.restaurantName == rest_name &&
-      data.restaurantAddress == rest_loc &&
-      data.restaurantCuisine == rest_cuis
-    ) {
-      return true;
-    }
-  }
-
-  const [data, setData] = useState([]);
-
   const [searchParams] = useSearchParams();
   const cuisine = searchParams.get("c");
   const location = searchParams.get("l");
   const keyword = searchParams.get("K");
 
   console.log("Cuisine:", cuisine, "Location:", location, "Keyword:", keyword);
-
-  let user_id = "65fb4b3b2519c4ffea8d5fa0";
 
   const [fil_data, setFil_data] = useState([]);
   useEffect(() => {
@@ -48,7 +34,6 @@ const Results = () => {
         const data = await response.json();
         console.log("DATA RA REY", data);
 
-        // Create a new array to store the filtered data
         const filteredData = data.filter(
           (restaurant) =>
             restaurant.restaurantName
@@ -60,7 +45,6 @@ const Results = () => {
             restaurant.cuisine.toLowerCase().includes(cuisine.toLowerCase())
         );
 
-        // Update the state with the new filtered data
         setFil_data(filteredData);
       } catch (error) {
         console.error("Failed to fetch restaurant details:", error);
