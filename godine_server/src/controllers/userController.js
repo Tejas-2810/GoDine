@@ -1,5 +1,4 @@
 const Users = require("../models/users");
-const Newsletter = require("../models/newsletter");
 
 // Controller to get user profile
 exports.getUserProfile = async (req, res) => {
@@ -40,33 +39,6 @@ exports.updateUserProfile = async (req, res) => {
   }
 };
 
-// Controller to update user's newsletter subscription status
-exports.updateNewsletterSubscription = async (req, res) => {
-  try {
-    const userID = req.params.userID;
-    const user = await Users.findOne({ _id: userID });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const subscriptionStatus = req.body.newsLetterStatus;
-    let newsletter = await Newsletter.findOne({ userID: userID });
-
-    if (!newsletter) {
-      newsletter = new Newsletter({
-        userID: userID,
-        newsLetterStatus: subscriptionStatus,
-      });
-    } else {
-      newsletter.newsLetterStatus = subscriptionStatus;
-    }
-
-    await newsletter.save();
-    res.json({ message: "Newsletter subscription status updated" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
 exports.addRestaurantToWishlist = async (req, res) => {
   try {
     const userID = req.params.userID;

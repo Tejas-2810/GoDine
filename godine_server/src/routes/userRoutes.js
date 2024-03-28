@@ -8,9 +8,6 @@ router.get("/:userID", userController.getUserProfile);
 // PUT update user profile
 router.put("/edit/:userID", userController.updateUserProfile);
 
-// PUT update user's newsletter subscription status
-router.put("/subscribe/:userID", userController.updateNewsletterSubscription);
-
 // POST add a restaurant to wishlist
 router.post("/wishlist/add/:userID", userController.addRestaurantToWishlist);
 
