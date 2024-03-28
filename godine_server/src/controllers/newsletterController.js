@@ -58,7 +58,6 @@ const subscribeToNewsletter = async (req, res) => {
   }
 };
 
-// Initialize the newsletter sending schedule
 const initNewsletterSchedule = () => {
   cron.schedule(
     "17 11 * * *",
