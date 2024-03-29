@@ -6,10 +6,10 @@ const RequireAuth = ({ allowedRoles }) => {
     const { getAuthData, isSessionValid } = useAuth();
     const location = useLocation();
 
-    return allowedRoles.includes(getAuthData().role)? 
+    return allowedRoles.includes(getAuthData()?.role)? 
             isSessionValid? <Outlet />
                     : <Navigate to="/signin" state={{from: location}}  replace />
-            : !getAuthData().role ? <Navigate to="/signin" state={{from: location}}  replace /> 
+            : !getAuthData()?.role ? <Navigate to="/signin" state={{from: location}}  replace /> 
                     : <Navigate to="/unauthorized" replace/>
 }
 
