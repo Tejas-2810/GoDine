@@ -16,10 +16,16 @@ import Footer from './components/footer/footer';
 import History from './views/history/history';
 import Search from './views/result/results';
 import Dashboard from './views/dashboard/dashboard';
+import Unauthorized from './views/authentication/unauthorized';
 import RequireAuth from './utils/RequireAuth';
-
-
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+// current roles
+const ROLES = {
+  USER: "user",
+  RESTAURANT_OWNER: "restaurant owner",
+  ADMIN: "admin"
+}
 
 function App() {
   return (
@@ -36,16 +42,22 @@ function App() {
           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
           {/* protect routes */}
-          <Route element={<RequireAuth />}>
+          {/* user routes */}
+          <Route element={<RequireAuth allowedRoles={[ROLES.USER]} />}>
             <Route path="/profile" element={<Profile />} />
+            <Route path="/history" element={<History />} />
             <Route path="/wishlist" element={<WishList />} />
           </Route>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/history" element={<History />} />
+          {/* restaurant owner route */}
+          <Route element={<RequireAuth allowedRoles={[ROLES.RESTAURANT_OWNER]} />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+
           <Route path="/reserve" element={<Reserve />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="*" element={<P404 />} />
         </Routes>
       </Router>
