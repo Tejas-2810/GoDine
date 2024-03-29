@@ -7,17 +7,28 @@ import { useSearchParams } from "react-router-dom";
 
 const Results = () => {
   const [searchParams] = useSearchParams();
-  const cuisine = searchParams.get("c");
-  const location = searchParams.get("l");
-  const keyword = searchParams.get("K");
+  let cuisine = searchParams.get("c" || "");
+  if (cuisine == "Any Cuisine") {
+    cuisine = "";
+  }
+  let location = searchParams.get("l" || "");
+  if (location == "Select Location") {
+    location = "";
+  }
+  let keyword = searchParams.get("K" || "");
 
   console.log("Cuisine:", cuisine, "Location:", location, "Keyword:", keyword);
+  const [data, setData] = useState([]);
+  const [selectedDiscount, setSelectedDiscount] = useState(-1);
+  const [selectedLocation, setSelectedLocation] = useState(location);
+  const [selectedCuisine, setSelectedCuisine] = useState(cuisine);
+  const [selectedRating, setSelectedRating] = useState("");
 
   const [fil_data, setFil_data] = useState([]);
+
   useEffect(() => {
     const fetchRestDetails = async () => {
       const fetchRestUrl = `http://127.0.0.1:3000/api/restaurants/`;
-      console.log("Fetching details for:", cuisine, location, keyword);
 
       try {
         const response = await fetch(fetchRestUrl, {
@@ -30,9 +41,10 @@ const Results = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-
         const data = await response.json();
-        console.log("DATA RA REY", data);
+
+        setData(data);
+        console.log(cuisine, location, keyword);
 
         const filteredData = data.filter(
           (restaurant) =>
@@ -54,6 +66,48 @@ const Results = () => {
     fetchRestDetails();
   }, [cuisine, location, keyword]);
 
+  //   const handleDiscountSelection = (value) => {
+  //     setSelectedDiscounts((prevDiscounts) => {
+  //       // If the value is already in the array, remove it, otherwise add it
+  //       return prevDiscounts.includes(value)
+  //         ? prevDiscounts.filter((discount) => discount !== value)
+  //         : [...prevDiscounts, value];
+  //     });
+  //   };
+
+  //   const toggleDiscount = (discount) => {
+  //     setSelectedDiscount((currentDiscounts) =>
+  //       currentDiscounts.includes(discount)
+  //         ? currentDiscounts.filter((d) => d !== discount)
+  //         : [...currentDiscounts, discount]
+  //     );
+  //   };
+
+  const handleLocationSelection = (value) => {
+    setSelectedLocation(value);
+  };
+
+  const handleCuisineSelection = (value) => {
+    setSelectedCuisine(value);
+  };
+
+  const handleRatingSelection = (value) => {
+    setSelectedRating(value);
+  };
+  const applyFilters = () => {
+    const filteredData = data.filter((restaurant) => {
+      return (
+        restaurant.restaurantAddress
+          .toLowerCase()
+          .includes(selectedLocation.toLowerCase()) &&
+        restaurant.cuisine.toLowerCase().includes(selectedCuisine.toLowerCase())
+      );
+    });
+
+    setFil_data(filteredData); // Update the state with filtered data
+    console.log("Filters applied");
+  };
+
   return (
     <div className="container cb">
       <section>
@@ -71,18 +125,24 @@ const Results = () => {
                 Discounts
               </button>
               <div className="dropdown-menu" aria-labelledby="discountDropdown">
-                <div>
-                  <input type="checkbox" id="discount-10" value="10" />
-                  <label htmlFor="discount-10">10%</label>
-                </div>
-                <div>
-                  <input type="checkbox" id="discount-20" value="20" />
-                  <label htmlFor="discount-20">20%</label>
-                </div>
-                <div>
-                  <input type="checkbox" id="discount-30" value="30" />
-                  <label htmlFor="discount-30">30%</label>
-                </div>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setSelectedDiscount("10")}
+                >
+                  10%
+                </button>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setSelectedDiscount("20")}
+                >
+                  20%
+                </button>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setSelectedDiscount("30")}
+                >
+                  30%
+                </button>
               </div>
             </div>
           </div>
@@ -99,9 +159,24 @@ const Results = () => {
                 Location
               </button>
               <div className="dropdown-menu" aria-labelledby="locationDropdown">
-                <a className="dropdown-item">New York</a>
-                <a className="dropdown-item">London</a>
-                <a className="dropdown-item">Halifax</a>
+                <button
+                  className="dropdown-item"
+                  onClick={() => handleLocationSelection("New York")}
+                >
+                  New York
+                </button>
+                <button
+                  className="dropdown-item"
+                  onClick={() => handleLocationSelection("London")}
+                >
+                  London
+                </button>
+                <button
+                  className="dropdown-item"
+                  onClick={() => handleLocationSelection("Halifax")}
+                >
+                  Halifax
+                </button>
               </div>
             </div>
           </div>
@@ -118,9 +193,24 @@ const Results = () => {
                 Cuisine
               </button>
               <div className="dropdown-menu" aria-labelledby="cuisineDropdown">
-                <a className="dropdown-item">Italian</a>
-                <a className="dropdown-item">Mexican</a>
-                <a className="dropdown-item">Chinese</a>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setSelectedCuisine("Italian")}
+                >
+                  Italian
+                </button>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setSelectedCuisine("Mexican")}
+                >
+                  Mexican
+                </button>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setSelectedCuisine("Chinese")}
+                >
+                  Chinese
+                </button>
               </div>
             </div>
           </div>
@@ -137,11 +227,41 @@ const Results = () => {
                 Ratings
               </button>
               <div className="dropdown-menu" aria-labelledby="ratingsDropdown">
-                <a className="dropdown-item">1</a>
-                <a className="dropdown-item">2</a>
-                <a className="dropdown-item">3</a>
-                <a className="dropdown-item">4</a>
-                <a className="dropdown-item">5</a>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setSelectedRating("1")}
+                >
+                  1
+                </button>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setSelectedRating("2")}
+                >
+                  2
+                </button>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setSelectedRating("3")}
+                >
+                  3
+                </button>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setSelectedRating("4")}
+                >
+                  4
+                </button>
+                <button
+                  className="dropdown-item"
+                  onClick={() => setSelectedRating("5")}
+                >
+                  5
+                </button>
+              </div>
+              <div className="apply-button-container">
+                <button onClick={applyFilters} className="btn btn-primary">
+                  Apply
+                </button>
               </div>
             </div>
           </div>

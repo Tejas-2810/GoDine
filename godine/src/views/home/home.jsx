@@ -262,7 +262,7 @@ const Home = () => {
                 placeholder="Search Restaurants or Food. . . ."
                 aria-label="Input group example"
                 aria-describedby="basic-addon1"
-                required
+                // required
                 onChange={handleKeywordChange}
               />
               <select
@@ -291,7 +291,7 @@ const Home = () => {
                   color: "white",
                   borderRadius: "1rem",
                 }}
-                required
+                // required
                 onChange={handleLocationChange}
               >
                 <option value="0">Select Location</option>
