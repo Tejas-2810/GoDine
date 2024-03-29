@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
 import axios from 'axios'
 
@@ -6,11 +6,16 @@ function ResetPassword() {
     const [newPassword, setNewPassword] = useState('');
     const [validNewPassword, setValidNewPassword] = useState(true);
     const [passwordMatched, setPasswordMatched] = useState(true);
+    const passwordRef = useRef();
 
     const reqCancelRef = useRef(null);
     const navigate = useNavigate();
 
     const {token} = useParams();
+
+    useEffect(() => {
+        passwordRef.current.focus();
+    });
 
     function validatePasswordAndSet(e) {
         const pwd = e.target.value;
@@ -42,14 +47,15 @@ function ResetPassword() {
         const pwd = newPassword;
         console.log(`token: ${token}`);
 
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
+        const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+        const reset_password_endpoint = process.env.REACT_APP_RESET_PASSWORD_ENDPOINT || "api/auth/resetPassword";
+
         reqCancelRef.current?.abort();
         reqCancelRef.current = new AbortController();
 
         if(pwd !== '' && validNewPassword && passwordMatched){
-            console.log(`reference token: ${token}`);
-            
-            // todo: update url
-            const url = `http://localhost:8080/api/auth/resetPassword/${token}`;
+            const url = `${server_url}:${server_port}/${reset_password_endpoint}/${token}`;
             const data = {password: pwd};
             const response = await axios.patch(url, data, {signal: reqCancelRef.current?.signal})
                     .then((response) => response.response)
@@ -79,6 +85,7 @@ function ResetPassword() {
             } else{
                 alert('Please try again after sometime');
             }
+            window.location.reload();
         }
         else{
             alert('Please enter valid password');
@@ -96,7 +103,7 @@ function ResetPassword() {
                             <form>
                                 <div className='form-group m-1'>
                                     <label>New password</label>
-                                    <input type='password' className='form-control' placeholder='Enter password' onInput={validatePasswordAndSet}/>
+                                    <input type='password' ref={passwordRef} className='form-control' placeholder='Enter password' onInput={validatePasswordAndSet}/>
                                     {validNewPassword? null: <small style={{color: 'red'}}>Password must be at least 8 characters long</small>}
                                 </div>
                                 <div className='form-group m-1'>
