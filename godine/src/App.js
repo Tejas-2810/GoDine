@@ -44,13 +44,16 @@ function App() {
           {/* protect routes */}
           {/* user routes */}
           <Route element={<RequireAuth allowedRoles={[ROLES.USER]} />}>
-            <Route path="/profile" element={<Profile />} />
             <Route path="/history" element={<History />} />
             <Route path="/wishlist" element={<WishList />} />
           </Route>
           {/* restaurant owner route */}
           <Route element={<RequireAuth allowedRoles={[ROLES.RESTAURANT_OWNER]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+          {/* common routes */}
+          <Route element={<RequireAuth allowedRoles={[ROLES.USER, ROLES.RESTAURANT_OWNER, ROLES.ADMIN]}/>}>
+            <Route path="/profile" element={<Profile />} />
           </Route>
 
           <Route path="/reserve" element={<Reserve />} />
