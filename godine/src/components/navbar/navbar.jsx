@@ -45,6 +45,7 @@ const Navb = () => {
     // clear session cookie and redirect to home
     const handleLogout = () => {
         clearAuthData();
+        alert("Successfully logged out!");
         navigate('/', {replace: true});
     }
 
