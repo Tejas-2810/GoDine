@@ -13,15 +13,17 @@ function Signin() {
     const [validPassword, setValidPassword] = useState(true);
     const requestCancelRef = useRef(null);
 
-    const { setAuthData, clearAuthData } = useAuth();
-
-    useEffect( () => {
-        clearAuthData();
-        emailRef.current.focus();
-    }, [clearAuthData]);
-
+    const { getAuthData, setAuthData, isSessionValid } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+
+    useEffect( () => {
+        if(isSessionValid()){
+            navigate(getAuthData().role === "user"? "/": "/dashboard", {replace: true});
+        }
+
+        emailRef.current.focus();
+    }, [isSessionValid]);
 
     function validateEmailAndSet(e) {
         const email = e.target.value;

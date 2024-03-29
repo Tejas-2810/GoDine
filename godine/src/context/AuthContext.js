@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { jwtDecode } from 'jwt-decode'
 
 // it will hold all auth related data
@@ -8,6 +8,10 @@ const USER_STATE = "godine_user_state";
 
 export const AuthProvider = ({ children }) => {
     const [userState, setUserState] = useState(null);
+
+    useEffect(() => {
+        setUserState(JSON.parse(sessionStorage.getItem(USER_STATE)));
+    }, []);
 
     // sets user state and cookie
     const setAuthData = (token, role) => {
@@ -35,8 +39,7 @@ export const AuthProvider = ({ children }) => {
     // fetch current auth data of the user
     const getAuthData = () => {
         if (!userState) {
-            const state = JSON.parse(sessionStorage.getItem(USER_STATE));
-            setUserState(state);
+            return JSON.parse(sessionStorage.getItem(USER_STATE));
         }
         return userState;
     }
@@ -48,10 +51,10 @@ export const AuthProvider = ({ children }) => {
 
     // checking session validity
     const isSessionValid = () => {
-        const state = JSON.parse(localStorage.getItem('authData'));
-        const userId = state ? state.userId : userState.userId;
-        const expiry = state ? state.expiresIn : userState.expireIn;
-        const role = state ? state.role : userState.role;
+        const state = JSON.parse(sessionStorage.getItem(USER_STATE));
+        const userId = state ? state.userId : userState?.userId;
+        const expiry = state ? state.expiresIn : userState?.expireIn;
+        const role = state ? state.role : userState?.role;
 
         return userId !== null && userId !== ''
             && expiry !== null && expiry !== ''

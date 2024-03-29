@@ -22,11 +22,15 @@ function Signup() {
 
     const [toggleValue, setToggleValue] = useState('user');
 
-    const { setAuthData } = useAuth();
+    const { getAuthData, setAuthData, isSessionValid } = useAuth();
     const reqCancelRef = useRef(null);
     const navigate = useNavigate();
 
     useEffect(() => {
+        if(isSessionValid()){
+            navigate(getAuthData()?.role === "user"? "/": "/dashboard", {replace: true});
+        }
+
         firstNameRef.current.focus();
     }, []);
 

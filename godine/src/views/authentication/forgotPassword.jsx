@@ -2,16 +2,22 @@ import React, { useState, useRef, useEffect } from 'react'
 import {useNavigate} from 'react-router-dom'
 import './common.css'
 import axios from 'axios';
+import useAuth from '../../hooks/useAuth';
 
 function ForgotPassword() {
     const [email, setEmail] = useState('');
     const [validEmail, setValidEmail] = useState(true);
     const emailRef = useRef();
 
+    const {getAuthData, isSessionValid} = useAuth();
     const reqCancelRef = useRef(null);
     const navigate = useNavigate();
 
     useEffect(() => {
+        if(isSessionValid()){
+            navigate(getAuthData()?.role === "user"? "/": "/dashboard", {replace: true});
+        }
+
         emailRef.current.focus();
     }, []);
 

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
 import axios from 'axios'
+import useAuth from '../../hooks/useAuth';
 
 function ResetPassword() {
     const [newPassword, setNewPassword] = useState('');
@@ -8,12 +9,17 @@ function ResetPassword() {
     const [passwordMatched, setPasswordMatched] = useState(true);
     const passwordRef = useRef();
 
+    const {getAuthData, isSessionValid} = useAuth();
     const reqCancelRef = useRef(null);
     const navigate = useNavigate();
 
     const {token} = useParams();
 
     useEffect(() => {
+        if(isSessionValid()){
+            navigate(getAuthData()?.role === "user"? "/": "/dashboard", {replace: true});
+        }
+
         passwordRef.current.focus();
     });
 
