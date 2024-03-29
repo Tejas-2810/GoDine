@@ -1,56 +1,74 @@
 import React, {useState} from 'react'
+import { jwtDecode } from 'jwt-decode'
 
 // it will hold all auth related data
 const AuthContext = React.createContext({});
 
+const USER_STATE = "godine_user_state";
+
 export const AuthProvider = ({ children }) => {
-    const [token, setToken] = useState(null);
-    const [expiryTime, setExpiryTime] = useState(null);
-    const [role, setRole] = useState(null);
+    const [userState, setUserState] = useState(null);
 
-    const setAuthData = (token, expiry, role) => {
-        setToken(token);
-        setExpiryTime(expiry);
-        setRole(role);
+    // sets user state and cookie
+    const setAuthData = (token, role) => {
+        const userInfo = jwtDecode(token);
+        // default expiry of 20 mins in milliseconds
+        const defaultExpiryTime = 20 * 60 * 1000;
+        const defaultExpiresIn = Date.now() + defaultExpiryTime;
 
-        // setting token and expiry time in local storage.
-        localStorage.setItem('authData', JSON.stringify({t: token, et: expiry, r: role}));
+        const state = {
+            userId: userInfo.id,
+            expiresIn: userInfo.expiresIn? userInfo.expiresIn: defaultExpiresIn,
+            role: role
+        };
+
+        setUserState(state);
+        sessionStorage.setItem(USER_STATE, JSON.stringify(state));
     }
 
-    // ! fix 
-    // ! what is the meaning of this, AuthContext.js:21 
-    // ! Warning: Cannot update a component (`AuthProvider`) while rendering a different component (`RequireAuth`). 
-    // !To locate the bad setState() call inside `RequireAuth`
+    // clear user auth data when users logs out or validity expires
     const clearAuthData = () => {
-        setToken(null);
-        setExpiryTime(null);
-        setRole(null);
-
-        // clearing localStorage
-        localStorage.removeItem('authData');
+        setUserState(null);
+        sessionStorage.removeItem(USER_STATE);
     }
 
-    const isValid = () => {
-        const authData = JSON.parse(localStorage.getItem('authData'));
-        const t = authData? authData.t: token;
-        const et = authData? authData.et: expiryTime;
-        const r = authData? authData.r: role;
+    // fetch current auth data of the user
+    const getAuthData = () => {
+        if(!state){
+            const userState = JSON.parse(sessionStorage.getItem(USER_STATE));
+            setUserState(userState);
+        }
+        return state;
+    }
 
-        return t !== null && t !== '' && et !== null && et !== '' && Date.now() < et
-            && r !== null && r!== '';
+    // user id for fetching data of the user
+    const getUserId = () => {
+        return state.userId || getAuthData().userId;
+    }
+
+    // checking session validity
+    const isSessionValid = () => {
+        const state = JSON.parse(localStorage.getItem('authData'));
+        const userId = state? state.userId: userState.userId;
+        const expiry = state? state.expiresIn: userState.expireIn;
+        const role = state? state.role: userState.role;
+
+        return userId !== null && userId !== '' 
+                && expiry !== null && expiry !== '' 
+                && Date.now() < et
+                && role !== null && role !== '';
     }
     
-    const authValues = {
-        token,
-        expiryTime,
-        role,
+    const authData = {
+        getAuthData,
         setAuthData,
         clearAuthData,
-        isValid
+        isSessionValid,
+        getUserId
     }
 
     return(
-        <AuthContext.Provider value={authValues}>
+        <AuthContext.Provider value={authData}>
             {children}
         </AuthContext.Provider>
     );
