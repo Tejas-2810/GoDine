@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
 
 // it will hold all auth related data
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
 
         const state = {
             userId: userInfo.id,
-            expiresIn: userInfo.expiresIn? userInfo.expiresIn: defaultExpiresIn,
+            expiresIn: userInfo.expiresIn ? userInfo.expiresIn : defaultExpiresIn,
             role: role
         };
 
@@ -34,31 +34,31 @@ export const AuthProvider = ({ children }) => {
 
     // fetch current auth data of the user
     const getAuthData = () => {
-        if(!state){
-            const userState = JSON.parse(sessionStorage.getItem(USER_STATE));
-            setUserState(userState);
+        if (!userState) {
+            const state = JSON.parse(sessionStorage.getItem(USER_STATE));
+            setUserState(state);
         }
-        return state;
+        return userState;
     }
 
     // user id for fetching data of the user
     const getUserId = () => {
-        return state.userId || getAuthData().userId;
+        return userState.userId || getAuthData().userId;
     }
 
     // checking session validity
     const isSessionValid = () => {
         const state = JSON.parse(localStorage.getItem('authData'));
-        const userId = state? state.userId: userState.userId;
-        const expiry = state? state.expiresIn: userState.expireIn;
-        const role = state? state.role: userState.role;
+        const userId = state ? state.userId : userState.userId;
+        const expiry = state ? state.expiresIn : userState.expireIn;
+        const role = state ? state.role : userState.role;
 
-        return userId !== null && userId !== '' 
-                && expiry !== null && expiry !== '' 
-                && Date.now() < et
-                && role !== null && role !== '';
+        return userId !== null && userId !== ''
+            && expiry !== null && expiry !== ''
+            && Date.now() < expiry
+            && role !== null && role !== '';
     }
-    
+
     const authData = {
         getAuthData,
         setAuthData,
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
         getUserId
     }
 
-    return(
+    return (
         <AuthContext.Provider value={authData}>
             {children}
         </AuthContext.Provider>
