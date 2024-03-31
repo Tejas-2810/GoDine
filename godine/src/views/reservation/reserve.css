@@ -10,7 +10,22 @@
 
 }
 
+.menu{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    /* padding: 20px; */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    /* max-width: 2rem; */
+    width: 30%;
+    cursor: pointer;
+}
 
+.review{
+    margin-left: 10%;
+    margin-right: 5%;
+
+}
 
 @media (max-width: 767px) {
     /* Add padding for mobile screens */

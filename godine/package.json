@@ -16,6 +16,7 @@
     "dotenv": "^16.4.4",
     "faker": "^6.6.6",
     "jquery": "^3.7.1",
+    "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",
