@@ -1,14 +1,25 @@
-import React, {useState, useRef} from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {useNavigate} from 'react-router-dom'
 import './common.css'
 import axios from 'axios';
+import useAuth from '../../hooks/useAuth';
 
 function ForgotPassword() {
     const [email, setEmail] = useState('');
     const [validEmail, setValidEmail] = useState(true);
-    const reqCancelRef = useRef(null);
+    const emailRef = useRef();
 
+    const {getAuthData, isSessionValid} = useAuth();
+    const reqCancelRef = useRef(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(isSessionValid()){
+            navigate(getAuthData()?.role === "user"? "/": "/dashboard", {replace: true});
+        }
+
+        emailRef.current.focus();
+    }, []);
 
     function validateEmailAndSet(e){
         const email = e.target.value;
@@ -28,14 +39,15 @@ function ForgotPassword() {
         e.preventDefault();
 
         const em = email;
-        const server_url = process.env.SERVER_URL || "http://localhost";
-        const server_port = process.env.SERVER_PORT || "8080";
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
+        const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+        const forgot_password_endpoint = process.env.REACT_APP_FORGOT_PASSWORD_ENDPOINT || "api/auth/forgotPassword"
 
         reqCancelRef.current?.abort();
         reqCancelRef.current = new AbortController();
 
         if(em !== '' && validEmail){
-            const url = `${server_url}:${server_port}/api/auth/forgotPassword`;
+            const url = `${server_url}:${server_port}/${forgot_password_endpoint}`;
             const data = {email: em};
             const response = await axios.post(url, data, {signal: reqCancelRef.current?.signal})
                     .then((response) => response.response)
@@ -78,7 +90,7 @@ function ForgotPassword() {
                             <form>
                                 <div className='form-group m-1'>
                                     <label>Enter email</label>
-                                    <input type='text' className='form-control' onInput={validateEmailAndSet}/>
+                                    <input type='text' ref={emailRef} className='form-control' onInput={validateEmailAndSet}/>
                                     {validEmail ? null : <small style={{color: 'red'}}>Please enter valid email</small>}
                                 </div>
                                 <button type='submit' className='btn btn-primary m-1' onClick={handleSubmit} >Submit</button>

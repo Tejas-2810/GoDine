@@ -17,10 +17,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    phoneNumber:{
+      type: String,
+      required: true
+    },
+    dateOfBirth: {
+      type: String,
+      required: false
+    },
+    address:{
+      type: String,
+      default: ""
+    },
     role: {
       type: String,
       required: true,
-      enum: ["restaurant owner", "user"],
+      enum: ["restaurant owner", "user", "admin"],
       default: "user",
     },
     wishlist: [

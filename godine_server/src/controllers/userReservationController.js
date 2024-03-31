@@ -4,7 +4,6 @@ var mongoose = require("mongoose");
 
 exports.getReservationHistory = async (req, res) => {
   const userId = req.params.userId;
-  print(userId);
 
   try {
     const reservations = await Reservation.find({ userID: userId });
@@ -55,27 +54,38 @@ exports.postReservationReview = async (req, res) => {
 };
 
 exports.createReservation = async (req, res) => {
-  if (!req.user) {
-    return res.status(401).json({ message: 'You must be logged in to make a reservation.' });
+  const { restaurantID, reservationDate, reservationTime, noOfGuests, userID } =
+    req.body;
+
+  if (
+    !restaurantID ||
+    !reservationTime ||
+    !reservationDate ||
+    !noOfGuests ||
+    !userID
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Please provide all required fields." });
   }
-  const { reservationTime, noOfGuests, } = req.body;
-  const restaurantID = req.params.restaurantID; 
 
   const newReservation = new Reservation({
-    restaurantID,                
-    userID: req.user._id,       
-    reservationTime,
+    restaurantID,
+    userID,
+    reservationDateTime: new Date(`${reservationDate}T${reservationTime}`),
     noOfGuests,
-    status: "Active"            
+    status: "Active",
   });
 
   try {
     const savedReservation = await newReservation.save();
     res.status(201).json({
-      message: 'Reservation created successfully',
-      data: savedReservation
+      message: "Reservation created successfully",
+      data: savedReservation,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error creating reservation: ' + error.message });
+    res
+      .status(500)
+      .json({ message: "Error creating reservation: " + error.message });
   }
 };

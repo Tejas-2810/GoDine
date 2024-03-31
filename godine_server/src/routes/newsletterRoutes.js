@@ -1,8 +1,15 @@
-const express = require('express');
+// newsletterRoutes.js
+const express = require("express");
 const router = express.Router();
-const newsletterController = require('../controllers/newsletterController');
+const {
+  subscribeToNewsletter,
+  initNewsletterSchedule,
+} = require("../controllers/newsletterController");
 
-// POST sending newsletters 
-router.post('/send', newsletterController.sendNewsletters);
+// Route to handle newsletter subscription from the newsletter page
+router.post("/subscribe", subscribeToNewsletter);
+
+// Initialize the newsletter sending schedule when the server starts
+initNewsletterSchedule();
 
 module.exports = router;

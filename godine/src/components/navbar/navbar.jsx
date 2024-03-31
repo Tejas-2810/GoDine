@@ -4,9 +4,12 @@ import logo from '../../images/logo.png';
 import './navbar.css';
 import { useNavigate } from 'react-router-dom';
 import { Navbar, Nav } from 'react-bootstrap';
+import useAuth from '../../hooks/useAuth';
 
 const Navb = () => {
     const navigate = useNavigate();
+    const {getAuthData, clearAuthData, isSessionValid} = useAuth();
+
     const redirect = (pid) => {
        switch (pid) {
            case '1':
@@ -30,11 +33,22 @@ const Navb = () => {
             case '7':
                 navigate('/dashboard');
                 break;
+            case '8':
+                navigate("/signin");
+                break;
            default:
                navigate('/');
                break;
        }
     }
+
+    // clear session cookie and redirect to home
+    const handleLogout = () => {
+        clearAuthData();
+        alert("Successfully logged out!");
+        navigate('/', {replace: true});
+    }
+
     return (
         <Navbar className='navbar' bg="transparent" variant="dark" expand="lg">
             <Navbar.Brand href="/">
@@ -46,12 +60,35 @@ const Navb = () => {
                 <Nav className="m-4 h6 text-center ">
                     <Nav.Link onClick={() => redirect()} className="tw">Home</Nav.Link>
                     <Nav.Link onClick={() => redirect('3')} className="tw">Reserve</Nav.Link>
-                    <Nav.Link onClick={() => redirect('1')} className="tw">Profile</Nav.Link>
+                    {
+                        isSessionValid()?
+                        <Nav.Link onClick={() => redirect('1')} className="tw">Profile</Nav.Link>
+                        :null
+                    }
                     <Nav.Link onClick={() => redirect('4')} className="tw" >Contact</Nav.Link>
-                    <Nav.Link onClick={() => redirect('2')} className="tw">WishList</Nav.Link>
-                    <Nav.Link onClick={() => redirect('7')} className="tw">Dashboard</Nav.Link>
-                    <Nav.Link onClick={() => redirect('6')} className="tw">My Bookings</Nav.Link>
+                    {
+                        getAuthData()?.role === "user"? isSessionValid()?
+                            <Nav.Link onClick={() => redirect('2')} className="tw">WishList</Nav.Link>
+                            :null
+                        : null
+                    }
+                    {
+                        getAuthData()?.role === "restaurant owner"? isSessionValid()?
+                            <Nav.Link onClick={() => redirect('7')} className="tw">Dashboard</Nav.Link>
+                            :null
+                        :null
+                    }
+                    {
+                        getAuthData()?.role === "user"? isSessionValid()?
+                            <Nav.Link onClick={() => redirect('6')} className="tw">My Bookings</Nav.Link>
+                            :null
+                        :null
+                    }
                     <Nav.Link onClick={() => redirect('5')} className="tw">FAQ</Nav.Link>
+                    {
+                        !isSessionValid()? <Nav.Link onClick={() => redirect('6')} className="tw">Sign in</Nav.Link>
+                        : <Nav.Link onClick={() => handleLogout()} className="tw">Log out</Nav.Link>
+                    }
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

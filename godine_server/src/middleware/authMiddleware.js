@@ -1,15 +1,11 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 
+// authenticating using token cookie
 const checkAuth = async (req, res, next) => {
   try {
-    // Check if the authorization header exists
-    if (!req.headers.authorization) {
-      return res.status(403).json({ message: "No token provided" });
-    }
-
-    // Extract the token from the Authorization header
-    const token = req.headers.authorization.split(" ")[1]; // Assumes Bearer token
+    const cookies = req.cookies;
+    const token = cookies?.token
     if (!token) {
       return res.status(403).json({ message: "No token provided" });
     }
@@ -35,17 +31,23 @@ const checkAuth = async (req, res, next) => {
     }
 
     // Check if the user has the required role
-    if (!["user", "restaurant owner"].includes(user.role)) {
+    if (!["user", "restaurant owner", "admin"].includes(user.role)) {
       return res
         .status(403)
         .json({ message: "You do not have permission to perform this action" });
     }
 
-    // If everything checks out, add the user to the request object and pass control to the next middleware
+    // todo: write conditions for paths based on roles
+
     req.user = user;
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    console.log(error);
+    if(error.message === "jwt expired"){
+      return res.status(401).json({ message: "Token has expired" });
+    }
+    
+    return res.status(500).json({ message: "Unable authenticate as processing the token failed" });
   }
 };
 
