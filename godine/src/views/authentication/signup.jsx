@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {useNavigate} from 'react-router-dom'
 import useAuth from '../../hooks/useAuth';
 import './common.css'
@@ -7,6 +7,7 @@ import axios from 'axios';
 function Signup() {
     const [firstName, setFirstName] = useState('');
     const [validFirstName, setValidFirstName] = useState(true);
+    const firstNameRef = useRef();
 
     const [lastName, setLastName] = useState('');
     const [validLastName, setValidLastName] = useState(true);
@@ -21,9 +22,17 @@ function Signup() {
 
     const [toggleValue, setToggleValue] = useState('user');
 
-    const { setAuthData } = useAuth();
+    const { getAuthData, setAuthData, isSessionValid } = useAuth();
     const reqCancelRef = useRef(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(isSessionValid()){
+            navigate(getAuthData()?.role === "user"? "/": "/dashboard", {replace: true});
+        }
+
+        firstNameRef.current.focus();
+    }, []);
 
     function validateFirstNameAndSet(e){
         const inputFn = e.target.value;
@@ -96,11 +105,21 @@ function Signup() {
         reqCancelRef.current?.abort();
         reqCancelRef.current = new AbortController();
 
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
+        const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+        const signup_endpoint = process.env.REACT_APP_SIGNUP_ENDPOINT || "api/auth/signup";
+
         if(firstName !== '' && lastName !== '' && email !== '' && password !== '' 
             && validFirstName && validLastName && validEmail && validPassword && passwordMatch){
-            // todo: add it in env
-            const url = `http://localhost:8080/api/auth/signup`;
-            const data = {firstName: firstName, lastName: lastName, email: email, password: password, role: toggleValue};
+
+            const url = `${server_url}:${server_port}/${signup_endpoint}`;
+            const data = {
+                firstName: firstName, 
+                lastName: lastName, 
+                email: email, 
+                password: password, 
+                role: toggleValue
+            };
 
             const response = await axios.post(url, data, {signal: reqCancelRef.current?.signal})
                     .then((response) => response) 
@@ -119,20 +138,13 @@ function Signup() {
                 return;
             }
 
-            console.log(response);
-
             if(response.status === 201 && response.data?.token && response.data?.data?.user?.role){
                 console.log('User created successfully');
                 const token =  response.data.token;
-                // default expiry time = 20 mins
-                const defaultExpiryTime = 20*60*1000;
-                // todo: check updated signup response with expiry time
-                const responseExpiryTime = null
-                const expiryTime = responseExpiryTime ? responseExpiryTime: defaultExpiryTime;
                 const role = response.data.data.user.role;
-                
-                setAuthData(token, expiryTime, role);
-                // todo: extend it to navigate to respective pages after signup
+
+                setAuthData(token, role);
+                // forcing user to sign in to reinforce login credentials
                 navigate('/signin', {replace: true});
             }
             else if(response.status === 401){
@@ -165,7 +177,7 @@ function Signup() {
                             <form>
                                 <div className='form-group m-1'>
                                     <label>First Name</label>
-                                    <input type='text' className='form-control' placeholder='Enter first name' onInput={validateFirstNameAndSet}/>
+                                    <input type='text' ref={firstNameRef} className='form-control' placeholder='Enter first name' onInput={validateFirstNameAndSet}/>
                                     {validFirstName ? null : <small style={{color: 'red'}}>Please enter a valid first name</small>}
                                 </div>
                                 <div className='form-group m-1'>

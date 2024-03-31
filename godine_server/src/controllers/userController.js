@@ -1,18 +1,31 @@
 const Users = require("../models/users");
+const Newsletter = require("../models/newsletter");
+const mongoose = require('mongoose');
 
 // Controller to get user profile
 exports.getUserProfile = async (req, res) => {
   try {
     const userID = req.params.userID;
-    console.log(userID);
-    const user = await Users.findOne({ userID: userID });
-    console.log(user);
+    if (!mongoose.Types.ObjectId.isValid(userID)) {
+      return res.status(400).json({ message: "Invalid user id" });
+    }
+
+    const user = await Users.findById(userID);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json(user);
+
+    const { name, email, phoneNumber, dateOfBirth, address } = user;
+    res.status(200).json({
+      name: name,
+      email: email,
+      phoneNumber: phoneNumber,
+      dateOfBirth: dateOfBirth,
+      address: address
+    });
+
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: { message: err.message } });
   }
 };
 
@@ -20,25 +33,62 @@ exports.getUserProfile = async (req, res) => {
 exports.updateUserProfile = async (req, res) => {
   try {
     const userID = req.params.userID;
-    let user = await Users.findOne({ userID: userID });
+
+    const updatedUser = {}
+    // Update the fields
+    updatedUser.name = req.body.name;
+    updatedUser.email = req.body.email;
+    updatedUser.phoneNumber = req.body.phoneNumber;
+    updatedUser.dateOfBirth = req.body.dateOfBirth;
+    updatedUser.address = req.body.address;
+
+    // Save the updated user
+    const response = await Users.findByIdAndUpdate(userID, updatedUser, {new: true});
+    if (!response) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { name, email, phoneNumber, dateOfBirth, address } = response;
+    res.status(200).json({
+      name: name,
+      email: email,
+      phoneNumber: phoneNumber,
+      dateOfBirth: dateOfBirth,
+      address: address
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Controller to update user's newsletter subscription status
+exports.updateNewsletterSubscription = async (req, res) => {
+  try {
+    const userID = req.params.userID;
+    const user = await Users.findById( userID );
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update the fields
-    user.username = req.body.username;
-    user.email = req.body.email;
-    user.userID = req.body.userID;
+    const subscriptionStatus = req.body.newsLetterStatus;
+    let newsletter = await Newsletter.findById( userID );
 
-    // Save the updated user
-    const updatedUser = await user.save();
+    if (!newsletter) {
+      newsletter = new Newsletter({
+        userID: userID,
+        newsLetterStatus: subscriptionStatus,
+      });
+    } else {
+      newsletter.newsLetterStatus = subscriptionStatus;
+    }
 
-    res.json(updatedUser);
+    await newsletter.save();
+    res.json({ message: "Newsletter subscription status updated" });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
-
 exports.addRestaurantToWishlist = async (req, res) => {
   try {
     const userID = req.params.userID;

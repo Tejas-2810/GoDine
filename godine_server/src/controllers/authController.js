@@ -28,6 +28,7 @@ exports.signup = async (req, res) => {
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
+
     // Send the token and the user data in the response
     res.status(201).json({ token, data: { user: newUser } });
   } catch (err) {
@@ -46,6 +47,7 @@ exports.signin = async (req, res) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Incorrect email or password" });
     }
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });

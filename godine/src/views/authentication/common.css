@@ -9,6 +9,13 @@
     background-position: center;
 }
 
+.unauthorized-page{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
 .signin-card, .signup-card, .forgot-password-card, .reset-password-card{
     display: flex;
     align-items: center;
