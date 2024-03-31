@@ -2,18 +2,28 @@ const Restaurant = require('../models/restaurant');
 const Review = require('../models/review');
 const path = require('path');
 const mongoose = require('mongoose');
+const cloudinary = require('../config/cloudinaryConfig');
 
 
 
 exports.createRestaurant = async (req, res) => {
   try {
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
     const jsonData = JSON.parse(req.body.data); 
     console.log(jsonData);
+
+    const uploadMenuPromises = req.files['menu'].map(file =>
+      cloudinary.uploader.upload(file.path)
+    );
+    const uploadPhotosPromises = req.files['photos'].map(file =>
+      cloudinary.uploader.upload(file.path)
+    );
+
+    const menuUploadResults = await Promise.all(uploadMenuPromises);
+    const photosUploadResults = await Promise.all(uploadPhotosPromises);
     const restaurantData = {
       ...jsonData,
-      menu: req.files['menu'] ? req.files['menu'].map(file => `${baseUrl}/public/upload/${file.filename}`) : [],
-      photos: req.files['photos'] ? req.files['photos'].map(file => `${baseUrl}/public/upload/${file.filename}`) : [],
+      menu: menuUploadResults.map(result => result.secure_url),
+      photos: photosUploadResults.map(result => result.secure_url),
     };
 
     const newRestaurant = await Restaurant.create(restaurantData);
