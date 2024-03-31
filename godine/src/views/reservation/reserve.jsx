@@ -4,6 +4,8 @@ import Card from "react-bootstrap/Card";
 import "./reserve.css";
 import useAuth from '../../hooks/useAuth';
 import axios, { isAxiosError } from 'axios';
+import 'bootstrap-icons/font/bootstrap-icons.css'
+
 const Reserve = () => {
     const { getUserId } = useAuth();
     const cancelRequestRef = useRef(null);
@@ -98,8 +100,9 @@ const Reserve = () => {
     const reviewdisplay = reviewList.map((reviewList) => {
         return (
             <div class="collapse multi-collapse" id="multiCollapseExample2">
-                <div class="card-body">
-                    <h5 class="card-title">{reviewList.userID?.name}</h5>
+                <div class=" card card-body">
+                    <h4 class="card-title border-bottom">{reviewList.userID?.name}</h4>
+
                     <p class="card-text">{reviewList.review}</p>
                 </div>
             </div>
@@ -255,8 +258,13 @@ const Reserve = () => {
 
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                    Ratings & Reviews
-                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" >Reviews</button>
+                    <div> Ratings & Reviews </div>
+                    {reviewData && <div> Number Of Reviews: {reviewData.reviewCount} </div>}
+                    <div> Average Rating: {reviewData && reviewData.averageRating.toFixed(1)} </div>
+                    {reviewData && Array.from({ length: reviewData.averageRating }, (_, index) => (
+                            <i key={index} className="bi bi-star-fill"></i>
+                        ))}
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" >Show Reviews</button>
                     </div>
                     <div className="">
                     </div>
