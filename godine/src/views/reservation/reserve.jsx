@@ -1,26 +1,55 @@
-import React,{useEffect, useState} from "react";
+import React,{useEffect, useState, useRef} from "react";
 import Carousel from "react-bootstrap/Carousel";
 import Card from "react-bootstrap/Card";
 import "./reserve.css";
-import axios from "axios"; 
+import useAuth from '../../hooks/useAuth';
+import axios, { isAxiosError } from 'axios';
 const Reserve = () => {
+    const { getUserId } = useAuth();
+    const cancelRequestRef = useRef(null);
 
     const [restaurantData, setRestaurantData] = useState(null);
+    const [reviewData, setReviewData] = useState(null);
 
     useEffect(() => {
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
+        const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+        const resturant_endpoint = process.env.REACT_APP_PROFILE_ENDPOINT || "api/restaurants";
+        const restaurantId = "66039bdae52ec6b12a61a43a";
+        const review = "reviews";
+        const userId = getUserId();
+
+        const endpoint = `${server_url}:${server_port}/${resturant_endpoint}/${restaurantId}`;
+
+        cancelRequestRef.current?.abort();
+        cancelRequestRef.current = new AbortController();
         const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/restaurants/66039bdae52ec6b12a61a43a");
+                const response = await axios.get(endpoint, { signal: cancelRequestRef.current?.signal, withCredentials: true })
+                .then((response) => response)
+                .catch((err) => err);
+
                 setRestaurantData(response.data);
                 console.log(response.data);
             } catch (error) {
                 console.error("Error fetching restaurant data:", error);
             }
         };
+        const fetchReview = async () => {
+            try {
+                const response = await axios.get(`${endpoint}/${review}`, { signal: cancelRequestRef.current?.signal, withCredentials: true })
+                .then((response) => response)
+                .catch((err) => err);
+                setReviewData(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error("Error fetching restaurant data:", error);
+            }
+        };
+        fetchReview();
         fetchData();
     }, []);
 
-    // Use restaurantData variable to access the fetched data
     if (restaurantData) {
         const {
             features,
@@ -39,7 +68,45 @@ const Reserve = () => {
         // Example: <h1>{restaurantName}</h1>
         console.log("Restaurant Data: ", restaurantName);
     }
+    var reviewList = [];
+    if (reviewData) {
+ 
+        const {
+            averageRating,
+            reviewCount,
+            reviews
+        } = reviewData;
+        reviewList = reviews;
 
+
+        // Use the variables above in your JSX code
+        // Example: <h1>{restaurantName}</h1>
+        console.log("Review Data: ", reviews);
+        console.log("Review Data: ", averageRating);
+        console.log("Review Data: ", reviewCount);
+
+
+    }
+    if (reviewList) {
+        reviewList.forEach((review) => {
+            if (review.userID && review.userID.name) {
+                console.log("Name:", review.userID.name);
+            }
+        });
+    }
+
+    const reviewdisplay = reviewList.map((reviewList) => {
+        return (
+            <div class="collapse multi-collapse" id="multiCollapseExample2">
+                <div class="card-body">
+                    <h5 class="card-title">{reviewList.userID?.name}</h5>
+                    <p class="card-text">{reviewList.review}</p>
+                </div>
+            </div>
+
+
+        );
+    })
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -59,7 +126,7 @@ const Reserve = () => {
                 noOfGuests: formData.guests
             };
             console.log(reservationData);
-            await axios.post("http://localhost:3000/api/user-reservation/book", reservationData);
+            await axios.post("http://localhost:8080/api/user-reservation/book", reservationData, { withCredentials: true });
             alert("Reservation created successfully!");
         } catch (error) {
             console.error("Error creating reservation:", error);
@@ -117,7 +184,7 @@ const Reserve = () => {
                             <div className="d-flex ">
                             {restaurantData && <h3 className="col-10 my-2">{restaurantData.restaurantName}</h3>}
                                 <div className="col-2 text-center">
-                                    <button disabled className="btn btn-success"> 4.5 </button>
+                                {reviewData && <button disabled className="btn btn-success"> {reviewData.averageRating.toFixed(1)} </button>}
                                     {/* <p>56 <i>reviews</i></p> */}
                                 </div>
                             </div>
@@ -183,16 +250,17 @@ const Reserve = () => {
                         </form>
                 </div>
             </div>
+
             <div className="review">
+
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                     Ratings & Reviews
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" >Reviews</button>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Special title treatment</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <div className="">
                     </div>
+                    {reviewdisplay}
                 </div>
             </div>
         </div>
