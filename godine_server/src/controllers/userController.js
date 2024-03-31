@@ -1,19 +1,33 @@
 const Users = require("../models/users");
 const Newsletter = require("../models/newsletter");
+const mongoose = require('mongoose');
 
 // Controller to get user profile
 exports.getUserProfile = async (req, res) => {
   try {
     const userID = req.params.userID;
-    console.log(userID);
-    const user = await Users.findOne({ userID: userID });
-    console.log(user);
+    if (!mongoose.Types.ObjectId.isValid(userID)) {
+      return res.status(400).json({ message: "Invalid user id" });
+    }
+
+    const user = await Users.findById(userID);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json(user);
+
+    console.log("user: ", user);
+
+    const { name, email, phoneNumber, dateOfBirth, address } = user;
+    res.status(200).json({
+      name: name,
+      email: email,
+      phoneNumber: phoneNumber,
+      dateOfBirth: dateOfBirth,
+      address: address
+    });
+
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: { message: err.message } });
   }
 };
 
