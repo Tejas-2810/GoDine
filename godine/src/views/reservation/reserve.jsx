@@ -1,27 +1,65 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import Carousel from "react-bootstrap/Carousel";
 import Card from "react-bootstrap/Card";
 import "./reserve.css";
 import axios from "axios"; 
 const Reserve = () => {
 
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        phone: "",
-        date: "",
-        time: "",
-        guests: 0
-    });
+    const [restaurantData, setRestaurantData] = useState(null);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.id]: e.target.value });
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get("http://localhost:3000/api/restaurants/66039bdae52ec6b12a61a43a");
+                setRestaurantData(response.data);
+                console.log(response.data);
+            } catch (error) {
+                console.error("Error fetching restaurant data:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
+    // Use restaurantData variable to access the fetched data
+    if (restaurantData) {
+        const {
+            features,
+            restaurantName,
+            restaurantAddress,
+            pricing,
+            cuisine,
+            operatingHours,
+            contactNumber,
+            seatingCapacity,
+            menu,
+            photos
+        } = restaurantData;
+
+        // Use the variables above in your JSX code
+        // Example: <h1>{restaurantName}</h1>
+        console.log("Restaurant Data: ", restaurantName);
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("https://www.localhost:/wp-content/api/user-reservation/book", formData);
+            const formData = {
+                name: e.target.nameInput.value,
+                email: e.target.emailInput.value,
+                phone: e.target.phoneInput.value,
+                date: e.target.dateInput.value,
+                time: e.target.timeInput.value,
+                guests: parseInt(e.target.guests.value)
+            };
+            const reservationData = {
+                restaurantID: "660345d96a5e6f56688098a6",
+                userID: "65fb4b3b2519c4ffea8d5fa0",
+                reservationDate: formData.date,
+                reservationTime: formData.time,
+                noOfGuests: formData.guests
+            };
+            console.log(reservationData);
+            await axios.post("http://localhost:3000/api/user-reservation/book", reservationData);
             alert("Reservation created successfully!");
         } catch (error) {
             console.error("Error creating reservation:", error);
@@ -66,97 +104,96 @@ const Reserve = () => {
                                     </Carousel.Caption>
                                 </Carousel.Item>
                             </Carousel>
+                            {/* {images.map((image, index) => ( */}
+                                <img
+                                    key={1}
+                                    className="d-block menu"
+                                    src={ 'https://www.birchrestaurant.com/wp-content/uploads/2022/03/The-Regent-Cocktail-Club.jpg '}
+                                    alt={`Slide ${1 + 1}`}
+                                />
+                            {/* ))} */}
                         </Card.Body>
-                        <Card.Footer className="cfooter">
+                        <Card.Footer className="cfooter d-flex-column">
                             <div className="d-flex ">
-                                <h3 className="col-10">In the Sky Lounge - Bar Exchange</h3>
+                            {restaurantData && <h3 className="col-10 my-2">{restaurantData.restaurantName}</h3>}
                                 <div className="col-2 text-center">
                                     <button disabled className="btn btn-success"> 4.5 </button>
-                                    <p>56 <i>reviews</i></p>
+                                    {/* <p>56 <i>reviews</i></p> */}
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-8">
-                                    <p>Address: 1st Floor, 763, 100 Feet Road, Indiranagar, Bangalore</p>
-                                    <p>Phone: 080 49653466</p>
-                                    <p>Timings: 12:00 PM - 1:00 AM</p>
+
+                                <div className=" container my-4">
+                                {restaurantData && <p>Address: {restaurantData.restaurantAddress }</p>  }
+                                {restaurantData && <p>Phone: {restaurantData.contactNumber}</p> }
+                                {restaurantData && <p>Operating Hours: {restaurantData.operatingHours}</p> }
+                                {restaurantData && <p>Seating Capacity: {restaurantData.seatingCapacity}</p> }
+                                {restaurantData && <p>Cuisine: {restaurantData.cuisine}</p> }
+                                {restaurantData && <p>Pricing: {restaurantData.pricing}</p> }
+ 
+
                                 </div>
-                                <div className="col-4 text-center m-auto">
+                                {/* <div className="col-4 text-center m-auto">
                                     <button className="btn btn-primary">Menu</button>
                                     <button className="btn btn-primary">Review</button>
                                     <button className="btn btn-primary">Overview</button>
-                                </div>
-                            </div>
+                                </div> */}
                             
                         </Card.Footer>
                     </Card>
                 </div>
                 <div className="col-md-4">
-                    <form onSubmit={handleSubmit} className="m-5 fcontainer">
-                        <h4>Reservation Form</h4>
+                    <form className="m-5 fcontainer " onSubmit={handleSubmit}>
+                        <h4 className="text-center text-capitalize">Reservation Form</h4>
                         <div className="form-group">
                             <label htmlFor="nameInput">Name</label>
-                            <input type="text" className="form-control" id="nameInput" value={formData.name} onChange={handleChange} placeholder="Enter name" />
+                            <input type="text" className="form-control" id="nameInput" placeholder="Enter name" required/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="emailInput">Email</label>
-                            <input type="email" className="form-control" id="emailInput" value={formData.email} onChange={handleChange} placeholder="Enter email" />
+                            <input type="email" className="form-control" id="emailInput" placeholder="Enter email" required/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="phoneInput">Phone</label>
-                            <input type="text" className="form-control" id="phoneInput" value={formData.phone} onChange={handleChange} placeholder="Enter phone" />
+                            <input type="number" className="form-control" id="phoneInput" placeholder="Enter phone" required/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="dateInput">Date</label>
-                            <input type="date" className="form-control" id="dateInput" value={formData.date} onChange={handleChange} placeholder="Enter date" />
+                            <input type="date" className="form-control text-center" id="dateInput" placeholder="Enter date" required/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="timeInput">Time</label>
-                            <input type="time" className="form-control" id="timeInput" value={formData.time} onChange={handleChange} placeholder="Enter time" />
+                            <input type="time" className="form-control text-center" id="timeInput" placeholder="Enter time" required/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="guestsInput">Number of guests (max 5)</label>
                             <div className="dropdown">
-                                <button className="form-control dropdown-toggle" type="button" id="guestsInput" value={formData.guests} onChange={handleChange} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    0
-                                </button>
-                                <div className="dropdown-menu" aria-labelledby="guestsInput">
-                                    <a className="dropdown-item" href="#">1</a>
-                                    <a className="dropdown-item" href="#">2</a>
-                                    <a className="dropdown-item" href="#">3</a>
-                                    <a className="dropdown-item" href="#">4</a>
-                                    <a className="dropdown-item" href="#">5</a>
-                                </div>
+                                <select class="form-select text-center" id="guests" aria-label="Example select with button addon" required>
+                                    <option selected>None</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                    <option value="4">Four</option>
+                                    <option value="5">Five</option>
+                                </select>
                             </div>
                         </div>
-                        <div className="m-5 text-right">
-                            <button type="submit" className="btn btn-primary float-right">Submit</button>
+                        <div className="m-5 text-center">
+                            <button type="submit" className="btn btn-primary">Submit</button>
                         </div>
-                    </form>
+                        </form>
                 </div>
             </div>
-            <div>
-                <div className="col-md-2"></div>
-                <form className="m-5 fcontainer ">
-                    <h4>Review Form</h4>
-                    <div className="form-group">
-                        <label htmlFor="ratingInput">Rate your experience</label>
-                        <div class="rating mx-5"> <input type="radio" name="rating" value="5" id="5"/>
-                        <label for="5">☆</label> <input type="radio" name="rating" value="4" id="4"/>
-                        <label for="4">☆</label> <input type="radio" name="rating" value="3" id="3"/>
-                        <label for="3">☆</label> <input type="radio" name="rating" value="2" id="2"/>
-                        <label for="2">☆</label> <input type="radio" name="rating" value="1" id="1"/>
-                        <label for="1">☆</label>
+            <div className="review">
+                <div class="card">
+                    <div class="card-header">
+                    Ratings & Reviews
                     </div>
-                    <div className="form-group">
-                        <textarea className="form-control rc" id="commentInput" placeholder="Enter your comment"></textarea>
+                    <div class="card-body">
+                        <h5 class="card-title">Special title treatment</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
-
-                    </div>
-                    <div className="m-3 d-flex justify-content-end ">
-                        <button type="submit" className="btn btn-primary">Submit</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     );
