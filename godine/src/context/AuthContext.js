@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { jwtDecode } from 'jwt-decode'
+import Cookies from 'js-cookie'
 
 // it will hold all auth related data
 const AuthContext = React.createContext({});
 
 const USER_STATE = "godine_user_state";
+const TOKEN = "token";
 
 export const AuthProvider = ({ children }) => {
     const [userState, setUserState] = useState(null);
@@ -16,16 +18,20 @@ export const AuthProvider = ({ children }) => {
     // sets user state and cookie
     const setAuthData = (token, role) => {
         const userInfo = jwtDecode(token);
-        // default expiry of 20 mins in milliseconds
-        const defaultExpiryTime = 20 * 60 * 1000;
+        // default expiry of 10 mins in milliseconds
+        const defaultExpiryTime = 10 * 60 * 1000;
         const defaultExpiresIn = Date.now() + defaultExpiryTime;
 
+        const id = userInfo.id;
+        const expiry = userInfo.exp ? userInfo.exp*1000 : defaultExpiresIn;
+
         const state = {
-            userId: userInfo.id,
-            expiresIn: userInfo.expiresIn ? userInfo.expiresIn : defaultExpiresIn,
+            userId: id,
+            expiresIn: expiry,
             role: role
         };
 
+        Cookies.set(TOKEN, token, { expires: expiry });
         setUserState(state);
         sessionStorage.setItem(USER_STATE, JSON.stringify(state));
     }
@@ -34,6 +40,7 @@ export const AuthProvider = ({ children }) => {
     const clearAuthData = () => {
         setUserState(null);
         sessionStorage.removeItem(USER_STATE);
+        Cookies.remove(TOKEN);
     }
 
     // fetch current auth data of the user
@@ -46,19 +53,19 @@ export const AuthProvider = ({ children }) => {
 
     // user id for fetching data of the user
     const getUserId = () => {
-        return userState.userId || getAuthData().userId;
+        return userState?.userId || getAuthData()?.userId;
     }
 
     // checking session validity
     const isSessionValid = () => {
-        const state = JSON.parse(sessionStorage.getItem(USER_STATE));
-        const userId = state ? state.userId : userState?.userId;
-        const expiry = state ? state.expiresIn : userState?.expireIn;
-        const role = state ? state.role : userState?.role;
+        const currentState = JSON.parse(sessionStorage.getItem(USER_STATE));
+        const userId = currentState ? currentState.userId : userState?.userId;
+        const expiry = currentState ? currentState.expiresIn : userState?.expiresIn;
+        const role = currentState ? currentState.role : userState?.role;
 
         return userId !== null && userId !== ''
             && expiry !== null && expiry !== ''
-            && Date.now() < expiry
+            && Date.now() <= expiry
             && role !== null && role !== '';
     }
 
