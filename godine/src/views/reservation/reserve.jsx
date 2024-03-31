@@ -101,7 +101,7 @@ const Reserve = () => {
         return (
             <div class="collapse multi-collapse" id="multiCollapseExample2">
                 <div class=" card card-body">
-                    <h5 class="card-title border-bottom">{reviewList.userID?.name}</h5>
+                    <h4 class="card-title border-bottom">{reviewList.userID?.name}</h4>
 
                     <p class="card-text">{reviewList.review}</p>
                 </div>
