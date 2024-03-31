@@ -19,11 +19,11 @@ const Profile = () => {
 
     function updateDobAndAge(dobString) {
         setDob(dobString);
-        const currentTime = new Date();
-        const dobTime = new Date(dobString);
-
-        const age = currentTime.getFullYear() - dobTime.getFullYear();
-        setAge(age);
+        const dobDate = new Date(dobString);
+        const currentDate = new Date();
+        const diffInMillis = currentDate - dobDate;
+        const duration = new Date(diffInMillis);
+        setAge(Math.abs(duration.getUTCFullYear() - 1970));
     }
 
     useEffect(() => {
