@@ -1,21 +1,21 @@
-const Newsletter = require("../models/newsletter");
+// newsletterController.js
 const nodemailer = require("nodemailer");
-const Users = require("../models/users");
 const cron = require("node-cron");
+const Users = require("../models/users");
+const Newsletter = require("../models/newsletter");
 require("dotenv").config();
 
-// Function to send newsletter emails
-const sendNewsletterEmail = async (email, content) => {
-  let transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: true,
-    auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USERNAME,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
 
+const sendNewsletterEmail = async (email, content) => {
   let mailOptions = {
     from: process.env.EMAIL_USERNAME,
     to: email,
@@ -32,31 +32,58 @@ const sendNewsletterEmail = async (email, content) => {
   });
 };
 
-const sendNewsletters = async () => {
+// Function to subscribe to the newsletter
+const subscribeToNewsletter = async (req, res) => {
   try {
-    const newsletters = await Newsletter.find({
-      newsLetterStatus: "Subscribed",
-    }).populate("userID");
-    for (const newsletter of newsletters) {
-      const user = await Users.findById(newsletter.userID);
-      if (user && user.email) {
-        const content = "This is your newsletter content!";
-        await sendNewsletterEmail(user.email, content);
-      }
+    const { email } = req.body;
+    const user = await Users.findOne({ email: email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    console.log("Newsletters sent successfully");
+    let newsletter = await Newsletter.findOne({ userID: user._id });
+    if (!newsletter) {
+      newsletter = new Newsletter({
+        userID: user._id,
+        newsLetterStatus: "Subscribed",
+      });
+    } else {
+      newsletter.newsLetterStatus = "Subscribed";
+    }
+
+    await newsletter.save();
+    res.json({ message: "Successfully subscribed to the newsletter" });
   } catch (err) {
-    console.error("Error sending newsletters: " + err.message);
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Schedule to send newsletters every week (e.g., every Monday at 10 AM)
-cron.schedule("0 10 * * 1", sendNewsletters, {
-  scheduled: true,
-  timezone: "America/Halifax", // Timezone for Halifax, Nova Scotia, Canad
-});
-
-module.exports = {
-  sendNewsletters,
+// Initialize the newsletter sending schedule
+const initNewsletterSchedule = () => {
+  cron.schedule(
+    "17 11 * * *",
+    async () => {
+      try {
+        const newsletters = await Newsletter.find({
+          newsLetterStatus: "Subscribed",
+        }).populate("userID");
+        for (const newsletter of newsletters) {
+          const user = await Users.findById(newsletter.userID);
+          if (user && user.email) {
+            const content = "This is your newsletter content!";
+            await sendNewsletterEmail(user.email, content);
+          }
+        }
+        console.log("Newsletters sent successfully");
+      } catch (err) {
+        console.error("Error sending newsletters: " + err.message);
+      }
+    },
+    {
+      scheduled: true,
+      timezone: "America/Halifax",
+    }
+  );
 };
+
+module.exports = { subscribeToNewsletter, initNewsletterSchedule };

@@ -35,6 +35,9 @@ router.post(
 // Restaurant Page
 router.get("/:id", restaurantController.getRestaurantById);
 
+// Restaurant Reviews
+router.get("/:restaurantID/reviews", restaurantController.getRestaurantReviews);
+
 //Home page
 router.get("/", restaurantController.getAllRestaurantsForHomePage);
 module.exports = router;
