@@ -283,7 +283,6 @@ const Results = () => {
                   </p>
                   <p className="m-0">Cuisine: {restaurant.cuisine}</p>
                   <p className="m-0">
-                    <p>{restaurant._id}</p>
                     Ratings:{" "}
                     {ratings[restaurant._id] !== undefined
                       ? ratings[restaurant._id]
