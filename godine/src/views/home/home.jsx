@@ -43,6 +43,102 @@ const Home = () => {
     }
   };
 
+  const handleBuffetClick = () => {
+    // Directly navigate without updating the component state
+    navigate({
+      pathname: "/search",
+      search: createSearchParams({
+        c: "Indian", // Directly set the cuisine to Indian
+        l: location,
+        K: keyword,
+      }).toString(),
+    });
+  };
+
+  const handleVegClick = () => {
+    // Directly navigate without updating the component state
+    navigate({
+      pathname: "/search",
+      search: createSearchParams({
+        c: cuisine, // Directly set the cuisine to Indian
+        l: location,
+        K: "Mirchi Tandoor",
+      }).toString(),
+    });
+  };
+
+  const handleMustVisitClick = () => {
+    // Directly navigate without updating the component state
+    navigate({
+      pathname: "/search",
+      search: createSearchParams({
+        c: "Italian", // Directly set the cuisine to Indian
+        l: location,
+        K: keyword,
+      }).toString(),
+    });
+  };
+
+  const handleHappyHoursClick = () => {
+    // Directly navigate without updating the component state
+    navigate({
+      pathname: "/search",
+      search: createSearchParams({
+        c: cuisine, // Directly set the cuisine to Indian
+        l: location,
+        K: "Tawa Grill",
+      }).toString(),
+    });
+  };
+
+  const handleNewRestaurantsClick = () => {
+    // Directly navigate without updating the component state
+    navigate({
+      pathname: "/search",
+      search: createSearchParams({
+        c: cuisine, // Directly set the cuisine to Indian
+        l: location,
+        K: "Marthas",
+      }).toString(),
+    });
+  };
+
+  const handleMeatestClick = () => {
+    // Directly navigate without updating the component state
+    navigate({
+      pathname: "/search",
+      search: createSearchParams({
+        c: cuisine, // Directly set the cuisine to Indian
+        l: location,
+        K: "Paradise Restaurant",
+      }).toString(),
+    });
+  };
+
+  const handleSeaFoodClick = () => {
+    // Directly navigate without updating the component state
+    navigate({
+      pathname: "/search",
+      search: createSearchParams({
+        c: cuisine, // Directly set the cuisine to Indian
+        l: location,
+        K: "Mehfil Restaurant",
+      }).toString(),
+    });
+  };
+
+  const handleVeganFoodClick = () => {
+    // Directly navigate without updating the component state
+    navigate({
+      pathname: "/search",
+      search: createSearchParams({
+        c: cuisine, // Directly set the cuisine to Indian
+        l: location,
+        K: "Santosh Dhaba",
+      }).toString(),
+    });
+  };
+
   return (
     <div className="hcontainer">
       <div className="bg1">
@@ -167,12 +263,15 @@ const Home = () => {
           <div className="container">
             <div className="row">
               <div className="col-md-3 mb-3">
-                <div className="card border border-3 border-warning rounded-lg shadow-lg type">
+                <div
+                  className="card border border-3 border-warning rounded-lg shadow-lg type"
+                  onClick={handleBuffetClick} // Using the new function here
+                >
                   <div className="card-body d-flex flex-row">
                     <div>
                       <h5 className="card-title">Buffet</h5>
                       <p className="card-text">
-                        Enjoy a wide variety of dishes. With no limitaitons
+                        Enjoy a wide variety of dishes. With no limitations
                       </p>
                     </div>
                   </div>
@@ -180,11 +279,15 @@ const Home = () => {
               </div>
               <div className="col-md-3 mb-3">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
-                  <div className="card-body d-flex flex-row">
+                  <div
+                    className="card-body d-flex flex-row"
+                    onClick={handleVegClick}
+                  >
                     <div>
                       <h5 className="card-title">Pure Veg</h5>
                       <p className="card-text">
-                        Experience the best vegetarian cuisine.
+                        Experience the best vegetarian cuisine from around your
+                        beauriful city.
                       </p>
                     </div>
                   </div>
@@ -192,11 +295,15 @@ const Home = () => {
               </div>
               <div className="col-md-3 mb-3">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
-                  <div className="card-body d-flex flex-row">
+                  <div
+                    className="card-body d-flex flex-row"
+                    onClick={handleMustVisitClick}
+                  >
                     <div>
                       <h5 className="card-title">Must Visit</h5>
                       <p className="card-text">
-                        Discover the must-visit restaurants in our city.
+                        Discover the must-visit restaurants in our city at a
+                        discounted rate (Special Offer)
                       </p>
                     </div>
                   </div>
@@ -204,11 +311,15 @@ const Home = () => {
               </div>
               <div className="col-md-3 mb-3">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
-                  <div className="card-body d-flex flex-row">
+                  <div
+                    className="card-body d-flex flex-row"
+                    onClick={handleHappyHoursClick}
+                  >
                     <div>
                       <h5 className="card-title">Happy Hours</h5>
                       <p className="card-text">
-                        Enjoy special discounts and offers.
+                        Enjoy your Happy Hours with a beautiful Downtown View at
+                        Tawa Grill and other similar restaurants
                       </p>
                     </div>
                   </div>
@@ -216,11 +327,14 @@ const Home = () => {
               </div>
               <div className="col-md-3 mb-3">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
-                  <div className="card-body d-flex flex-row">
+                  <div
+                    className="card-body d-flex flex-row"
+                    onClick={handleNewRestaurantsClick}
+                  >
                     <div>
                       <h5 className="card-title">New Restaurants</h5>
                       <p className="card-text">
-                        Explore the latest additions of restaurant.
+                        Explore the latest addition of restaurants.
                       </p>
                     </div>
                   </div>
@@ -228,11 +342,15 @@ const Home = () => {
               </div>
               <div className="col-md-3 mb-3">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
-                  <div className="card-body d-flex flex-row">
+                  <div
+                    className="card-body d-flex flex-row"
+                    onClick={handleMeatestClick}
+                  >
                     <div>
                       <h5 className="card-title">Meat Fest</h5>
                       <p className="card-text">
-                        Experience with a variety of meats.
+                        Experience with a variety of meats at our new place at
+                        discounted price.
                       </p>
                     </div>
                   </div>
@@ -240,11 +358,15 @@ const Home = () => {
               </div>
               <div className="col-md-3 mb-3">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
-                  <div className="card-body d-flex flex-row">
+                  <div
+                    className="card-body d-flex flex-row"
+                    onClick={handleSeaFoodClick}
+                  >
                     <div>
                       <h5 className="card-title">Sea Food</h5>
                       <p className="card-text">
-                        Treat yourself to seafood from the ocean.
+                        Treat yourself to Freshly prepared seafood from the
+                        ocean at Mehfil.
                       </p>
                     </div>
                   </div>
@@ -252,11 +374,15 @@ const Home = () => {
               </div>
               <div className="col-md-3 mb-3">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
-                  <div className="card-body d-flex flex-row">
+                  <div
+                    className="card-body d-flex flex-row"
+                    onClick={handleVeganFoodClick}
+                  >
                     <div>
                       <h5 className="card-title">Vegan</h5>
                       <p className="card-text">
-                        Discover the benefits of a plant-based diet.
+                        Discover the benefits of a plant-based diet with Dhaba
+                        Style twist.
                       </p>
                     </div>
                   </div>
