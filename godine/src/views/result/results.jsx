@@ -6,10 +6,22 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import useAuth from "../../hooks/useAuth";
 
 const Results = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  let cuisineFirst = searchParams.get("c") || "";
+  if (cuisineFirst === "Any Cuisine") {
+    cuisineFirst = "";
+  }
+  let locationFirst = searchParams.get("l") || "";
+  if (locationFirst === "Select Location") {
+    locationFirst = "";
+  }
+  let keywordFirst = searchParams.get("K") || "";
+
   const [restaurants, setRestaurants] = useState([]);
+  const [initiallyFilteredRestaurants, setInitiallyFilteredRestaurants] =
+    useState(null);
   const [discounts, setDiscounts] = useState([]);
-  // Adjusted for direct integer parsing of ratings
   const [ratings, setRatings] = useState({});
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState({
@@ -20,6 +32,19 @@ const Results = () => {
   });
   const [favorites, setFavorites] = useState({});
   const { getUserId } = useAuth();
+  const fetchRatings = (restaurantsData) => {
+    restaurantsData.forEach((restaurant) => {
+      fetch(`http://127.0.0.1:8080/api/restaurants/${restaurant._id}/reviews`)
+        .then((response) => response.json())
+        .then((data) => {
+          setRatings((prevRatings) => ({
+            ...prevRatings,
+            [restaurant._id]: parseInt(data.averageRating, 10) || "Not Rated",
+          }));
+        })
+        .catch((error) => console.error("Error fetching ratings:", error));
+    });
+  };
 
   useEffect(() => {
     const fetchRestaurants = async () => {
@@ -29,6 +54,8 @@ const Results = () => {
       fetchRatings(data);
     };
 
+    console.log(restaurants);
+
     const fetchDiscounts = async () => {
       const response = await fetch(
         "http://127.0.0.1:8080/api/discountsPromotions/discounts"
@@ -37,47 +64,73 @@ const Results = () => {
       setDiscounts(data);
     };
 
-    const fetchRatings = (restaurants) => {
-      restaurants.forEach(async (restaurant) => {
-        const response = await fetch(
-          `http://127.0.0.1:8080/api/restaurants/${restaurant._id}/reviews`
-        );
-        response.json().then((data) => {
-          setRatings((prevRatings) => ({
-            ...prevRatings,
-            [restaurant._id]: parseInt(data.averageRating),
-          }));
-        });
-      });
-    };
-
     fetchRestaurants().catch(console.error);
     fetchDiscounts().catch(console.error);
   }, []);
 
-  //   const findDiscountForRestaurant = (restaurantId) => {
-  //     const discount = discounts.find(
-  //       (discount) => discount.restaurantID === restaurantId
-  //     );
-  //     return discount ? discount.discountPercentage : 0;
-  //   };
+  useEffect(() => {
+    setInitiallyFilteredRestaurants(
+      restaurants.filter((restaurant) => {
+        return (
+          (!cuisineFirst || restaurant.cuisine === cuisineFirst) &&
+          (!locationFirst ||
+            restaurant.restaurantAddress.includes(locationFirst)) &&
+          (!keywordFirst ||
+            restaurant.restaurantName
+              .toLowerCase()
+              .includes(keywordFirst.toLowerCase()))
+        );
+      })
+    );
+  }, [restaurants, cuisineFirst, locationFirst, keywordFirst]); // Initial filter effect
+
+  const applyFilters = (restaurant) => {
+    const restaurantLocation = restaurant.restaurantAddress
+      .split(",")[1]
+      ?.trim();
+    const matchesLocation = selectedFilters.location
+      ? restaurantLocation === selectedFilters.location
+      : true;
+    const matchesCuisine = selectedFilters.cuisine
+      ? restaurant.cuisine === selectedFilters.cuisine
+      : true;
+    const rating = ratings[restaurant._id];
+    const matchesRating = selectedFilters.rating
+      ? rating !== undefined && parseInt(rating, 10) === selectedFilters.rating
+      : true;
+    const discount = findDiscountForRestaurant(restaurant._id);
+    const matchesDiscount = selectedFilters.discount
+      ? discount === selectedFilters.discount
+      : true;
+
+    return (
+      matchesLocation && matchesCuisine && matchesRating && matchesDiscount
+    );
+  };
+
   const findDiscountForRestaurant = (restaurantId) => {
     if (!Array.isArray(discounts)) {
       console.warn("Discounts is not an array", discounts);
-      return 0; // Default to 0 if discounts is not an array
+      return 0;
     }
     const discount = discounts.find(
       (discount) => discount.restaurantID === restaurantId
     );
     return discount ? discount.discountPercentage : 0;
   };
-
-  const toggleFilters = () => {
-    setFiltersOpen(!filtersOpen);
-  };
-
   const handleFilterChange = (filter, value) => {
-    setSelectedFilters({ ...selectedFilters, [filter]: parseInt(value) });
+    let newValue;
+    if (filter === "rating" || filter === "discount") {
+      newValue = parseInt(value, 10);
+      newValue = isNaN(newValue) ? 0 : newValue;
+    } else {
+      newValue = value;
+    }
+
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
+      [filter]: newValue,
+    }));
   };
 
   const toggleFavorite = (restaurantId) => {
@@ -87,51 +140,44 @@ const Results = () => {
     }));
   };
 
-  const getUniqueCuisines = (restaurants) => {
-    const cuisines = restaurants.map((restaurant) => restaurant.cuisine);
-    return [...new Set(cuisines)];
+  const showAllRestaurants = () => {
+    setSelectedFilters({
+      location: "",
+      cuisine: "",
+      rating: 0,
+      discount: 0,
+    });
+
+    setInitiallyFilteredRestaurants(null);
   };
 
-  const getUniqueLocations = (restaurants) => {
-    const locations = restaurants.map((restaurant) =>
-      restaurant.restaurantAddress.split(",")[1].trim()
-    );
-    return [...new Set(locations)];
-  };
-
-  const applyFilters = (restaurant) => {
-    const matchesLocation = selectedFilters.location
-      ? restaurant.restaurantAddress.includes(selectedFilters.location)
-      : true;
-    const matchesCuisine = selectedFilters.cuisine
-      ? restaurant.cuisine === selectedFilters.cuisine
-      : true;
-    const rating = ratings[restaurant._id];
-    const matchesRating =
-      rating !== undefined ? parseInt(rating) >= selectedFilters.rating : false; // Ensures filter works correctly when specific ratings are not found
-    const matchesDiscount = selectedFilters.discount
-      ? findDiscountForRestaurant(restaurant._id) === selectedFilters.discount
-      : true;
-
-    return (
-      matchesLocation && matchesCuisine && matchesRating && matchesDiscount
-    );
-  };
-
-  const filteredRestaurants = restaurants.filter(applyFilters);
-
-  const uniqueCuisines = getUniqueCuisines(restaurants);
-  const uniqueLocations = getUniqueLocations(restaurants);
+  const displayedRestaurants = initiallyFilteredRestaurants || restaurants;
+  const filteredRestaurants = displayedRestaurants.filter(applyFilters);
+  const uniqueCuisines = [
+    ...new Set(restaurants.map((restaurant) => restaurant.cuisine)),
+  ];
+  const uniqueLocations = [
+    ...new Set(
+      restaurants.map((restaurant) =>
+        restaurant.restaurantAddress.split(",")[1].trim()
+      )
+    ),
+  ];
 
   return (
     <div className="container cb">
-      <button className="btn btn-primary" onClick={toggleFilters}>
+      <button
+        className="btn btn-secondary"
+        onClick={() => setFiltersOpen(!filtersOpen)}
+      >
         {filtersOpen ? "Hide Filters" : "Show Filters"}
+      </button>
+      <button className="btn btn-primary" onClick={showAllRestaurants}>
+        Show All Restaurants
       </button>
 
       {filtersOpen && (
         <div className="filter-panel">
-          {/* Filter UI code */}
           <div className="filter-group">
             <label htmlFor="location-filter">Location</label>
             <select
@@ -213,7 +259,7 @@ const Results = () => {
                   <div
                     className="favorite-icon"
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent card click event
+                      e.stopPropagation();
                       toggleFavorite(restaurant._id);
                     }}
                   >
@@ -237,7 +283,11 @@ const Results = () => {
                   </p>
                   <p className="m-0">Cuisine: {restaurant.cuisine}</p>
                   <p className="m-0">
-                    Ratings: {ratings[restaurant._id] || "Not Rated"}
+                    <p>{restaurant._id}</p>
+                    Ratings:{" "}
+                    {ratings[restaurant._id] !== undefined
+                      ? ratings[restaurant._id]
+                      : "Not Rated"}
                   </p>
                   <button className="btn btn-primary">Book</button>
                 </div>
