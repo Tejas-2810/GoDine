@@ -81,7 +81,7 @@ exports.forgotPassword = async (req, res) => {
 
     res.json({
       status: "success",
-      message: "Password reset linksent to email!",
+      message: "Password reset link sent to email!",
     });
   } catch (err) {
     user.passwordResetToken = undefined;
@@ -104,7 +104,7 @@ exports.resetPassword = async (req, res) => {
   user.password = req.body.password;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
-  await user.save();
+  await user.save({validateBeforeSave: false});
 
   // Log the user in, send JWT
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
