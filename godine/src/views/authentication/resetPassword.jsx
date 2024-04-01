@@ -65,19 +65,23 @@ function ResetPassword() {
             const data = {password: pwd};
             const response = await axios.patch(url, data, {signal: reqCancelRef.current?.signal})
                     .then((response) => response)
-                    .catch((err) => {
-                        if(axios.isCancel(err)){
-                            return err;
-                        }
-                        if(axios.isAxiosError(err)){
-                            return err.response;
-                        }
-                        return err;
-                    });
+                    .catch((err) => err);
             
             console.log(response);
-            if(axios.isCancel(reqCancelRef)){
+            if(axios.isCancel(response)){
                 console.log('Reset password request aborted');
+                return;
+            }
+
+            if(axios.isAxiosError(response)){
+                const err = response;
+                if(err.response.status === 400){
+                    alert('Invalid token or expired token, please try again!');
+                    navigate('/forgot-password');
+                }
+                else {
+                    alert('Please try again after sometime');
+                }
                 return;
             }
 
@@ -85,10 +89,7 @@ function ResetPassword() {
                 alert('Password reset successful');
                 navigate('/signin', {replace: true});
                 return;
-            } else if(response.status === 400){
-                alert('Invalid token or expired token, please try again!');
-                navigate('/forgot-password');
-            } else{
+            }else{
                 alert('Please try again after sometime');
             }
             window.location.reload();
