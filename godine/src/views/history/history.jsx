@@ -1,38 +1,280 @@
-import React from "react";
-import { useState, useEffect } from "react";
+// import React from "react";
+// import { useState, useEffect } from "react";
+// import "./history.css";
+// import useAuth from "../../hooks/useAuth";
+// import axios from "axios"; // Import axios
+
+// const History = () => {
+//   // const { getUserId } = useAuth();
+//   // const userId = getUserId();
+
+//   // const handleCancel = async (userId, reservationId) => {
+//   //   console.log("userid", userId, "reservationid", reservationId);
+//   //   const deleteUrl = `http://127.0.0.1:8080/api/user-reservation/delete/${userId}/${reservationId}`;
+
+//   //   console.log(deleteUrl);
+//   //   try {
+//   //     const response = await fetch(deleteUrl, {
+//   //       method: "delete",
+//   //       headers: {
+//   //         "Content-Type": "application/json",
+//   //       },
+//   //       credentials: "include",
+//   //     });
+
+//   //     console.log(response);
+
+//   //     if (!response.ok) {
+//   //       throw new Error(`HTTP error! status: ${response.status}`);
+//   //     }
+
+//   //     const newData = data.filter((item) => item._id !== reservationId);
+//   //     setData(newData);
+//   //   } catch (error) {
+//   //     console.error("Failed to delete the reservation:", error);
+//   //   }
+//   // };
+
+//   // const [data, setData] = useState([]);
+//   // const [restaurantDetails, setrestaurantDetails] = useState([]);
+//   // const [currentReviewDetails, setCurrentReviewDetails] = useState({
+//   //   userId: null,
+//   //   reservationId: null,
+//   //   restaurantId: null,
+//   // });
+//   // const [review, setReview] = useState({
+//   //   rating: "",
+//   //   recommendation: "",
+//   //   comment: "",
+//   // });
+
+//   // const handleChange = (e) => {
+//   //   const { name, value } = e.target;
+//   //   setReview((prevReview) => ({
+//   //     ...prevReview,
+//   //     [name]: value,
+//   //   }));
+//   // };
+
+//   // const handleSubmit = async (e) => {
+//   //   const { userId, reservationId, restaurantId } = currentReviewDetails;
+
+//   //   console.log(userId, reservationId, restaurantId);
+//   //   e.preventDefault();
+
+//   //   setReview({
+//   //     rating: "",
+//   //     recommendation: "",
+//   //     comment: "",
+//   //   });
+
+//   //   console.log("UUU");
+
+//   //   const post_review = `http://localhost:8080/api/user-reservation/review/${userId}/${reservationId}`;
+
+//   //   console.log(userId, reservationId, restaurantId);
+
+//   //   console.log("REVIEW", post_review);
+
+//   //   const reviewData = {
+//   //     userID: userId,
+//   //     reservationID: reservationId,
+//   //     restaurantID: restaurantId,
+//   //     rating: review["rating"],
+//   //     review: review["comment"],
+//   //   };
+//   //   try {
+//   //     const response = await fetch(post_review, {
+//   //       method: "post",
+//   //       headers: {
+//   //         "Content-Type": "application/json",
+//   //       },
+//   //       credentials: "include",
+//   //       body: JSON.stringify(reviewData),
+//   //     });
+
+//   //     console.log(response);
+
+//   //     if (!response.ok) {
+//   //       throw new Error(`HTTP error! status: ${response.status}`);
+//   //     }
+//   //   } catch (error) {
+//   //     console.error("Failed to add the review ", error);
+//   //   }
+//   // };
+
+//   // useEffect(() => {
+//   //   const fetchData = async () => {
+//   //     const userId = getUserId();
+//   //     const url = `http://localhost:8080/api/user-reservation/history/${userId}`;
+//   //     const get_rest_name = `http://localhost:8080/api/restaurants/`;
+//   //     console.log("2ND ID", userId);
+
+//   //     try {
+//   //       const response = await fetch(url, {
+//   //         method: "GET",
+//   //         headers: {
+//   //           "Content-Type": "application/json",
+//   //         },
+//   //         credentials: "include",
+//   //       });
+
+//   //       const response_rest = await fetch(get_rest_name, {
+//   //         method: "GET",
+//   //         headers: {
+//   //           "Content-Type": "application/json",
+//   //         },
+//   //         credentials: "include",
+//   //       });
+
+//   //       console.log("RESERVATION HISTORY", response);
+//   //       console.log("RESTAURANTS", response_rest);
+//   //       if (!response.ok) {
+//   //         throw new Error(`HTTP error! status: ${response.status}`);
+//   //       }
+//   //       const jsonData = await response.json();
+//   //       console.log("ERFDCVERS", jsonData, typeof jsonData);
+//   //       setData(jsonData.reservations);
+
+//   //       const jsonData1 = await response_rest.json();
+//   //       setrestaurantDetails(jsonData1);
+//   //     } catch (error) {
+//   //       console.error("Failed to fetch data:", error);
+//   //     }
+//   //   };
+
+//   //   fetchData();
+//   // }, []);
+
+//   const { getUserId } = useAuth();
+//   const userId = getUserId();
+
+//   const [data, setData] = useState([]);
+//   const [restaurantDetails, setRestaurantDetails] = useState([]);
+//   const [currentReviewDetails, setCurrentReviewDetails] = useState({
+//     userId: null,
+//     reservationId: null,
+//     restaurantId: null,
+//   });
+//   const [review, setReview] = useState({
+//     rating: "",
+//     recommendation: "",
+//     comment: "",
+//   });
+
+//   const handleCancel = async (userId, reservationId) => {
+//     const deleteUrl = `http://127.0.0.1:8080/api/user-reservation/delete/${userId}/${reservationId}`;
+
+//     try {
+//       await axios.delete(deleteUrl, {
+//         withCredentials: true, // Add withCredentials
+//       });
+
+//       const newData = data.filter((item) => item._id !== reservationId);
+//       setData(newData);
+//     } catch (error) {
+//       console.error("Failed to delete the reservation:", error);
+//     }
+//   };
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setReview((prevReview) => ({
+//       ...prevReview,
+//       [name]: value,
+//     }));
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     const { userId, reservationId, restaurantId } = currentReviewDetails;
+//     const post_review = `http://localhost:8080/api/user-reservation/review/${userId}/${reservationId}`;
+
+//     try {
+//       await axios.post(
+//         post_review,
+//         {
+//           userID: userId,
+//           reservationID: reservationId,
+//           restaurantID: restaurantId,
+//           rating: review.rating,
+//           review: review.comment,
+//         },
+//         {
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//           withCredentials: true,
+//         }
+//       );
+
+//       setReview({
+//         rating: "",
+//         recommendation: "",
+//         comment: "",
+//       });
+//     } catch (error) {
+//       console.error("Failed to add the review ", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       const url = `http://localhost:8080/api/user-reservation/history/${userId}`;
+//       const get_rest_name = `http://localhost:8080/api/restaurants/`;
+//       const { token } = useAuth();
+//       console.log(url);
+//       console.log(get_rest_name);
+
+//       try {
+//         const headers = {
+//           Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+//           "Content-Type": "application/json",
+//         };
+//         console.log("OOOOOO");
+//         // const response = await axios.get(url, {
+//         //   withCredentials: true,
+//         // });
+
+//         // console.log("PROBLEM", response);
+
+//         // const response_rest = await axios.get(get_rest_name, {
+//         //   withCredentials: true,
+//         // });
+
+//         const response = await axios.get(url, {
+//           withCredentials: true,
+//           headers,
+//         });
+//         const response_rest = await axios.get(get_rest_name, {
+//           withCredentials: true,
+//           headers,
+//         });
+
+//         setData(response.data.reservations);
+//         setRestaurantDetails(response_rest.data);
+//       } catch (error) {
+//         console.error("Failed to fetch data:", error);
+//       }
+//     };
+
+//     fetchData();
+//   }, []);
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./history.css";
+import useAuth from "../../hooks/useAuth"; // Update the import path as needed
 
 const History = () => {
-  let user_id = "65fb4b3b2519c4ffea8d5fa0";
-
-  const handleCancel = async (userId, reservationId) => {
-    console.log("userid", userId, "reservationid", reservationId);
-    const deleteUrl = `http://127.0.0.1:3000/api/user-reservation/delete/${userId}/${reservationId}`;
-
-    console.log(deleteUrl);
-    try {
-      const response = await fetch(deleteUrl, {
-        method: "delete",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      console.log(response);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const newData = data.filter((item) => item._id !== reservationId);
-      setData(newData);
-    } catch (error) {
-      console.error("Failed to delete the reservation:", error);
-    }
-  };
+  // Assuming useAuth hook provides userId and possibly a token for authenticated requests
+  const { getUserId, token } = useAuth();
+  const userId = getUserId();
 
   const [data, setData] = useState([]);
-  const [restaurantDetails, setrestaurantDetails] = useState([]);
+  const [restaurantDetails, setRestaurantDetails] = useState([]);
+  // Assuming you're managing some form states here for reviews
   const [currentReviewDetails, setCurrentReviewDetails] = useState({
     userId: null,
     reservationId: null,
@@ -44,90 +286,93 @@ const History = () => {
     comment: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  // Function to handle reservation cancellation
+  const handleCancel = async (reservationId) => {
+    try {
+      const deleteUrl = `http://127.0.0.1:8080/api/user-reservation/delete/${userId}/${reservationId}`;
+      await axios.delete(deleteUrl, {
+        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` }, // If needed
+      });
+      // Filter out the canceled reservation
+      setData(data.filter((item) => item._id !== reservationId));
+    } catch (error) {
+      console.error("Failed to delete the reservation:", error);
+    }
+  };
+
+  // Function to handle review submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { reservationId, restaurantId } = currentReviewDetails;
+    const reviewUrl = `http://localhost:8080/api/user-reservation/review/${userId}/${reservationId}`;
+
+    try {
+      await axios.post(
+        reviewUrl,
+        {
+          userID: userId,
+          reservationID: reservationId,
+          restaurantID: restaurantId,
+          rating: review.rating,
+          review: review.comment,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      // Reset review form
+      setReview({ rating: "", recommendation: "", comment: "" });
+      // Optionally refresh data or provide user feedback
+    } catch (error) {
+      console.error("Failed to add the review", error);
+    }
+  };
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
+
+    // For a checkbox, use the 'checked' property to determine the state value.
+    // For other inputs (e.g., text fields, radio buttons), use the 'value' property.
     setReview((prevReview) => ({
       ...prevReview,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = async (e) => {
-    const { userId, reservationId, restaurantId } = currentReviewDetails;
+  // Function to fetch data for reservations and restaurants
+  const fetchData = async () => {
+    const historyUrl = `http://localhost:8080/api/user-reservation/history/${userId}`;
+    const restaurantsUrl = `http://localhost:8080/api/restaurants/`;
 
-    console.log(userId, reservationId, restaurantId);
-    e.preventDefault();
-
-    setReview({
-      rating: "",
-      recommendation: "",
-      comment: "",
-    });
-
-    const post_review = `http://127.0.0.1:3000/api/user-reservation/review/${userId}/${reservationId}`;
-
-    console.log(userId, reservationId, restaurantId);
-
-    const reviewData = {
-      userID: userId,
-      reservationID: reservationId,
-      restaurantID: restaurantId,
-      rating: review["rating"],
-      review: review["comment"],
-    };
     try {
-      const response = await fetch(post_review, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reviewData),
+      console.log(historyUrl);
+      const response = await axios.get(historyUrl, {
+        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log(response);
+      console.log("SHIT", response);
+      const responseRest = await axios.get(restaurantsUrl, {
+        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      setData(response.data.reservations);
+      setRestaurantDetails(responseRest.data);
     } catch (error) {
-      console.error("Failed to add the review ", error);
+      if (error.response.status == 404) {
+        setData({});
+      }
+      console.error("Failed to fetch data:", error);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const url = `http://127.0.0.1:3000/api/user-reservation/history/${user_id}`;
-      const get_rest_name = `http://127.0.0.1:3000/api/restaurants/`;
-
-      try {
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        const response_rest = await fetch(get_rest_name, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const jsonData = await response.json();
-        console.log("ERFDCVERS", jsonData, typeof jsonData);
-        setData(jsonData.reservations);
-
-        const jsonData1 = await response_rest.json();
-        setrestaurantDetails(jsonData1);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      }
-    };
-
-    fetchData();
+    fetchData(); // Fetch data on component mount
   }, []);
 
   return (
@@ -187,7 +432,7 @@ const History = () => {
                       data-target="#exampleModalCenter"
                       onClick={() =>
                         setCurrentReviewDetails({
-                          userId: user_id,
+                          userId: getUserId(),
                           reservationId: item._id,
                           restaurantId: item.restaurantID,
                         })
@@ -200,7 +445,7 @@ const History = () => {
                     <button
                       type="button"
                       className="btn btn-danger"
-                      onClick={() => handleCancel(user_id, item._id)}
+                      onClick={() => handleCancel(getUserId(), item._id)}
                     >
                       Cancel
                     </button>
