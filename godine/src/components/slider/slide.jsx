@@ -6,8 +6,40 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import "react-multi-carousel/lib/styles.css";
 import Carousel from "react-multi-carousel";
 import "./slide.css"
+import axios, { isAxiosError } from 'axios';
+import React, { useEffect, useState, useRef } from "react";
 
 const Slide = () => {
+  const [latestRestaurants, setLatestRestaurants] = useState([]);
+    const cancelRequestRef = useRef(null);
+
+  useEffect(() => {
+    
+    cancelRequestRef.current?.abort();
+    cancelRequestRef.current = new AbortController();
+
+    const fetchLatestRestaurants = async () => {
+      try {
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
+        const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+        const resturant_endpoint = process.env.REACT_APP_PROFILE_ENDPOINT || "api/restaurants/topseatingrestaurants";
+        const endpoint = `${server_url}:${server_port}/${resturant_endpoint}`;
+        const response = await axios.get(endpoint, { signal: cancelRequestRef.current?.signal, withCredentials: true })
+        .then((response) => response)
+        .catch((err) => err);
+
+        setLatestRestaurants(response.data);
+      } catch (error) {
+        console.error("Error fetching restaurant data:",error);
+      }
+    };
+
+    fetchLatestRestaurants();
+
+    console.log("Top Restaurants:", latestRestaurants[0]);
+
+  }, []);
+
 const responsive = {
     superLargeDesktop: {
         // the naming can be any, depends on you.
@@ -87,114 +119,68 @@ sliderClass=""
 slidesToSlide={1}
 swipeable
 >
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i1} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i2} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i3} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i1} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i2} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i3} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i1} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i2} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i3} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i1} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i2} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i3} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
+  <div className="card home-c">
+        <div className="card">
+            <img className="img-bottom" alt="Card image" src={latestRestaurants[0].photos[0]} />
+        </div>
+        <div className="card-body">
+            <div className="d-flex">
+            <h5 className="card-title m-0">{latestRestaurants[0].restaurantName}</h5>
+            </div>
+            <p className="card-text "><b>Address : </b>{latestRestaurants[0].restaurantAddress}</p>
+            <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {latestRestaurants[0].cuisine} </p></div>
+          </div>
+      </div>
+  <div className="card home-c">
+        <div className="card">
+            <img className="img-bottom" alt="Card image" src={latestRestaurants[1].photos[0]} />
+        </div>
+        <div className="card-body">
+            <div className="d-flex">
+            <h5 className="card-title m-0">{latestRestaurants[1].restaurantName}</h5>
+            </div>
+            <p className="card-text "><b>Address : </b>{latestRestaurants[1].restaurantAddress}</p>
+            <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {latestRestaurants[1].cuisine} </p></div>
+          </div>
+      </div>
+  <div className="card home-c">
+        <div className="card">
+            <img className="img-bottom" alt="Card image" src={latestRestaurants[2].photos[0]} />
+        </div>
+        <div className="card-body">
+            <div className="d-flex">
+            <h5 className="card-title m-0">{latestRestaurants[2].restaurantName}</h5>
+            </div>
+            <p className="card-text "><b>Address : </b>{latestRestaurants[2].restaurantAddress}</p>
+            <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {latestRestaurants[2].cuisine} </p></div>
+          </div>
+      </div>
+  <div className="card home-c">
+        <div className="card">
+            <img className="img-bottom" alt="Card image" src={latestRestaurants[3].photos[0]} />
+        </div>
+        <div className="card-body">
+            <div className="d-flex">
+            <h5 className="card-title m-0">{latestRestaurants[3].restaurantName}</h5>
+            </div>
+            <p className="card-text "><b>Address : </b>{latestRestaurants[3].restaurantAddress}</p>
+            <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {latestRestaurants[3].cuisine} </p></div>
+          </div>
+      </div>
+  <div className="card home-c">
+        <div className="card">
+            <img className="img-bottom" alt="Card image" src={latestRestaurants[4].photos[0]} />
+        </div>
+        <div className="card-body">
+            <div className="d-flex">
+            <h5 className="card-title m-0">{latestRestaurants[4].restaurantName}</h5>
+            </div>
+            <p className="card-text "><b>Address : </b>{latestRestaurants[4].restaurantAddress}</p>
+            <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {latestRestaurants[4].cuisine} </p></div>
+          </div>
+      </div>
+
+
 </Carousel>
 );
 };

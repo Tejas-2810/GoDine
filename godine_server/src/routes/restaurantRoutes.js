@@ -32,6 +32,15 @@ router.post(
   restaurantController.createRestaurant
 );
 
+//Top 3 restaurants
+router.get("/toprestaurants", restaurantController.getTopRestaurants);
+
+//Top 5 restaurants by seating capacity
+router.get(
+  "/topseatingrestaurants",
+  restaurantController.getTopRestaurantsBySeatingCapacity
+);
+
 // Restaurant Page
 router.get("/:id", restaurantController.getRestaurantById);
 
@@ -40,4 +49,5 @@ router.get("/:restaurantID/reviews", restaurantController.getRestaurantReviews);
 
 //Home page
 router.get("/", restaurantController.getAllRestaurantsForHomePage);
+
 module.exports = router;

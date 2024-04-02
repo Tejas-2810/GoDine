@@ -169,3 +169,18 @@ transform: rotate(10deg);
 .form-control-h::placeholder{
 color: white !important;
 }
+
+.img-top {
+    /* max-width: 20vw !important; */
+    width: 100% !important;
+    max-height: 15rem !important;
+    object-fit: cover;
+
+}
+
+
+.home-c:hover {
+    cursor: pointer;
+    transition: background-color 0.5s ease, transform 0.3s ease;
+    transform: scale(1.1);
+}
