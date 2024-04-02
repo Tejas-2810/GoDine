@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const router = express.Router();
 const restaurantController = require("../controllers/restaurantController");
-const { checkAuth } = require("../middleware/authMiddleware");
+const cloudinary = require('../config/cloudinaryConfig');
 
 const FILE_TYPE_MAP = {
   "image/png": "png",
