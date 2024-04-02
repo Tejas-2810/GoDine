@@ -18,6 +18,7 @@ import Search from "./views/result/results";
 import Dashboard from "./views/dashboard/dashboard";
 import Unauthorized from "./views/authentication/unauthorized";
 import RequireAuth from "./utils/RequireAuth";
+import Newsletter from "./views/newsletter/newsletter";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 // current roles
@@ -45,6 +46,7 @@ function App() {
           {/* user routes */}
           <Route element={<RequireAuth allowedRoles={[ROLES.USER]} />}>
             <Route path="/history" element={<History />} />
+            <Route path="/newsletter" element={<Newsletter />} />
           </Route>
           {/* restaurant owner route */}
           <Route
