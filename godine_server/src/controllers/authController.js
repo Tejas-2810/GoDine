@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require("uuid");
 //Create a new user
 exports.signup = async (req, res) => {
   const uniqueId = uuidv4();
-  const { firstName, lastName, email, password, role } = req.body;
+  const { firstName, lastName, email, password, phoneNumber, role } = req.body;
   const user = await User.findOne({ email }).select("+password");
   if (user) {
     return res.status(401).json({ message: "User already exists" });
@@ -16,21 +16,18 @@ exports.signup = async (req, res) => {
   try {
     const name = firstName + " " + lastName;
     const userID = uniqueId;
-    console.log(userID, name, email, password, role);
+
     const newUser = await User.create({
       userID,
       name,
       email,
       password,
-      role,
-    });
-    // Create a token for JWT_EXPIRES_IN duration (6 minutes)
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
+      phoneNumber,
+      role
     });
 
     // Send the token and the user data in the response
-    res.status(201).json({ token, data: { user: newUser } });
+    res.status(201).json({ user: newUser , message: "Successfully created a user"});
   } catch (err) {
     // If there is an error, send the error message in the response
     res.status(500).json({ message: err.message });
@@ -69,8 +66,7 @@ exports.forgotPassword = async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   //Change the resetURL to the frontend URL
-  const resetURL = `http://localhost:8080/reset-password/${resetToken}`;
-  console.log("NEW");
+  const resetURL = `http://localhost:3000/reset-password/${resetToken}`;
   const message = `Reset your password: ${resetURL}.`;
 
   try {
@@ -94,24 +90,23 @@ exports.forgotPassword = async (req, res) => {
 
 //Reset password
 exports.resetPassword = async (req, res) => {
-  const resetToken = req.params.token;
-  let user = await User.findOne({ passwordResetExpires: { $gt: Date.now() } });
+  try{
+    const resetToken = req.params.token;
+    let user = await User.findOne({ passwordResetExpires: { $gt: Date.now() } });
 
-  // Find user by comparing hashed tokens
-  if (!user || !(await bcrypt.compare(resetToken, user.passwordResetToken))) {
-    return res.status(400).json({ message: "Token is invalid or has expired" });
+    // Find user by comparing hashed tokens
+    if (!user || !(await bcrypt.compare(resetToken, user.passwordResetToken))) {
+      return res.status(400).json({ message: "Token is invalid or has expired" });
+    }
+
+    user.password = req.body.password;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+
+    user.save({ validateBeforeSave: false });
+
+    res.status(200).json({ message: "Successfully updated the password!" });
+  } catch (err){
+    res.status(500).json({ message: "Error in resetting password" });
   }
-
-  user.password = req.body.password;
-  user.passwordResetToken = undefined;
-  user.passwordResetExpires = undefined;
-
-  user.save({ validateBeforeSave: false });
-  // is this code needed as I am forcing the user to log in again in front end
-  // Log the user in, send JWT
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
-
-  res.status(200).json({ token });
 };
