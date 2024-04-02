@@ -1,5 +1,7 @@
-.bp{
-    margin-bottom: auto;
-    
+.bp {
+  margin-bottom: auto;
 }
 
+.table-light-blue {
+  background-color: lightblue !important; /* Ensure this overrides other styles */
+}
