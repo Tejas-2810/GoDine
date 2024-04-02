@@ -1,15 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./home.css";
 import { Button } from "react-bootstrap";
 import Slide from "../../components/slider/slide";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios, { isAxiosError } from 'axios';
 import { useNavigate, createSearchParams } from "react-router-dom";
 
 const Home = () => {
   const [cuisine, setCuisine] = useState("Any Cuisine");
   const [location, setLocation] = useState("Select Location");
   const [keyword, setKeyword] = useState("");
+  const [topRestaurants, setTopRestaurants] = useState([]); 
+
   const navigate = useNavigate();
+  const cancelRequestRef = useRef(null);
+  
+  useEffect(() => {
+    
+    cancelRequestRef.current?.abort();
+    cancelRequestRef.current = new AbortController();
+    const fetchTopRestaurants = async () => {
+      try {
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
+        const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+        const resturant_endpoint = process.env.REACT_APP_PROFILE_ENDPOINT || "api/restaurants/toprestaurants";
+      
+        const endpoint = `${server_url}:${server_port}/${resturant_endpoint}`;
+        const response = await axios.get(endpoint, { signal: cancelRequestRef.current?.signal, withCredentials: true })
+        .then((response) => response)
+        .catch((err) => err);
+
+        setTopRestaurants(response.data);
+      } catch (error) { 
+        console.error("Error fetching restaurant data:",error);
+      }
+    };
+
+    fetchTopRestaurants(); 
+
+  }, []);
+
+  const topRestaurantsList = topRestaurants?.map((restaurant) => {
+    return (
+      <div className="col-md-4 mb-3 home-c">
+        <div className="card ">
+          <img  className="img-top " alt="safdf" src={restaurant.photos[0]} />
+
+          <div className="card-body">
+            <div className="d-flex">
+            <h4 className="card-title m-0 col-9">{restaurant.restaurantName}</h4>
+            <p> {restaurant.operatingHours}</p>
+            </div>
+            <p className="card-text "><b>Address : </b>{restaurant.restaurantAddress}</p>
+            <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {restaurant.cuisine} </p></div>
+          </div>
+        </div>
+      </div>
+    );
+  });
 
   const redirect = () => {
     navigate({
@@ -206,53 +254,7 @@ const Home = () => {
             </div>
             <div className="col-12">
               <div className="row">
-                <div className="col-md-4 mb-3">
-                  <div className="card">
-                    <img
-                      className="img-fluid"
-                      alt="safdf"
-                      src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-0.3.5&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;w=1080&amp;fit=max&amp;ixid=eyJhcHBfaWQiOjMyMDc0fQ&amp;s=ee8417f0ea2a50d53a12665820b54e23"
-                    />
-                    <div className="card-body">
-                      <h4 className="card-title">Beach Restautrent</h4>
-                      <p className="card-text">
-                        Enjoy the beach as you eat, with a beautiful sunset.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-4 mb-3">
-                  <div className="card">
-                    <img
-                      className="img-fluid"
-                      alt="100%x280"
-                      src="https://images.unsplash.com/photo-1532777946373-b6783242f211?ixlib=rb-0.3.5&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;w=1080&amp;fit=max&amp;ixid=eyJhcHBfaWQiOjMyMDc0fQ&amp;s=8ac55cf3a68785643998730839663129"
-                    />
-                    <div className="card-body">
-                      <h4 className="card-title">Sunset</h4>
-                      <p className="card-text">
-                        With supporting text below as a natural lead-in to
-                        additional content.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-4 mb-3">
-                  <div className="card">
-                    <img
-                      className="img-fluid"
-                      alt="100%x280"
-                      src="https://images.unsplash.com/photo-1532763303805-529d595877c5?ixlib=rb-0.3.5&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;w=1080&amp;fit=max&amp;ixid=eyJhcHBfaWQiOjMyMDc0fQ&amp;s=5ee4fd5d19b40f93eadb21871757eda6"
-                    />
-                    <div className="card-body">
-                      <h4 className="card-title">Hills</h4>
-                      <p className="card-text">
-                        With supporting text below as a natural lead-in to
-                        additional content.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                {topRestaurantsList}  
               </div>
             </div>
           </div>
