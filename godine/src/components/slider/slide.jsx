@@ -40,6 +40,23 @@ const Slide = () => {
 
   }, []);
 
+
+  const latestrestarants = latestRestaurants?.map((restaurant) => {
+    return (
+      <div className="card home-c">
+        <div className="card">
+            <img className="img-bottom" alt="Card image" src={restaurant.photos[0]} />
+        </div>
+        <div className="card-body">
+            <div className="d-flex">
+            <h5 className="card-title m-0">{restaurant.restaurantName}</h5>
+            </div>
+            <p className="card-text "><b>Address : </b>{restaurant.restaurantAddress}</p>
+            <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {restaurant.cuisine} </p></div>
+          </div>
+      </div>
+    )
+  });
 const responsive = {
     superLargeDesktop: {
         // the naming can be any, depends on you.
@@ -119,68 +136,9 @@ sliderClass=""
 slidesToSlide={1}
 swipeable
 >
-  <div className="card home-c">
-        <div className="card">
-            <img className="img-bottom" alt="Card image" src={latestRestaurants[0].photos[0]} />
-        </div>
-        <div className="card-body">
-            <div className="d-flex">
-            <h5 className="card-title m-0">{latestRestaurants[0].restaurantName}</h5>
-            </div>
-            <p className="card-text "><b>Address : </b>{latestRestaurants[0].restaurantAddress}</p>
-            <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {latestRestaurants[0].cuisine} </p></div>
-          </div>
-      </div>
-  <div className="card home-c">
-        <div className="card">
-            <img className="img-bottom" alt="Card image" src={latestRestaurants[1].photos[0]} />
-        </div>
-        <div className="card-body">
-            <div className="d-flex">
-            <h5 className="card-title m-0">{latestRestaurants[1].restaurantName}</h5>
-            </div>
-            <p className="card-text "><b>Address : </b>{latestRestaurants[1].restaurantAddress}</p>
-            <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {latestRestaurants[1].cuisine} </p></div>
-          </div>
-      </div>
-  <div className="card home-c">
-        <div className="card">
-            <img className="img-bottom" alt="Card image" src={latestRestaurants[2].photos[0]} />
-        </div>
-        <div className="card-body">
-            <div className="d-flex">
-            <h5 className="card-title m-0">{latestRestaurants[2].restaurantName}</h5>
-            </div>
-            <p className="card-text "><b>Address : </b>{latestRestaurants[2].restaurantAddress}</p>
-            <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {latestRestaurants[2].cuisine} </p></div>
-          </div>
-      </div>
-  <div className="card home-c">
-        <div className="card">
-            <img className="img-bottom" alt="Card image" src={latestRestaurants[3].photos[0]} />
-        </div>
-        <div className="card-body">
-            <div className="d-flex">
-            <h5 className="card-title m-0">{latestRestaurants[3].restaurantName}</h5>
-            </div>
-            <p className="card-text "><b>Address : </b>{latestRestaurants[3].restaurantAddress}</p>
-            <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {latestRestaurants[3].cuisine} </p></div>
-          </div>
-      </div>
-  <div className="card home-c">
-        <div className="card">
-            <img className="img-bottom" alt="Card image" src={latestRestaurants[4].photos[0]} />
-        </div>
-        <div className="card-body">
-            <div className="d-flex">
-            <h5 className="card-title m-0">{latestRestaurants[4].restaurantName}</h5>
-            </div>
-            <p className="card-text "><b>Address : </b>{latestRestaurants[4].restaurantAddress}</p>
-            <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {latestRestaurants[4].cuisine} </p></div>
-          </div>
-      </div>
 
-
+  {latestrestarants}
+  <div className='test'></div>
 </Carousel>
 );
 };
