@@ -69,7 +69,8 @@ exports.forgotPassword = async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   //Change the resetURL to the frontend URL
-  const resetURL = `http://localhost:3000/profile${resetToken}`;
+  const resetURL = `http://localhost:3000/reset-password/${resetToken}`;
+  console.log("NEW");
   const message = `Reset your password: ${resetURL}.`;
 
   try {
@@ -81,7 +82,7 @@ exports.forgotPassword = async (req, res) => {
 
     res.json({
       status: "success",
-      message: "Password reset link sent to email!",
+      message: "Password reset linksent to email!",
     });
   } catch (err) {
     user.passwordResetToken = undefined;
@@ -104,8 +105,9 @@ exports.resetPassword = async (req, res) => {
   user.password = req.body.password;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
-  await user.save({validateBeforeSave: false});
 
+  user.save({ validateBeforeSave: false });
+  // is this code needed as I am forcing the user to log in again in front end
   // Log the user in, send JWT
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,

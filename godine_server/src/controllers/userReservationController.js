@@ -7,9 +7,10 @@ exports.getReservationHistory = async (req, res) => {
 
   try {
     const reservations = await Reservation.find({ userID: userId });
+    console.log(reservations);
     if (reservations.length === 0) {
       return res
-        .status(404)
+        .status(200)
         .json({ message: "No reservations found for this user" });
     }
     res.status(200).json({ reservations });
