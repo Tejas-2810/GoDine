@@ -262,19 +262,136 @@
 //     fetchData();
 //   }, []);
 
+// import React, { useState, useEffect } from "react";
+// import axios from "axios";
+// import "./history.css";
+// import useAuth from "../../hooks/useAuth"; // Update the import path as needed
+
+// const History = () => {
+//   // Assuming useAuth hook provides userId and possibly a token for authenticated requests
+//   const { getUserId, token } = useAuth();
+//   const userId = getUserId();
+
+//   const [data, setData] = useState([]);
+//   const [restaurantDetails, setRestaurantDetails] = useState([]);
+//   // Assuming you're managing some form states here for reviews
+//   const [currentReviewDetails, setCurrentReviewDetails] = useState({
+//     userId: null,
+//     reservationId: null,
+//     restaurantId: null,
+//   });
+//   const [review, setReview] = useState({
+//     rating: "",
+//     recommendation: "",
+//     comment: "",
+//   });
+
+//   // Function to handle reservation cancellation
+//   const handleCancel = async (userId, reservationId) => {
+//     console.log(userId, reservationId, "PPPP[", token);
+
+//     try {
+//       const deleteUrl = `http://127.0.0.1:8080/api/user-reservation/delete/${userId}/${reservationId}`;
+
+//       console.log("amma please amma", deleteUrl);
+//       await axios.delete(deleteUrl, {
+//         withCredentials: true,
+//         headers: { Authorization: `Bearer ${token}` }, // If needed
+//       });
+
+//       console.log("hmmmm");
+//       // Filter out the canceled reservation
+//       setData(data.filter((item) => item._id !== reservationId));
+//     } catch (error) {
+//       console.error("Failed to delete the reservation:", error);
+//     }
+//   };
+
+//   // Function to handle review submission
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     const { reservationId, restaurantId } = currentReviewDetails;
+//     const reviewUrl = `http://localhost:8080/api/user-reservation/review/${userId}/${reservationId}`;
+
+//     try {
+//       await axios.post(
+//         reviewUrl,
+//         {
+//           userID: userId,
+//           reservationID: reservationId,
+//           restaurantID: restaurantId,
+//           rating: review.rating,
+//           review: review.comment,
+//         },
+//         {
+//           withCredentials: true,
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
+//       // Reset review form
+//       setReview({ rating: "", recommendation: "", comment: "" });
+//       // Optionally refresh data or provide user feedback
+//     } catch (error) {
+//       console.error("Failed to add the review", error);
+//     }
+//   };
+//   const handleChange = (event) => {
+//     const { name, value, type, checked } = event.target;
+
+//     // For a checkbox, use the 'checked' property to determine the state value.
+//     // For other inputs (e.g., text fields, radio buttons), use the 'value' property.
+//     setReview((prevReview) => ({
+//       ...prevReview,
+//       [name]: type === "checkbox" ? checked : value,
+//     }));
+//   };
+
+//   // Function to fetch data for reservations and restaurants
+//   const fetchData = async () => {
+//     const historyUrl = `http://localhost:8080/api/user-reservation/history/${userId}`;
+//     const restaurantsUrl = `http://localhost:8080/api/restaurants/`;
+
+//     try {
+//       console.log(historyUrl);
+//       const response = await axios.get(historyUrl, {
+//         withCredentials: true,
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+
+//       console.log("SHIT", response);
+//       const responseRest = await axios.get(restaurantsUrl, {
+//         withCredentials: true,
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+
+//       setData(response.data.reservations);
+//       setRestaurantDetails(responseRest.data);
+//     } catch (error) {
+//       if (error.response.status == 404) {
+//         setData({});
+//       }
+//       console.error("Failed to fetch data:", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchData(); // Fetch data on component mount
+//   }, []);
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./history.css";
-import useAuth from "../../hooks/useAuth"; // Update the import path as needed
+import "./history.css"; // Make sure the path is correct
+import useAuth from "../../hooks/useAuth"; // Make sure the path is correct
 
 const History = () => {
-  // Assuming useAuth hook provides userId and possibly a token for authenticated requests
-  const { getUserId, token } = useAuth();
+  const { getUserId } = useAuth();
+
   const userId = getUserId();
 
   const [data, setData] = useState([]);
   const [restaurantDetails, setRestaurantDetails] = useState([]);
-  // Assuming you're managing some form states here for reviews
   const [currentReviewDetails, setCurrentReviewDetails] = useState({
     userId: null,
     reservationId: null,
@@ -286,27 +403,70 @@ const History = () => {
     comment: "",
   });
 
-  // Function to handle reservation cancellation
-  const handleCancel = async (reservationId) => {
+  useEffect(() => {
+    // if (!token) {
+    //   console.warn("Token not available yet. Delaying data fetch.");
+    //   // Early return if token isn't available, thus preventing API call
+    // }
+    const fetchData = async () => {
+      //console.log("first", token);
+      const historyUrl = `http://localhost:8080/api/user-reservation/history/${userId}`;
+      const restaurantsUrl = `http://localhost:8080/api/restaurants/`;
+      try {
+        const [reservationsResponse, restaurantsResponse] = await Promise.all([
+          axios.get(historyUrl, {
+            withCredentials: true,
+          }),
+          axios.get(restaurantsUrl, {
+            withCredentials: true,
+          }),
+        ]);
+        setData(reservationsResponse.data.reservations);
+        setRestaurantDetails(restaurantsResponse.data);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+    fetchData();
+  }, [userId]);
+
+  const handleCancel = async (userId, reservationId) => {
+    // if (!token) {
+    //   console.error("Token is not available for cancellation.");
+    //   //return;
+    // }
     try {
-      const deleteUrl = `http://127.0.0.1:8080/api/user-reservation/delete/${userId}/${reservationId}`;
+      //console.log("second", token);
+
+      console.log(userId, reservationId);
+      const deleteUrl = `http://localhost:8080/api/user-reservation/delete/${userId}/${reservationId}`;
       await axios.delete(deleteUrl, {
         withCredentials: true,
-        headers: { Authorization: `Bearer ${token}` }, // If needed
       });
-      // Filter out the canceled reservation
       setData(data.filter((item) => item._id !== reservationId));
     } catch (error) {
       console.error("Failed to delete the reservation:", error);
     }
   };
 
-  // Function to handle review submission
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setReview((prevReview) => ({
+      ...prevReview,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // if (!token) {
+    //   console.error("Token is not available for submitting the review.");
+    //   return;
+    // }
     const { reservationId, restaurantId } = currentReviewDetails;
     const reviewUrl = `http://localhost:8080/api/user-reservation/review/${userId}/${reservationId}`;
 
+    console.log(reviewUrl);
     try {
       await axios.post(
         reviewUrl,
@@ -320,61 +480,15 @@ const History = () => {
         {
           withCredentials: true,
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
       );
-      // Reset review form
-      setReview({ rating: "", recommendation: "", comment: "" });
-      // Optionally refresh data or provide user feedback
+      setReview({ rating: "", recommendation: "", comment: "" }); // Reset form after submission
     } catch (error) {
       console.error("Failed to add the review", error);
     }
   };
-  const handleChange = (event) => {
-    const { name, value, type, checked } = event.target;
-
-    // For a checkbox, use the 'checked' property to determine the state value.
-    // For other inputs (e.g., text fields, radio buttons), use the 'value' property.
-    setReview((prevReview) => ({
-      ...prevReview,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  // Function to fetch data for reservations and restaurants
-  const fetchData = async () => {
-    const historyUrl = `http://localhost:8080/api/user-reservation/history/${userId}`;
-    const restaurantsUrl = `http://localhost:8080/api/restaurants/`;
-
-    try {
-      console.log(historyUrl);
-      const response = await axios.get(historyUrl, {
-        withCredentials: true,
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      console.log("SHIT", response);
-      const responseRest = await axios.get(restaurantsUrl, {
-        withCredentials: true,
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setData(response.data.reservations);
-      setRestaurantDetails(responseRest.data);
-    } catch (error) {
-      if (error.response.status == 404) {
-        setData({});
-      }
-      console.error("Failed to fetch data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData(); // Fetch data on component mount
-  }, []);
-
   return (
     <div className="container cb bp">
       <table className="table table-hover ">

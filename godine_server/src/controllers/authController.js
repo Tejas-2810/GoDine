@@ -69,7 +69,7 @@ exports.forgotPassword = async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   //Change the resetURL to the frontend URL
-  const resetURL = `http://localhost:3000/reset-password/${resetToken}`;
+  const resetURL = `http://localhost:8080/reset-password/${resetToken}`;
   console.log("NEW");
   const message = `Reset your password: ${resetURL}.`;
 

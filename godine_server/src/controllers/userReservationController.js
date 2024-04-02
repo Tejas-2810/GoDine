@@ -2,6 +2,8 @@ const Reservation = require("../models/reservations");
 const Review = require("../models/review");
 var mongoose = require("mongoose");
 
+console.log("INSIDEEEEE");
+// return true
 exports.getReservationHistory = async (req, res) => {
   const userId = req.params.userId;
 
@@ -21,6 +23,7 @@ exports.getReservationHistory = async (req, res) => {
 
 exports.deleteReservation = async (req, res) => {
   const reservationId = req.params.reservationId;
+  console.log("shit");
 
   try {
     const reservation = await Reservation.findByIdAndDelete(reservationId);
