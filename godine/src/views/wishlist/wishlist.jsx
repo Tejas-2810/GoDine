@@ -2,130 +2,146 @@ import React, { useEffect, useRef, useState } from "react";
 import RestaurantsList from "../../components/wishlist/RestaurantsList";
 import "../../components/wishlist/RestaurantCard.css";
 import useAuth from "../../hooks/useAuth";
-import axios, { isAxiosError } from "axios";
-const restaurants = [
-  {
-    id: 1,
-    imageUrl:
-      "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cmVzdGF1cmFudCUyMGludGVyaW9yfGVufDB8fDB8fHww",
-    name: "Gourmet Bites",
-    rating: 4.5,
-    tags: ["Italian", "Pizza", "Vegetarian"],
-  },
-  {
-    id: 2,
-    imageUrl:
-      "https://media.istockphoto.com/id/843610508/photo/interior-of-cozy-restaurant-loft-style.jpg?s=612x612&w=0&k=20&c=s_PVQJNzcilxKYpm3O-AxBMx4_om5G0TKuxUmiMl85Y=",
-    name: "Ocean's Delight",
-    rating: 4.8,
-    tags: ["Seafood", "Fine Dining"],
-  },
-  {
-    id: 3,
-    imageUrl:
-      "https://media.cntraveler.com/photos/5a931002d363c34048b35bf5/master/w_320%2Cc_limit/Motoyoshi_2018__DSC5176.jpg",
-    name: "The Curry House",
-    rating: 4.2,
-    tags: ["Indian", "Spicy", "Vegan Options"],
-  },
-  {
-    id: 4,
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7GdDoIBupJln8MPs0tByH0JPDabG2zF0F6w&usqp=CAU",
-    name: "Beijing Express",
-    rating: 4.0,
-    tags: ["Chinese", "Noodles", "Quick Bites"],
-  },
-  {
-    id: 5,
-    imageUrl:
-      "https://w0.peakpx.com/wallpaper/821/32/HD-wallpaper-beautiful-wood-lined-restaurant-r-tables-window-restaurant-chairs-r.jpg",
-    name: "El Mexicano",
-    rating: 4.3,
-    tags: ["Mexican", "Tacos", "Gluten Free Options"],
-  },
-  {
-    id: 6,
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuT9tc_FRLkw0t-5KqibtXlskSf1xYqwbl2Q&usqp=CAU",
-    name: "The Green Leaf",
-    rating: 4.6,
-    tags: ["Vegetarian", "Organic", "Salads"],
-  },
-  {
-    id: 7,
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9ZoETXY0T-MxJAnBYToMggNoOs5NmkHjh9Q&usqp=CAU",
-    name: "Burger Town",
-    rating: 3.9,
-    tags: ["American", "Burgers", "Fast Food"],
-  },
-  {
-    id: 8,
-    imageUrl:
-      "https://resizer.otstatic.com/v2/photos/wide-mlarge/2/43647767.webp",
-    name: "Sushi World",
-    rating: 4.7,
-    tags: ["Japanese", "Sushi", "Fine Dining"],
-  },
-  {
-    id: 9,
-    imageUrl:
-      "https://media.istockphoto.com/id/1406684925/photo/multiracial-friends-at-the-dinner-at-the-beach-restaurant-during-sunset.jpg?s=612x612&w=0&k=20&c=_-RlzdaQ0M0BsJ-bu-Rb3NbM_KZd8Wv26R7QUon6DO0=",
-    name: "Pasta Paradise",
-    rating: 4.4,
-    tags: ["Italian", "Pasta", "Vegetarian Friendly"],
-  },
-  {
-    id: 10,
-    imageUrl:
-      "https://media.istockphoto.com/id/1322274374/photo/beach-bar-and-night-clubs-at-tropical-island-koh-phangan-thailand.jpg?s=612x612&w=0&k=20&c=OwrhkyMCdewdSZLziz5UKLaBQClkzmahMeTV_u2XuY8=",
-    name: "French Feast",
-    rating: 4.9,
-    tags: ["French", "Fine Dining", "Gourmet"],
-  },
-];
+import axios from "axios";
+
 const WishList = () => {
   const { getUserId } = useAuth();
   const userId = getUserId();
+  console.log(userId);
   const cancelRequestRef = useRef(null);
-  console.log("UserID :::::", userId);
-  const [wishlistData, setwishlistData] = useState(null);
+  const [restaurantsData, setRestaurantsData] = useState([]);
 
   useEffect(() => {
-    const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
-    const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
-    const resturant_endpoint =
-      process.env.REACT_APP_PROFILE_ENDPOINT || "api/wishlist";
-    const userId = getUserId();
+    const fetchWishlistAndDetails = async () => {
+      const endpoint = `http://localhost:8080/users/wishlist/${userId}`;
 
-    const endpoint = `${server_url}:${server_port}/${resturant_endpoint}/${userId}`;
-
-    cancelRequestRef.current?.abort();
-    cancelRequestRef.current = new AbortController();
-    const fetchData = async () => {
       try {
-        const response = await axios
-          .get(endpoint, {
-            signal: cancelRequestRef.current?.signal,
-            withCredentials: true,
-          })
-          .then((response) => response)
-          .catch((err) => err);
+        cancelRequestRef.current?.cancel(
+          "Operation canceled due to new request."
+        );
+        cancelRequestRef.current = axios.CancelToken.source();
 
-        setwishlistData(response.data);
-        console.log(response.data);
+        const response = await axios.get(endpoint, {
+          cancelToken: cancelRequestRef.current.token,
+          withCredentials: true,
+        });
+
+        console.log(response.data); // Log the data to verify
+
+        // Fetch ratings for each restaurant ID in the response
+        const ratingsPromises = response.data.map((restaurantId) =>
+          axios.get(
+            `http://127.0.0.1:8080/api/restaurants/${restaurantId}/reviews`,
+            {
+              cancelToken: cancelRequestRef.current.token,
+            }
+          )
+        );
+
+        // Fetch additional details for each restaurant in the wishlist
+        const detailsPromises = response.data.map((restaurantId) =>
+          axios.get(`http://127.0.0.1:8080/api/restaurants/${restaurantId}`, {
+            cancelToken: cancelRequestRef.current.token,
+          })
+        );
+
+        // Wait for all promises to complete
+        const [ratingsResponses, detailsResponses] = await Promise.all([
+          Promise.all(ratingsPromises),
+          Promise.all(detailsPromises),
+        ]);
+
+        // Construct data with details and ratings
+        const wishlistDataWithDetailsAndRatings = response.data.map(
+          (restaurantId, index) => {
+            const details = detailsResponses[index].data;
+            console.log(details);
+            const ratings = ratingsResponses[index].data;
+            const photoUrls = details.photos || [];
+            const randomPhotoIndex = Math.floor(
+              Math.random() * photoUrls.length
+            );
+            const averageRating = ratings.averageRating;
+            const location = details.address
+              ? details.address.split(",")[1].trim()
+              : "Unknown";
+
+            return {
+              id: restaurantId,
+              imageUrl:
+                photoUrls[randomPhotoIndex] ||
+                "https://via.placeholder.com/150",
+              name: details.restaurantName,
+              rating: Number.isFinite(averageRating)
+                ? Math.round(averageRating)
+                : 0,
+              tags: [details.cuisine],
+              location,
+            };
+          }
+        );
+
+        setRestaurantsData(wishlistDataWithDetailsAndRatings);
       } catch (error) {
-        console.error("Error fetching restaurant data:", error);
+        if (axios.isAxiosError(error) && !axios.isCancel(error)) {
+          console.error("Error fetching wishlist data:", error);
+        }
       }
     };
-    fetchData();
-  }, []);
-  console.log("Data restaturents:");
+
+    fetchWishlistAndDetails();
+
+    return () => {
+      cancelRequestRef.current?.cancel(
+        "Component unmounted, operation canceled"
+      );
+    };
+  }, [userId]);
+  // const removeRestaurantFromWishlist = async (restaurantId) => {
+  //   const url = `http://localhost:8080/users/wishlist/remove/${userId}?restaurantID=${restaurantId}`;
+  //   try {
+  //     await axios.delete(url, { withCredentials: true });
+  //     // Filter out the removed restaurant and update state
+  //     setRestaurantsData(
+  //       restaurantsData.filter((item) => item.id !== restaurantId)
+  //     );
+  //   } catch (error) {
+  //     console.error("Error removing restaurant from wishlist:", error);
+  //   }
+  // };
+  const removeRestaurantFromWishlist = async (restaurantId) => {
+    // Construct the URL for removing a restaurant from the wishlist
+    console.log("rest id", restaurantId);
+    const url = `http://localhost:8080/users/wishlist/remove/${userId}?restaurantID=${restaurantId}`;
+
+    try {
+      // Send a DELETE request to the backend
+      const response = await axios.delete(url, { withCredentials: true });
+
+      // Log the response from the server for debugging
+      console.log("Response from removing restaurant:", response.data);
+
+      // Filter out the removed restaurant from the state
+      // This updates the UI to no longer show the removed restaurant
+      setRestaurantsData(
+        restaurantsData.filter((item) => item.id !== restaurantId)
+      );
+
+      // Optionally, you can check the response before updating the UI
+      // to ensure the backend successfully processed the request
+    } catch (error) {
+      // Log any error that occurs during the API call
+      console.error("Error removing restaurant from wishlist:", error);
+      // Optionally, handle the error in the UI, such as showing a message to the user
+    }
+  };
   return (
     <div className="pcontainer">
       <h1 className="wishlist-header">Wishlist Restaurants</h1>
-      <RestaurantsList restaurants={restaurants} />
+      <RestaurantsList
+        restaurants={restaurantsData}
+        onRemove={removeRestaurantFromWishlist}
+      />
     </div>
   );
 };
