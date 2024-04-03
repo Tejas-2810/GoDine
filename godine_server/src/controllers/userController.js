@@ -1,6 +1,6 @@
 const Users = require("../models/users");
 const Newsletter = require("../models/newsletter");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Controller to get user profile
 exports.getUserProfile = async (req, res) => {
@@ -21,9 +21,8 @@ exports.getUserProfile = async (req, res) => {
       email: email,
       phoneNumber: phoneNumber,
       dateOfBirth: dateOfBirth,
-      address: address
+      address: address,
     });
-
   } catch (err) {
     res.status(500).json({ error: { message: err.message } });
   }
@@ -34,7 +33,7 @@ exports.updateUserProfile = async (req, res) => {
   try {
     const userID = req.params.userID;
 
-    const updatedUser = {}
+    const updatedUser = {};
     // Update the fields
     updatedUser.name = req.body.name;
     updatedUser.email = req.body.email;
@@ -43,7 +42,9 @@ exports.updateUserProfile = async (req, res) => {
     updatedUser.address = req.body.address;
 
     // Save the updated user
-    const response = await Users.findByIdAndUpdate(userID, updatedUser, {new: true});
+    const response = await Users.findByIdAndUpdate(userID, updatedUser, {
+      new: true,
+    });
     if (!response) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -54,9 +55,8 @@ exports.updateUserProfile = async (req, res) => {
       email: email,
       phoneNumber: phoneNumber,
       dateOfBirth: dateOfBirth,
-      address: address
+      address: address,
     });
-
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -66,13 +66,13 @@ exports.updateUserProfile = async (req, res) => {
 exports.updateNewsletterSubscription = async (req, res) => {
   try {
     const userID = req.params.userID;
-    const user = await Users.findById( userID );
+    const user = await Users.findById(userID);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     const subscriptionStatus = req.body.newsLetterStatus;
-    let newsletter = await Newsletter.findById( userID );
+    let newsletter = await Newsletter.findById(userID);
 
     if (!newsletter) {
       newsletter = new Newsletter({
@@ -116,7 +116,8 @@ exports.addRestaurantToWishlist = async (req, res) => {
 exports.removeRestaurantFromWishlist = async (req, res) => {
   try {
     const userID = req.params.userID;
-    const restaurantID = req.body.restaurantID;
+    //const restaurantID = req.body.restaurantID;
+    const restaurantID = req.query.restaurantID;
 
     // Check if restaurantID is provided in the request body
     if (!restaurantID) {
@@ -161,7 +162,9 @@ exports.getUserWishlist = async (req, res) => {
   try {
     console.log("Inside");
     const userID = req.params.userID;
-    const user = await Users.findById(userID).populate("wishlist");
+    console.log(userID);
+    const user = await Users.findById(userID);
+    console.log(user);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
