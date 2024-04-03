@@ -5,9 +5,23 @@ import { useSearchParams } from "react-router-dom";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
+
 const Results = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  let cuisineFirst = searchParams.get("c") || "";
+  if (cuisineFirst === "Any Cuisine") {
+    cuisineFirst = "";
+  }
+  let locationFirst = searchParams.get("l") || "";
+  if (locationFirst === "Select Location") {
+    locationFirst = "";
+  }
+  let keywordFirst = searchParams.get("K") || "";
+
   const [restaurants, setRestaurants] = useState([]);
+  const [initiallyFilteredRestaurants, setInitiallyFilteredRestaurants] =
+    useState(null);
   const [discounts, setDiscounts] = useState([]);
   const [ratings, setRatings] = useState({});
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -19,9 +33,21 @@ const Results = () => {
   });
   const [favorites, setFavorites] = useState({});
   const { getUserId } = useAuth();
-  const userId = getUserId();
-  console.log(userId);
+  const fetchRatings = (restaurantsData) => {
+    restaurantsData.forEach((restaurant) => {
+      fetch(`http://127.0.0.1:8080/api/restaurants/${restaurant._id}/reviews`)
+        .then((response) => response.json())
+        .then((data) => {
+          setRatings((prevRatings) => ({
+            ...prevRatings,
+            [restaurant._id]: parseInt(data.averageRating, 10) || "Not Rated",
+          }));
+        })
+        .catch((error) => console.error("Error fetching ratings:", error));
+    });
+  };
 
+  const userId = getUserId();
   useEffect(() => {
     const fetchData = async () => {
       const wishlisturl = `http://localhost:8080/users/wishlist/${userId}`;
@@ -44,70 +70,90 @@ const Results = () => {
       }
     };
     fetchData();
-
-    const fetchRestaurantsAndDiscounts = async () => {
-      try {
-        const restaurantsResponse = await fetch(
-          "http://localhost:8080/api/restaurants/"
-        );
-        const restaurantsData = await restaurantsResponse.json();
-        setRestaurants(restaurantsData);
-
-        const discountsResponse = await fetch(
-          "http://127.0.0.1:8080/api/discountsPromotions/discounts"
-        );
-        const discountsData = await discountsResponse.json();
-        setDiscounts(discountsData);
-
-        restaurantsData.forEach(async (restaurant) => {
-          try {
-            const response = await fetch(
-              `http://127.0.0.1:8080/api/restaurants/${restaurant._id}/reviews`
-            );
-            const data = await response.json();
-            setRatings((prevRatings) => ({
-              ...prevRatings,
-              [restaurant._id]: parseInt(data.averageRating, 10) || "Not Rated",
-            }));
-          } catch (error) {
-            console.error("Error fetching ratings:", error);
-          }
-        });
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+    const fetchRestaurants = async () => {
+      const response = await fetch("http://localhost:8080/api/restaurants/");
+      const data = await response.json();
+      setRestaurants(data);
+      fetchRatings(data);
     };
 
-    fetchRestaurantsAndDiscounts();
-  }, [userId]);
+    console.log(restaurants);
 
-  const findDiscountForRestaurant = (restaurantId) => {
-    const discount = discounts.find((d) => d.restaurantID === restaurantId);
-    return discount ? discount.discountPercentage : 0;
-  };
+    const fetchDiscounts = async () => {
+      const response = await fetch(
+        "http://127.0.0.1:8080/api/discountsPromotions/discounts"
+      );
+      const data = await response.json();
+      setDiscounts(data);
+    };
+
+    fetchRestaurants().catch(console.error);
+    fetchDiscounts().catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    setInitiallyFilteredRestaurants(
+      restaurants.filter((restaurant) => {
+        return (
+          (!cuisineFirst || restaurant.cuisine === cuisineFirst) &&
+          (!locationFirst ||
+            restaurant.restaurantAddress.includes(locationFirst)) &&
+          (!keywordFirst ||
+            restaurant.restaurantName
+              .toLowerCase()
+              .includes(keywordFirst.toLowerCase()))
+        );
+      })
+    );
+  }, [restaurants, cuisineFirst, locationFirst, keywordFirst]); // Initial filter effect
 
   const applyFilters = (restaurant) => {
-    const matchesLocation =
-      !selectedFilters.location ||
-      restaurant.restaurantAddress.includes(selectedFilters.location);
-    const matchesCuisine =
-      !selectedFilters.cuisine ||
-      restaurant.cuisine === selectedFilters.cuisine;
+    const restaurantLocation = restaurant.restaurantAddress
+      .split(",")[1]
+      ?.trim();
+    const matchesLocation = selectedFilters.location
+      ? restaurantLocation === selectedFilters.location
+      : true;
+    const matchesCuisine = selectedFilters.cuisine
+      ? restaurant.cuisine === selectedFilters.cuisine
+      : true;
     const rating = ratings[restaurant._id];
-    const matchesRating =
-      !selectedFilters.rating ||
-      (rating && parseInt(rating, 10) === selectedFilters.rating);
+    const matchesRating = selectedFilters.rating
+      ? rating !== undefined && parseInt(rating, 10) === selectedFilters.rating
+      : true;
     const discount = findDiscountForRestaurant(restaurant._id);
-    const matchesDiscount =
-      !selectedFilters.discount || discount === selectedFilters.discount;
+    const matchesDiscount = selectedFilters.discount
+      ? discount === selectedFilters.discount
+      : true;
 
     return (
       matchesLocation && matchesCuisine && matchesRating && matchesDiscount
     );
   };
 
+  const findDiscountForRestaurant = (restaurantId) => {
+    if (!Array.isArray(discounts)) {
+      console.warn("Discounts is not an array", discounts);
+      return 0;
+    }
+    const discount = discounts.find(
+      (discount) => discount.restaurantID === restaurantId
+    );
+    return discount ? discount.discountPercentage : 0;
+  };
   const handleFilterChange = (filter, value) => {
-    setSelectedFilters((prev) => ({ ...prev, [filter]: value }));
+    let newValue;
+    if (filter === "rating" || filter === "discount") {
+      newValue = parseInt(value, 10);
+      newValue = isNaN(newValue) ? 0 : newValue;
+    } else {
+      newValue = value;
+    }
+
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
+      [filter]: newValue,
+    }));
   };
 
   const toggleFavorite = async (restaurantId) => {
@@ -160,23 +206,28 @@ const Results = () => {
   };
 
   const showAllRestaurants = () => {
-    setSelectedFilters({ location: "", cuisine: "", rating: 0, discount: 0 });
+    setSelectedFilters({
+      location: "",
+      cuisine: "",
+      rating: 0,
+      discount: 0,
+    });
+
+    setInitiallyFilteredRestaurants(null);
   };
 
+  const displayedRestaurants = initiallyFilteredRestaurants || restaurants;
+  const filteredRestaurants = displayedRestaurants.filter(applyFilters);
   const uniqueCuisines = [
     ...new Set(restaurants.map((restaurant) => restaurant.cuisine)),
   ];
   const uniqueLocations = [
     ...new Set(
       restaurants.map((restaurant) =>
-        restaurant.restaurantAddress.split(",")[1]?.trim()
+        restaurant.restaurantAddress.split(",")[1].trim()
       )
     ),
   ];
-
-  const filteredRestaurants = restaurants.filter((restaurant) => {
-    return applyFilters(restaurant);
-  });
 
   return (
     <div className="container cb">
