@@ -40,28 +40,20 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/wishlist" element={<WishList />} />
 
           {/* protect routes */}
           {/* user routes */}
           <Route element={<RequireAuth allowedRoles={[ROLES.USER]} />}>
             <Route path="/history" element={<History />} />
             <Route path="/newsletter" element={<Newsletter />} />
+            <Route path="/wishlist" element={<WishList />} />
           </Route>
           {/* restaurant owner route */}
-          <Route
-            element={<RequireAuth allowedRoles={[ROLES.RESTAURANT_OWNER]} />}
-          >
+          <Route element={<RequireAuth allowedRoles={[ROLES.RESTAURANT_OWNER]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
           {/* common routes */}
-          <Route
-            element={
-              <RequireAuth
-                allowedRoles={[ROLES.USER, ROLES.RESTAURANT_OWNER, ROLES.ADMIN]}
-              />
-            }
-          >
+          <Route element={<RequireAuth allowedRoles={[ROLES.USER, ROLES.RESTAURANT_OWNER, ROLES.ADMIN]} />}>
             <Route path="/profile" element={<Profile />} />
           </Route>
 
