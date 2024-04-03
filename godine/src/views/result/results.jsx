@@ -323,18 +323,9 @@ const Results = () => {
               onClick={() => console.log("Restaurant ID:", restaurant._id)}
             >
               <div className="card mb-3">
-                <img
-                  src={
-                    restaurant.photos[0] || "https://via.placeholder.com/150"
-                  }
-                  className="card-img-top"
-                  alt={restaurant.restaurantName}
-                />
+                <img src={restaurant.photos[0] || "https://via.placeholder.com/150"} className="card-img-top" alt={restaurant.restaurantName}                />
                 <div className="card-body">
-                  <div
-                    className="favorite-icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
+                  <div className="favorite-icon" onClick={(e) => { e.stopPropagation();
                       toggleFavorite(restaurant._id);
                     }}
                   >

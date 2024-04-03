@@ -104,9 +104,11 @@ const Reserve = () => {
         return (
             <div class="collapse multi-collapse" id="multiCollapseExample2">
                 <div class=" card card-body">
-                    <h4 class="card-title border-bottom">{reviewList.userID?.name}</h4>
-
-                    <p class="card-text">{reviewList.review}</p>
+                    <div className="border-bottom d-flex align-items-center">
+                    <h1 class=" mx-3 my-1"><i class="bi bi-person-circle"></i></h1>
+                    <h4 class="card-title ">{reviewList.userID?.name}</h4>
+                    </div>
+                    <p class="card-text review-text ">{reviewList.review}</p>
                 </div>
             </div>
 
@@ -161,34 +163,36 @@ const Reserve = () => {
                 <div className="container col-md-6">
                     <Card className="card-reserve">
                         <Card.Body  className="cbody">
-                            <Carousel>
+                            <Carousel className=" border-bottom">
                                 {respics}
                             </Carousel>
+                            <div className="d-flex">
                             {menupics.map((menupics, index) => (
                                 <img
                                     key={1}
-                                    className="d-flex menu"
+                                    className="menu mx-3"
                                     src={menupics}
                                     alt={`Slide ${1 + 1}`}
                                 />
                             ))} 
+                            </div>
                         </Card.Body>
-                        <Card.Footer className="cfooter d-flex-column">
-                            <div className="d-flex ">
+                        <Card.Footer className="cfooter d-flex-column text-white">
+                            <div className="d-flex border-bottom ">
                             {restaurantData && <h3 className="col-10 my-2">{restaurantData.restaurantName}</h3>}
                                 <div className="col-2 text-center">
-                                {reviewData && <button disabled className="btn btn-success"> {reviewData.averageRating.toFixed(1)} </button>}
+                                {reviewData && <button className="btn rating btn-success"> {reviewData.averageRating.toFixed(1)} </button>}
                                     {/* <p>56 <i>reviews</i></p> */}
                                 </div>
                             </div>
 
                                 <div className=" container my-4">
-                                {restaurantData && <p>Address: {restaurantData.restaurantAddress }</p>  }
-                                {restaurantData && <p>Phone: {restaurantData.contactNumber}</p> }
-                                {restaurantData && <p>Operating Hours: {restaurantData.operatingHours}</p> }
-                                {restaurantData && <p>Seating Capacity: {restaurantData.seatingCapacity}</p> }
-                                {restaurantData && <p>Cuisine: {restaurantData.cuisine}</p> }
-                                {restaurantData && <p>Pricing: {restaurantData.pricing}</p> }
+                                {restaurantData && <p> <b>Address: </b>{restaurantData.restaurantAddress }</p>  }
+                                {restaurantData && <p> <b>Phone:</b> {restaurantData.contactNumber}</p> }
+                                {restaurantData && <p> <b>Operating Hours:</b> {restaurantData.operatingHours}</p> }
+                                {restaurantData && <p> <b>Seating Capacity:</b> {restaurantData.seatingCapacity}</p> }
+                                {restaurantData && <p> <b>Cuisine: </b>{restaurantData.cuisine}</p> }
+                                {restaurantData && <p> <b>Pricing:</b> {restaurantData.pricing}</p> }
  
 
                                 </div>
@@ -201,7 +205,7 @@ const Reserve = () => {
                         </Card.Footer>
                     </Card>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 mx-5">
                     <form className="m-5 fcontainer " onSubmit={handleSubmit}>
                         <h4 className="text-center text-capitalize">Reservation Form</h4>
                         <div className="form-group">
@@ -244,13 +248,13 @@ const Reserve = () => {
                 </div>
             </div>
 
-            <div className="review">
+            <div className="review mx-5">
 
-                <div class="card">
+                <div class="card mx-5">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                    <div> Ratings & Reviews </div>
-                    {reviewData && <div> Number Of Reviews: {reviewData.reviewCount} </div>}
-                    <div> Average Rating: {reviewData && reviewData.averageRating.toFixed(1)} </div>
+                    <div> <b>Ratings & Reviews </b></div>
+                    {reviewData && <div> <b>Number Of Reviews:</b> {reviewData.reviewCount} </div>}
+                    <div> <b>Average Rating:</b> {reviewData && reviewData.averageRating.toFixed(1)} </div>
                     {reviewData && Array.from({ length: reviewData.averageRating }, (_, index) => (
                             <i key={index} className="bi bi-star-fill"></i>
                         ))}
