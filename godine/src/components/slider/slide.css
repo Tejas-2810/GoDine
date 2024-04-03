@@ -1,12 +1,13 @@
 .card{
     margin: 1rem !important;
+;
 }
 
 .img-bottom {
     /* max-width: 20vw !important; */
     width: 100% !important;
     max-height: 10rem !important;
-    object-fit: cover;
+    object-fit: fill;
 
 }
 

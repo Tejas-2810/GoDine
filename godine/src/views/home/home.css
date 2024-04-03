@@ -9,7 +9,7 @@
 }
 
 .bg1{
-    background-image: url('../../images/bg1.png');
+    background-image: url('../../images/bg2.png');
     background-size: cover;
     background-attachment: fixed;
     background-position: bottom;
@@ -178,9 +178,25 @@ color: white !important;
 
 }
 
-
 .home-c:hover {
     cursor: pointer;
     transition: background-color 0.5s ease, transform 0.3s ease;
     transform: scale(1.1);
+}
+
+.home-c {
+    transition: background-color 0.5s ease, transform 0.3s ease;
+}
+
+.slide {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}   
+
+.cards{
+    margin: 1rem !important;
+    border: 0.1rem solid rgba(0, 0, 0, 0.336);
+    border-radius: 1% !important;
 }
