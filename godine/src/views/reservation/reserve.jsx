@@ -105,10 +105,10 @@ const Reserve = () => {
             <div class="collapse multi-collapse" id="multiCollapseExample2">
                 <div class=" card card-body">
                     <div className="border-bottom d-flex align-items-center">
-                    <h1 class=" mx-3 my-1"><i class="bi bi-person-circle"></i></h1>
+                    <h3 class=" mx-3 my-1"><i class="bi bi-person-circle"></i></h3>
                     <h4 class="card-title ">{reviewList.userID?.name}</h4>
                     </div>
-                    <p class="card-text review-text ">{reviewList.review}</p>
+                    <p class="card-text review-text my-3">{reviewList.review}</p>
                 </div>
             </div>
 
