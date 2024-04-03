@@ -73,7 +73,7 @@ const Slide = () => {
     );
   });
 
-  var data = latestRestaurants[3];
+  // var data = latestRestaurants[3];
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -154,7 +154,7 @@ const Slide = () => {
       swipeable
     >
       {latestrestarants}
-      <div className="cards home-c">
+      {/* <div className="cards home-c">
         <div className="">
           <img
             className="img-bottom"
@@ -176,7 +176,8 @@ const Slide = () => {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
+      <div></div>
     </Carousel>
   );
 };
