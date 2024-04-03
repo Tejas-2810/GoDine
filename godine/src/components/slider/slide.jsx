@@ -5,11 +5,12 @@ import Carousel from "react-multi-carousel";
 import "./slide.css";
 import axios, { isAxiosError } from "axios";
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate, createSearchParams } from "react-router-dom";
 
 const Slide = () => {
   const [latestRestaurants, setLatestRestaurants] = useState([]);
   const cancelRequestRef = useRef(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     cancelRequestRef.current?.abort();
     cancelRequestRef.current = new AbortController();
@@ -42,13 +43,20 @@ const Slide = () => {
 
   }, []);
 
-
+  const restaurantid = (id) => {
+    navigate({
+      pathname: "/reserve",
+      search: createSearchParams({
+        id : id,
+      }).toString(),
+    });
+  };
     
 
   const latestrestarants = latestRestaurants?.map((restaurant) => {
     return (
-      <div className="cards home-c">
-        <div className="">
+      <div className="cards home-c" onClick={() => restaurantid(restaurant._id)}>
+        <div className="" >
           <img
             className="img-bottom"
             alt="Card image"

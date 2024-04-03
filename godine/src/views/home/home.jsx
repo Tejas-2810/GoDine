@@ -39,19 +39,27 @@ const Home = () => {
     fetchTopRestaurants(); 
 
   }, []);
+  
+    const restaurantid = (id) => {
+      navigate({
+        pathname: "/reserve",
+        search: createSearchParams({
+          id : id,
+        }).toString(),
+      });
+    };
 
   const topRestaurantsList = topRestaurants?.map((restaurant) => {
     return (
-      <div className="col-md-4 mb-3 home-c">
-        <div className="card ">
+      <div className="col-md-4 mb-3 home-c " >
+        <div className="card " onClick={() => restaurantid(restaurant._id)}>
           <img  className="img-top " alt="safdf" src={restaurant.photos[0]} />
-
           <div className="card-body">
-            <div className="d-flex">
+            <div className="d-flex border-bottom">
             <h4 className="card-title m-0 col-9">{restaurant.restaurantName}</h4>
             <p> {restaurant.operatingHours}</p>
             </div>
-            <p className="card-text "><b>Address : </b>{restaurant.restaurantAddress}</p>
+            <p className="card-text m-0 p-0"><b>Address : </b>{restaurant.restaurantAddress}</p>
             <div className="d-flex"><p className="card-text "> <b>Cusine :    </b> {restaurant.cuisine} </p></div>
           </div>
         </div>
