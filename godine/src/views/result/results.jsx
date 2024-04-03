@@ -1,24 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./results.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate, createSearchParams} from "react-router-dom";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 
 const Results = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  let cuisineFirst = searchParams.get("c") || "";
-  if (cuisineFirst === "Any Cuisine") {
-    cuisineFirst = "";
-  }
-  let locationFirst = searchParams.get("l") || "";
-  if (locationFirst === "Select Location") {
-    locationFirst = "";
-  }
-  let keywordFirst = searchParams.get("K") || "";
-
+  const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState([]);
   const [initiallyFilteredRestaurants, setInitiallyFilteredRestaurants] =
     useState(null);
@@ -33,6 +23,26 @@ const Results = () => {
   });
   const [favorites, setFavorites] = useState({});
   const { getUserId } = useAuth();
+
+  let cuisineFirst = searchParams.get("c") || "";
+  if (cuisineFirst === "Any Cuisine") {
+    cuisineFirst = "";
+  }
+  let locationFirst = searchParams.get("l") || "";
+  if (locationFirst === "Select Location") {
+    locationFirst = "";
+  }
+  let keywordFirst = searchParams.get("K") || "";
+
+
+  const restaurantid = (id) => {
+    navigate({
+      pathname: "/reserve",
+      search: createSearchParams({
+        id : id,
+      }).toString(),
+    });
+  };
   const fetchRatings = (restaurantsData) => {
     restaurantsData.forEach((restaurant) => {
       fetch(`http://127.0.0.1:8080/api/restaurants/${restaurant._id}/reviews`)
@@ -309,7 +319,7 @@ const Results = () => {
           {filteredRestaurants.map((restaurant, index) => (
             <div
               key={index}
-              className="col-sm-4"
+              className="col-sm-4 my-5"
               onClick={() => console.log("Restaurant ID:", restaurant._id)}
             >
               <div className="card mb-3">
@@ -353,7 +363,7 @@ const Results = () => {
                       ? ratings[restaurant._id]
                       : "Not Rated"}
                   </p>
-                  <button className="btn btn-primary">Book</button>
+                  <button className="btn btn-primary" onClick={() => restaurantid(restaurant._id)} >Book</button>
                 </div>
               </div>
             </div>
