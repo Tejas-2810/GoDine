@@ -5,21 +5,22 @@ import "./reserve.css";
 import useAuth from '../../hooks/useAuth';
 import axios, { isAxiosError } from 'axios';
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import { useSearchParams } from "react-router-dom";
 
 const Reserve = () => {
     const { getUserId } = useAuth();
     const cancelRequestRef = useRef(null);
-
+    const [searchParams] = useSearchParams();
     const [restaurantData, setRestaurantData] = useState(null);
     const [reviewData, setReviewData] = useState(null);
+    const userId = getUserId();
 
     useEffect(() => {
         const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
         const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
         const resturant_endpoint = process.env.REACT_APP_PROFILE_ENDPOINT || "api/restaurants";
-        const restaurantId = "660b0d0b0e93ee58576c5fed";
+        const restaurantId = searchParams.get("id") || "660345d96a5e6f56688098a6";
         const review = "reviews";
-        const userId = getUserId();
 
         const endpoint = `${server_url}:${server_port}/${resturant_endpoint}/${restaurantId}`;
 
@@ -121,8 +122,8 @@ const Reserve = () => {
                 guests: parseInt(e.target.guests.value)
             };
             const reservationData = {
-                restaurantID: "660345d96a5e6f56688098a6",
-                userID: "65fb4b3b2519c4ffea8d5fa0",
+                restaurantID: searchParams.get("id") || "660345d96a5e6f56688098a6",
+                userID: userId || "65fb4b3b2519c4ffea8d5fa0",
                 reservationDate: formData.date,
                 reservationTime: formData.time,
                 noOfGuests: formData.guests
