@@ -51,7 +51,8 @@ const Reserve = () => {
         fetchReview();
         fetchData();
     }, []);
-
+    var pics = []
+    var menupics = []
     if (restaurantData) {
         const {
             features,
@@ -65,10 +66,12 @@ const Reserve = () => {
             menu,
             photos
         } = restaurantData;
+        pics = photos
+        menupics = menu
 
         // Use the variables above in your JSX code
         // Example: <h1>{restaurantName}</h1>
-        console.log("Restaurant Data: ", restaurantName);
+        console.log("Restaurant Data: ", pics);
     }
     var reviewList = [];
     if (reviewData) {
@@ -110,6 +113,22 @@ const Reserve = () => {
 
         );
     })
+
+    const respics = pics.map((pics) =>{
+        return(
+            <Carousel.Item>
+            <img
+                className="d-block w-100"
+                src={pics}
+                alt="Resturant images"
+            />
+            <Carousel.Caption>
+                
+            </Carousel.Caption>
+        </Carousel.Item>
+        )
+    
+})
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -143,45 +162,16 @@ const Reserve = () => {
                     <Card className="card-reserve">
                         <Card.Body  className="cbody">
                             <Carousel>
-                                <Carousel.Item>
-                                    <img
-                                        className="d-block w-100"
-                                        src="https://foodchannel.com/wp-content/uploads/sites/78/2017/06/mercadito_0968.jpg?w=1200"
-                                        alt="First slide"
-                                    />
-                                    <Carousel.Caption>
-                                        
-                                    </Carousel.Caption>
-                                </Carousel.Item>
-                                <Carousel.Item>
-                                    <img
-                                        className="d-block w-100"
-                                        src="https://media.architecturaldigest.com/photos/572a34ffe50e09d42bdfb5e0/master/pass/japanese-restaurants-la-01.jpg"
-                                        alt="Second slide"
-                                    />
-                                    <Carousel.Caption>
-                                       
-                                    </Carousel.Caption>
-                                </Carousel.Item>
-                                <Carousel.Item>
-                                    <img
-                                        className="d-block w-100"
-                                        src="https://www.birchrestaurant.com/wp-content/uploads/2022/03/The-Regent-Cocktail-Club.jpg"
-                                        alt="Third slide"
-                                    />
-                                    <Carousel.Caption>
-                                        
-                                    </Carousel.Caption>
-                                </Carousel.Item>
+                                {respics}
                             </Carousel>
-                            {/* {images.map((image, index) => ( */}
+                            {menupics.map((menupics, index) => (
                                 <img
                                     key={1}
-                                    className="d-block menu"
-                                    src={ 'https://www.birchrestaurant.com/wp-content/uploads/2022/03/The-Regent-Cocktail-Club.jpg '}
+                                    className="d-flex menu"
+                                    src={menupics}
                                     alt={`Slide ${1 + 1}`}
                                 />
-                            {/* ))} */}
+                            ))} 
                         </Card.Body>
                         <Card.Footer className="cfooter d-flex-column">
                             <div className="d-flex ">
