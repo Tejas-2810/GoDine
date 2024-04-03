@@ -9,21 +9,88 @@ import axios, { isAxiosError } from 'axios';
 const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState("");
+    const [validName, setValidName] = useState(true);
+
     const [dob, setDob] = useState("");
     const [age, setAge] = useState("");
+
     const [email, setEmail] = useState("");
+    const [validEmail, setValidEmail] = useState(true);
+
     const [phone, setPhone] = useState("");
+    const [validPhoneNumber, setValidPhoneNumber] = useState(true);
+
     const [address, setAddress] = useState("");
+
+    const [allFieldsPresent, setAllFieldsPresent] = useState(false);
     const { getUserId } = useAuth();
     const cancelRequestRef = useRef(null);
 
+    function checkAllFieldsPresent() {
+        if (name == null || name === ""
+            || email == null || email === ""
+            || phone == null || phone === ""
+            || dob == null || dob === ""
+            || address == null || address === "") {
+            return false;
+        }
+        return true;
+    }
+
+    function validateNameAndSet(e) {
+        const inputName = e.target.value;
+        const name = inputName.trim();
+        const nameRegex = /^[a-zA-Z ]+$/;
+
+        if (nameRegex.test(name)) {
+            setValidName(true);
+        } else {
+            setValidName(false);
+        }
+        setName(name);
+    }
+
+    function validateEmailAndSet(e) {
+        const inputEmail = e.target.value;
+
+        const email = inputEmail.trim();
+        // email is an email
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+        if (emailRegex.test(email)) {
+            setValidEmail(true);
+        }
+        else {
+            setValidEmail(false);
+        }
+        setEmail(email);
+    }
+
+    function validatePhoneNumberAndSet(e) {
+        const phoneNumber = (e.target.value).trim();
+        const phoneNumberRegex = /^(\+[1]\s?)?\d{3}[\s.-]?\d{3}[\s.-]?\d{4}$/;
+
+        if (phoneNumberRegex.test(phoneNumber)) {
+            setValidPhoneNumber(true);
+        }
+        else {
+            setValidPhoneNumber(false);
+        }
+        setPhone(phoneNumber);
+    }
+
     function updateDobAndAge(dobString) {
         setDob(dobString);
-        const dobDate = new Date(dobString);
-        const currentDate = new Date();
-        const diffInMillis = currentDate - dobDate;
-        const duration = new Date(diffInMillis);
-        setAge(Math.abs(duration.getUTCFullYear() - 1970));
+        if (!dobString) {
+            const dobDate = new Date(dobString);
+            const currentDate = new Date();
+            const diffInMillis = currentDate - dobDate;
+            const duration = new Date(diffInMillis);
+            setAge(Math.abs(duration.getUTCFullYear() - 1970));
+        }
+        else {
+            setAge("");
+        }
     }
 
     useEffect(() => {
@@ -42,6 +109,8 @@ const Profile = () => {
             const response = await axios.get(endpoint, { signal: cancelRequestRef.current?.signal, withCredentials: true })
                 .then((response) => response)
                 .catch((err) => err);
+
+            console.log(response);
             if (axios.isCancel(response)) {
                 return;
             }
@@ -51,14 +120,17 @@ const Profile = () => {
                     alert("Invalid user or user not found!!");
                     return;
                 }
+                if (err.status === 401 || err.status === 403) {
+                    alert("Session has expired please log in again!");
+                    window.location.reload();
+                    return;
+                }
                 if (err.status === 500) {
                     alert("Internal server error, please try again after sometime");
                     return;
                 }
             }
-            else if (response.status && response.data?.name
-                && response.data?.email && response.data?.phoneNumber
-                && response.data?.dateOfBirth && response.data?.address) {
+            else if (response.status === 200 && response.data) {
 
                 const { name, email, phoneNumber, dateOfBirth, address } = response.data;
 
@@ -67,12 +139,14 @@ const Profile = () => {
                 setPhone(phoneNumber);
                 setDob(dateOfBirth);
 
-                const dobDate = new Date(dateOfBirth);
-                const currentDate = new Date();
-                const diffInMillis = currentDate - dobDate;
-                const duration = new Date(diffInMillis);
+                if (dateOfBirth != null) {
+                    const dobDate = new Date(dateOfBirth);
+                    const currentDate = new Date();
+                    const diffInMillis = currentDate - dobDate;
+                    const duration = new Date(diffInMillis);
 
-                setAge(Math.abs(duration.getUTCFullYear() - 1970));
+                    setAge(Math.abs(duration.getUTCFullYear() - 1970));
+                }
                 setAddress(address);
             }
             else {
@@ -87,7 +161,14 @@ const Profile = () => {
         setIsEditing(true);
     };
 
-    const handleSaveClick = async () => {
+    const handleSaveClick = async (e) => {
+        e.preventDefault();
+
+        if (!validName || !validEmail || !validPhoneNumber) {
+            alert("Please enter valid details");
+            return;
+        }
+
         const server_url = process.env.SERVER_URL || "http://localhost";
         const server_port = process.env.SERVER_PORT || "8080";
         const profile_edit_endpoint = process.env.PROFILE_EDIT_ENDPOINT || "users/edit";
@@ -111,13 +192,14 @@ const Profile = () => {
             .then((response) => response)
             .catch((err) => err);
 
+        console.log(response);
         if (axios.isCancel(response)) {
             console.log("Profile update aborted");
             return;
         }
         else if (axios.isAxiosError(response)) {
-            if (response.status === 403) {
-                console.log("token gone");
+            if (response.status === 401 || response.status === 403) {
+                alert("Session has expired please log in again!");
                 window.location.reload();
                 return;
             }
@@ -125,12 +207,11 @@ const Profile = () => {
                 alert("User not found, please verify account!!");
             }
             else {
-                alert("Something went wrong, could not save");
+                alert("Please try again, could not save due to some issue");
             }
+            return;
         }
-        else if (response.status === 200 && response.data?.name
-            && response.data?.email && response.data?.phoneNumber
-            && response.data?.dateOfBirth && response.data?.address) {
+        else if (response.status === 200 && response.data) {
             alert("Details successfully saved in database");
         }
         else {
@@ -138,6 +219,7 @@ const Profile = () => {
         }
 
         setIsEditing(false);
+        window.location.reload();
     };
 
     return (
@@ -188,6 +270,9 @@ const Profile = () => {
                     <div className="col-md-8">
                         <div className="info mx-5 glass">
                             <h4 className="text-center m-3">Personal Information</h4>
+                            {
+                                checkAllFieldsPresent() ? null : <div style={{ textAlign: "center", color: 'red' }}>Some fields missing, kindly update your information</div>
+                            }
                             <div className="d-flex justify-content-center my-5">
                                 <div className=" row col-md-7 align-items-end">
                                     <div className="form-label fw-bolder text-center">Name</div>
@@ -200,11 +285,14 @@ const Profile = () => {
                                 <div className="col-md-5">
                                     {isEditing ? (
                                         <>
-                                            <input type="text-dark" className="form-control form-control-p" value={name} onChange={(e) => setName(e.target.value)} />
+                                            <input type="text-dark" className="form-control form-control-p" value={name} onChange={(e) => validateNameAndSet(e)} />
+                                            {validName ? null : <small style={{ color: 'red' }}>Enter a valid name</small>}
                                             <input type="text-dark" className="form-control form-control-p" value={dob} onChange={(e) => updateDobAndAge(e.target.value)} />
-                                            <div className="form-control form-control-p">{age}</div>
-                                            <input type="text-dark" className="form-control form-control-p" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                            <input type="text-dark" className="form-control form-control-p" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                                            <div className="form-control form-control-p" style={{"background-color": "#f2f2f2", "opacity": "0.7"}}>{age}</div>
+                                            <input type="text-dark" className="form-control form-control-p" value={email} onChange={(e) => validateEmailAndSet(e)} />
+                                            {validEmail ? null : <small style={{ color: 'red' }}>Enter valid email</small>}
+                                            <input type="text-dark" className="form-control form-control-p" value={phone} onChange={(e) => validatePhoneNumberAndSet(e)} />
+                                            {validPhoneNumber ? null : <small style={{ color: 'red' }}>Enter valid phone number</small>}
                                             <input type="text-dark" className="form-control form-control-p" value={address} onChange={(e) => setAddress(e.target.value)} />
                                         </>
                                     ) : (
@@ -221,7 +309,10 @@ const Profile = () => {
                             </div>
                             <div className="text-center">
                                 {isEditing ? (
-                                    <button className="btn btn-primary" onClick={handleSaveClick}>Save</button>
+                                    <>
+                                        <button className="btn btn-primary m-3" onClick={handleSaveClick}>Save</button>
+                                        <button className="btn btn-primary m-3" onClick={() => setIsEditing(false)}>Cancel</button>
+                                    </>
                                 ) : (
                                     <button className="btn btn-primary" onClick={handleEditClick}>Edit</button>
                                 )}
