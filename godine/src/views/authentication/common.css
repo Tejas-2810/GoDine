@@ -34,6 +34,7 @@
 
 .form-control{
   color: black !important;
+  min-width: 20rem !important;
 }
 
 /* CSS for toggle slider */

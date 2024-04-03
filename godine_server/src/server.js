@@ -36,7 +36,7 @@ async function startServer() {
   try {
     await connectToDatabase(); // Connect to the database
 
-    app.use("/users", userRoutes); // Create a base URL for the user routes
+    app.use("/users", checkAuth, userRoutes); // Create a base URL for the user routes
     app.use("/api/auth", authRoutes); // Create a base URL for the auth routes
     app.use("/api/newsletter", newsletterRoutes); // Create a base URL for the newsletter routes
     app.use("/api/restaurants", restaurantRoutes); // Create a base URL for the restaurant routes

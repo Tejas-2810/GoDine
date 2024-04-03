@@ -1,6 +1,3 @@
-import i1 from "../../images/bg.png";
-import i2 from "../../images/bg1.png";
-import i3 from "../../images/bg2.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "react-multi-carousel/lib/styles.css";
@@ -8,11 +5,12 @@ import Carousel from "react-multi-carousel";
 import "./slide.css";
 import axios, { isAxiosError } from "axios";
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate, createSearchParams } from "react-router-dom";
 
 const Slide = () => {
   const [latestRestaurants, setLatestRestaurants] = useState([]);
   const cancelRequestRef = useRef(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     cancelRequestRef.current?.abort();
     cancelRequestRef.current = new AbortController();
@@ -42,30 +40,39 @@ const Slide = () => {
 
     fetchLatestRestaurants();
 
-    console.log("Top Restaurants:", latestRestaurants[0]);
+
   }, []);
+
+  const restaurantid = (id) => {
+    navigate({
+      pathname: "/reserve",
+      search: createSearchParams({
+        id : id,
+      }).toString(),
+    });
+  };
+    
 
   const latestrestarants = latestRestaurants?.map((restaurant) => {
     return (
-      <div className="card home-c">
-        <div className="card">
+      <div className="cards home-c" onClick={() => restaurantid(restaurant._id)}>
+        <div className="" >
           <img
             className="img-bottom"
             alt="Card image"
             src={restaurant.photos[0]}
           />
         </div>
-        <div className="card-body">
+        <div className="p-3">
           <div className="d-flex">
             <h5 className="card-title m-0">{restaurant.restaurantName}</h5>
           </div>
-          <p className="card-text ">
+          <p className="">
             <b>Address : </b>
             {restaurant.restaurantAddress}
           </p>
-          <div className="d-flex">
-            <p className="card-text ">
-              {" "}
+          <div className="d-flex m-0 p-0">
+            <p className="">
               <b>Cusine : </b> {restaurant.cuisine}{" "}
             </p>
           </div>
@@ -73,6 +80,8 @@ const Slide = () => {
       </div>
     );
   });
+
+  // var data = latestRestaurants[3];
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -153,7 +162,30 @@ const Slide = () => {
       swipeable
     >
       {latestrestarants}
-      <div className="test"></div>
+      {/* <div className="cards home-c">
+        <div className="">
+          <img
+            className="img-bottom"
+            alt="Card image"
+            src={data.photos[0]}
+          />
+        </div>
+        <div className="p-3">
+          <div className="d-flex">
+            <h5 className="card-title m-0">{data.restaurantName}</h5>
+          </div>
+          <p className="">
+            <b>Address : </b>
+            {data.restaurantAddress}
+          </p>
+          <div className="d-flex m-0 p-0">
+            <p className="">
+              <b>Cusine : </b> {data.cuisine}{" "}
+            </p>
+          </div>
+        </div>
+      </div> */}
+      <div></div>
     </Carousel>
   );
 };

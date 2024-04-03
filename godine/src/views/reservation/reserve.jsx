@@ -5,21 +5,22 @@ import "./reserve.css";
 import useAuth from '../../hooks/useAuth';
 import axios, { isAxiosError } from 'axios';
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import { useSearchParams } from "react-router-dom";
 
 const Reserve = () => {
     const { getUserId } = useAuth();
     const cancelRequestRef = useRef(null);
-
+    const [searchParams] = useSearchParams();
     const [restaurantData, setRestaurantData] = useState(null);
     const [reviewData, setReviewData] = useState(null);
+    const userId = getUserId();
 
     useEffect(() => {
         const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
         const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
         const resturant_endpoint = process.env.REACT_APP_PROFILE_ENDPOINT || "api/restaurants";
-        const restaurantId = "660b0d0b0e93ee58576c5fed";
+        const restaurantId = searchParams.get("id") || "660345d96a5e6f56688098a6";
         const review = "reviews";
-        const userId = getUserId();
 
         const endpoint = `${server_url}:${server_port}/${resturant_endpoint}/${restaurantId}`;
 
@@ -50,7 +51,8 @@ const Reserve = () => {
         fetchReview();
         fetchData();
     }, []);
-
+    var pics = []
+    var menupics = []
     if (restaurantData) {
         const {
             features,
@@ -64,10 +66,12 @@ const Reserve = () => {
             menu,
             photos
         } = restaurantData;
+        pics = photos
+        menupics = menu
 
         // Use the variables above in your JSX code
         // Example: <h1>{restaurantName}</h1>
-        console.log("Restaurant Data: ", restaurantName);
+        console.log("Restaurant Data: ", pics);
     }
     var reviewList = [];
     if (reviewData) {
@@ -100,15 +104,33 @@ const Reserve = () => {
         return (
             <div class="collapse multi-collapse" id="multiCollapseExample2">
                 <div class=" card card-body">
-                    <h4 class="card-title border-bottom">{reviewList.userID?.name}</h4>
-
-                    <p class="card-text">{reviewList.review}</p>
+                    <div className="border-bottom d-flex align-items-center">
+                    <h3 class=" mx-3 my-1"><i class="bi bi-person-circle"></i></h3>
+                    <h4 class="card-title ">{reviewList.userID?.name}</h4>
+                    </div>
+                    <p class="card-text review-text my-3">{reviewList.review}</p>
                 </div>
             </div>
 
 
         );
     })
+
+    const respics = pics.map((pics) =>{
+        return(
+            <Carousel.Item>
+            <img
+                className="d-block w-100"
+                src={pics}
+                alt="Resturant images"
+            />
+            <Carousel.Caption>
+                
+            </Carousel.Caption>
+        </Carousel.Item>
+        )
+    
+})
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -121,8 +143,8 @@ const Reserve = () => {
                 guests: parseInt(e.target.guests.value)
             };
             const reservationData = {
-                restaurantID: "660345d96a5e6f56688098a6",
-                userID: "65fb4b3b2519c4ffea8d5fa0",
+                restaurantID: searchParams.get("id") || "660345d96a5e6f56688098a6",
+                userID: userId || "65fb4b3b2519c4ffea8d5fa0",
                 reservationDate: formData.date,
                 reservationTime: formData.time,
                 noOfGuests: formData.guests
@@ -141,63 +163,36 @@ const Reserve = () => {
                 <div className="container col-md-6">
                     <Card className="card-reserve">
                         <Card.Body  className="cbody">
-                            <Carousel>
-                                <Carousel.Item>
-                                    <img
-                                        className="d-block w-100"
-                                        src="https://foodchannel.com/wp-content/uploads/sites/78/2017/06/mercadito_0968.jpg?w=1200"
-                                        alt="First slide"
-                                    />
-                                    <Carousel.Caption>
-                                        
-                                    </Carousel.Caption>
-                                </Carousel.Item>
-                                <Carousel.Item>
-                                    <img
-                                        className="d-block w-100"
-                                        src="https://media.architecturaldigest.com/photos/572a34ffe50e09d42bdfb5e0/master/pass/japanese-restaurants-la-01.jpg"
-                                        alt="Second slide"
-                                    />
-                                    <Carousel.Caption>
-                                       
-                                    </Carousel.Caption>
-                                </Carousel.Item>
-                                <Carousel.Item>
-                                    <img
-                                        className="d-block w-100"
-                                        src="https://www.birchrestaurant.com/wp-content/uploads/2022/03/The-Regent-Cocktail-Club.jpg"
-                                        alt="Third slide"
-                                    />
-                                    <Carousel.Caption>
-                                        
-                                    </Carousel.Caption>
-                                </Carousel.Item>
+                            <Carousel className=" border-bottom">
+                                {respics}
                             </Carousel>
-                            {/* {images.map((image, index) => ( */}
+                            <div className="d-flex">
+                            {menupics.map((menupics, index) => (
                                 <img
                                     key={1}
-                                    className="d-block menu"
-                                    src={ 'https://www.birchrestaurant.com/wp-content/uploads/2022/03/The-Regent-Cocktail-Club.jpg '}
+                                    className="menu mx-3"
+                                    src={menupics}
                                     alt={`Slide ${1 + 1}`}
                                 />
-                            {/* ))} */}
+                            ))} 
+                            </div>
                         </Card.Body>
-                        <Card.Footer className="cfooter d-flex-column">
-                            <div className="d-flex ">
+                        <Card.Footer className="cfooter d-flex-column text-white">
+                            <div className="d-flex border-bottom ">
                             {restaurantData && <h3 className="col-10 my-2">{restaurantData.restaurantName}</h3>}
                                 <div className="col-2 text-center">
-                                {reviewData && <button disabled className="btn btn-success"> {reviewData.averageRating.toFixed(1)} </button>}
+                                {reviewData && <button className="btn rating btn-success"> {reviewData.averageRating.toFixed(1)} </button>}
                                     {/* <p>56 <i>reviews</i></p> */}
                                 </div>
                             </div>
 
                                 <div className=" container my-4">
-                                {restaurantData && <p>Address: {restaurantData.restaurantAddress }</p>  }
-                                {restaurantData && <p>Phone: {restaurantData.contactNumber}</p> }
-                                {restaurantData && <p>Operating Hours: {restaurantData.operatingHours}</p> }
-                                {restaurantData && <p>Seating Capacity: {restaurantData.seatingCapacity}</p> }
-                                {restaurantData && <p>Cuisine: {restaurantData.cuisine}</p> }
-                                {restaurantData && <p>Pricing: {restaurantData.pricing}</p> }
+                                {restaurantData && <p> <b>Address: </b>{restaurantData.restaurantAddress }</p>  }
+                                {restaurantData && <p> <b>Phone:</b> {restaurantData.contactNumber}</p> }
+                                {restaurantData && <p> <b>Operating Hours:</b> {restaurantData.operatingHours}</p> }
+                                {restaurantData && <p> <b>Seating Capacity:</b> {restaurantData.seatingCapacity}</p> }
+                                {restaurantData && <p> <b>Cuisine: </b>{restaurantData.cuisine}</p> }
+                                {restaurantData && <p> <b>Pricing:</b> {restaurantData.pricing}</p> }
  
 
                                 </div>
@@ -210,7 +205,7 @@ const Reserve = () => {
                         </Card.Footer>
                     </Card>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-4 mx-5">
                     <form className="m-5 fcontainer " onSubmit={handleSubmit}>
                         <h4 className="text-center text-capitalize">Reservation Form</h4>
                         <div className="form-group">
@@ -253,13 +248,13 @@ const Reserve = () => {
                 </div>
             </div>
 
-            <div className="review">
+            <div className="review mx-5">
 
-                <div class="card">
+                <div class="card mx-5">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                    <div> Ratings & Reviews </div>
-                    {reviewData && <div> Number Of Reviews: {reviewData.reviewCount} </div>}
-                    <div> Average Rating: {reviewData && reviewData.averageRating.toFixed(1)} </div>
+                    <div> <b>Ratings & Reviews </b></div>
+                    {reviewData && <div> <b>Number Of Reviews:</b> {reviewData.reviewCount} </div>}
+                    <div> <b>Average Rating:</b> {reviewData && reviewData.averageRating.toFixed(1)} </div>
                     {reviewData && Array.from({ length: reviewData.averageRating }, (_, index) => (
                             <i key={index} className="bi bi-star-fill"></i>
                         ))}

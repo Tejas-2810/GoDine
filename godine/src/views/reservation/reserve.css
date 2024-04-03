@@ -1,5 +1,5 @@
 .cfooter{
-    background-color: rgb(196, 185, 207);
+    background-color: rgb(8, 37, 71);
 }
 .card-reserve{
     margin-top: 20px;
@@ -10,6 +10,9 @@
 
 }
 
+.rating{
+    background-color: #029221 !important;
+}
 .menu{
     margin-top: 20px;
     margin-bottom: 20px;
@@ -24,6 +27,7 @@
 .review{
     margin-left: 10%;
     margin-right: 5%;
+    margin-top: 3rem !important;
 
 }
 
@@ -95,4 +99,8 @@
 
 .rating:hover>input:checked~label:before {
     opacity: 0.4
+}
+
+.review-text{
+    margin-left: 10%;
 }
