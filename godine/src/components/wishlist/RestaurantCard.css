@@ -1,84 +1,80 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
 body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f7f7f7; 
-    color: #333; 
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f7f7f7;
+  color: #333;
 }
 .c-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-    gap: 1rem; 
-    padding: 1rem; 
-    width: 100%; 
-    max-width: 1200px; 
-    margin: 2rem auto; 
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
 }
 
 .c {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
-    border-radius: 8px; 
-    overflow: hidden; 
-    background: white; 
-    transition: transform 0.3s ease, box-shadow 0.3s ease; 
-    cursor: pointer; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 .c:hover {
-    transform: translateY(-25px) scale(1.03); 
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
+  transform: translateY(-25px) scale(1.03);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
-
 
 .c img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover; 
-    transition: transform 0.3s ease; 
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
 }
 .c:hover img {
-    transform: scale(1.1); 
+  transform: scale(1.1);
 }
 
-
 .c-title-area {
-    font-size: 1.25rem;
-    margin-right: 0.5rem; 
-    display: flex;
-    align-items: center; 
-    justify-content: space-between; 
-    width: 100%;
- 
+  font-size: 1.25rem;
+  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .c-t {
-    font-size: 0.9rem; 
+  font-size: 0.9rem;
 }
 
 .h-icon {
-    cursor: pointer;
-    margin-left: 10px; 
-    font-size: 1.5rem; 
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 1.5rem;
 }
 
 @media (min-width: 768px) {
-    
-    .c img {
-        height: 200; 
-    }
+  .c img {
+    height: 200;
+  }
 }
 
-
-
 .wishlist-header {
-    text-align: center;
-    font-size: 3rem; 
-    color: #333; 
-    margin-top: 1rem; 
-    margin-bottom: 2rem; 
-    font-weight: 700; 
+  text-align: center;
+  font-size: 3rem;
+  color: #333;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
 }
 /* 
 Refernces
