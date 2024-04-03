@@ -1,0 +1,85 @@
+.newsletter-page {
+  padding-top: 70px;
+  padding-bottom: 70px;
+  font-family: "YourFontFamily", sans-serif;
+}
+
+.newsletter-card {
+  display: flex;
+  flex-direction: column;
+  border: none;
+  border-radius: 1rem;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  cursor: pointer;
+  background-color: #fff; /* Change to match your design */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* A subtle shadow */
+}
+
+.newsletter-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Fixed image height and object-fit cover to ensure consistency */
+.newsletter-card-img {
+  height: 200px;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* Set a minimum height for card titles to ensure consistency */
+.newsletter-card-title {
+  min-height: 4rem; /* Adjust as needed */
+  display: flex;
+  align-items: center; /* Centers text vertically */
+  justify-content: center; /* Centers text horizontally */
+  font-weight: bold; /* If you want bold titles */
+}
+
+.newsletter-card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Add padding inside card body for spacing */
+.card-body {
+  padding: 1rem;
+}
+
+.newsletter-subscribe-btn {
+  background-color: #ffcc00; /* Primary button color from your palette */
+  color: #ffffff; /* White text */
+  border: none;
+  border-radius: 3rem; /* Rounded */
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+  margin-top: auto; /* Align at bottom */
+}
+
+/* Ensures columns are flex containers to match card heights */
+.col-md-4 {
+  display: flex;
+  margin-bottom: 1rem; /* Spacing between rows of cards */
+}
+
+/* Styles to make the subscribe button stick to the bottom */
+.col-md-4 .card {
+  flex: 1; /* Ensures that the card stretches full height of the column */
+}
+
+/* Add this at the bottom of your newsletter.css */
+/* To apply consistent heights to cards */
+.card {
+  height: 100%; /* This will make sure all your cards have the same height */
+}
+
+/* To ensure card content is spaced evenly */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* This will space your card content evenly */
+}

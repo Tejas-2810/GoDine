@@ -32,19 +32,45 @@ const sendNewsletterEmail = async (email, content) => {
   });
 };
 
-// Function to subscribe to the newsletter
+const getAllData = async (req, res) => {
+  try {
+    const newsletters = await Newsletter.find();
+    res.json(newsletters);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const unSubscribeToNewsletter = async (req, res) => {
+  try {
+    const { userID } = req.body;
+    // const user = await Users.findOne({ email: email });
+    // if (!user) {
+    //   return res.status(404).json({ message: "User not found" });
+    // }
+    console.log(userID);
+
+    let newsletter = await Newsletter.findOneAndDelete({ userID: userID });
+
+    // Removed the newsletter.save() line because it's not needed when deleting documents
+    res.status(200).json({ message: "Unsubscribed" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 const subscribeToNewsletter = async (req, res) => {
   try {
-    const { email } = req.body;
-    const user = await Users.findOne({ email: email });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    const { userID } = req.body;
+    // const user = await Users.findOne({ email: email });
+    // if (!user) {
+    //   return res.status(404).json({ message: "User not found" });
+    // }
 
-    let newsletter = await Newsletter.findOne({ userID: user._id });
+    let newsletter = await Newsletter.findOne({ userID: userID });
     if (!newsletter) {
       newsletter = new Newsletter({
-        userID: user._id,
+        userID: userID,
         newsLetterStatus: "Subscribed",
       });
     } else {
@@ -58,10 +84,9 @@ const subscribeToNewsletter = async (req, res) => {
   }
 };
 
-// Initialize the newsletter sending schedule
 const initNewsletterSchedule = () => {
   cron.schedule(
-    "17 11 * * *",
+    "*/2 * * * *",
     async () => {
       try {
         const newsletters = await Newsletter.find({
@@ -86,4 +111,9 @@ const initNewsletterSchedule = () => {
   );
 };
 
-module.exports = { subscribeToNewsletter, initNewsletterSchedule };
+module.exports = {
+  subscribeToNewsletter,
+  initNewsletterSchedule,
+  unSubscribeToNewsletter,
+  getAllData,
+};

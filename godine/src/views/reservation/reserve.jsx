@@ -17,7 +17,7 @@ const Reserve = () => {
         const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
         const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
         const resturant_endpoint = process.env.REACT_APP_PROFILE_ENDPOINT || "api/restaurants";
-        const restaurantId = "66039bdae52ec6b12a61a43a";
+        const restaurantId = "660b0d0b0e93ee58576c5fed";
         const review = "reviews";
         const userId = getUserId();
 
@@ -32,7 +32,6 @@ const Reserve = () => {
                 .catch((err) => err);
 
                 setRestaurantData(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error("Error fetching restaurant data:", error);
             }
