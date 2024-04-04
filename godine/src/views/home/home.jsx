@@ -258,7 +258,7 @@ const Home = () => {
         <div className="container">
           <div className="row">
             <div className="col-6">
-              <h3 className="mb-3">Top Resturants This Month</h3>
+              <h3 className="mb-3">Top Restaurants This Month</h3>
             </div>
             <div className="col-12">
               <div className="row">
