@@ -21,13 +21,12 @@ const History = () => {
     comment: "",
   });
   const [showModal, setShowModal] = useState(false);
-  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
-  const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
  
   useEffect(() => {
     const fetchData = async () => {
-      const historyUrl = `${server_url}:${server_port}/api/user-reservation/history/${userId}`;
-      const restaurantsUrl = `${server_url}:${server_port}/api/restaurants/`;
+      const historyUrl = `${server_url}/api/user-reservation/history/${userId}`;
+      const restaurantsUrl = `${server_url}/api/restaurants/`;
       try {
         const [reservationsResponse, restaurantsResponse] = await Promise.all([
           axios.get(historyUrl, { withCredentials: true }),
@@ -48,7 +47,7 @@ const History = () => {
     );
     if (isConfirmed) {
       try {
-        const deleteUrl = `${server_url}:${server_port}/api/user-reservation/delete/${userId}/${reservationId}`;
+        const deleteUrl = `${server_url}/api/user-reservation/delete/${userId}/${reservationId}`;
         await axios.delete(deleteUrl, { withCredentials: true });
         setData(data.filter((item) => item._id !== reservationId));
       } catch (error) {
@@ -70,7 +69,7 @@ const History = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { reservationId, restaurantId } = currentReviewDetails;
-    const reviewUrl = `${server_url}:${server_port}/api/user-reservation/review/${userId}/${reservationId}`;
+    const reviewUrl = `${server_url}/api/user-reservation/review/${userId}/${reservationId}`;
  
     try {
       await axios.post(

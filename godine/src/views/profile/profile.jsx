@@ -95,12 +95,11 @@ const Profile = () => {
 
     useEffect(() => {
         // fetch profile endpoint
-        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
-        const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
         const profile_endpoint = process.env.REACT_APP_PROFILE_ENDPOINT || "users";
         const userId = getUserId();
 
-        const endpoint = `${server_url}:${server_port}/${profile_endpoint}/${userId}`;
+        const endpoint = `${server_url}/${profile_endpoint}/${userId}`;
 
         cancelRequestRef.current?.abort();
         cancelRequestRef.current = new AbortController();
@@ -169,8 +168,7 @@ const Profile = () => {
             return;
         }
 
-        const server_url = process.env.SERVER_URL || "http://localhost";
-        const server_port = process.env.SERVER_PORT || "8080";
+        const server_url = process.env.SERVER_URL || "http://localhost:8080";
         const profile_edit_endpoint = process.env.PROFILE_EDIT_ENDPOINT || "users/edit";
         const userId = getUserId();
 
@@ -178,7 +176,7 @@ const Profile = () => {
         cancelRequestRef.current?.abort();
         cancelRequestRef.current = new AbortController();
 
-        const endpoint = `${server_url}:${server_port}/${profile_edit_endpoint}/${userId}`;
+        const endpoint = `${server_url}/${profile_edit_endpoint}/${userId}`;
 
         const data = {
             name: name,

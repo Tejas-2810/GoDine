@@ -19,13 +19,12 @@ const Reserve = () => {
     const location = useLocation();
 
     useEffect(() => {
-        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
-        const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
         const resturant_endpoint = process.env.REACT_APP_PROFILE_ENDPOINT || "api/restaurants";
         const restaurantId = searchParams.get("id") || "660345d96a5e6f56688098a6";
         const review = "reviews";
 
-        const endpoint = `${server_url}:${server_port}/${resturant_endpoint}/${restaurantId}`;
+        const endpoint = `${server_url}/${resturant_endpoint}/${restaurantId}`;
 
         cancelRequestRef.current?.abort();
         cancelRequestRef.current = new AbortController();

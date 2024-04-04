@@ -40,8 +40,7 @@ function ForgotPassword() {
     e.preventDefault();
 
     const em = email;
-    const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
-    const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+    const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
     const forgot_password_endpoint =
       process.env.REACT_APP_FORGOT_PASSWORD_ENDPOINT ||
       "api/auth/forgotPassword";
@@ -50,7 +49,7 @@ function ForgotPassword() {
     reqCancelRef.current = new AbortController();
 
     if (em !== "" && validEmail) {
-      const url = `${server_url}:${server_port}/${forgot_password_endpoint}`;
+      const url = `${server_url}/${forgot_password_endpoint}`;
       const data = { email: em };
       const response = await axios
         .post(url, data, { signal: reqCancelRef.current?.signal })

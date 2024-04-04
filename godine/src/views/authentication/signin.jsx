@@ -56,8 +56,7 @@ function Signin() {
     const pwd = password;
     const from = location?.state?.from;
 
-    const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
-    const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+    const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
     const signin_endpoint =
       process.env.REACT_APP_SIGNIN_ENDPOINT || "api/auth/signin";
 
@@ -66,7 +65,7 @@ function Signin() {
 
     // send the email and password to the server
     if (userEmail !== "" && pwd !== "" && validEmail && validPassword) {
-      const url = `${server_url}:${server_port}/${signin_endpoint}`;
+      const url = `${server_url}/${signin_endpoint}`;
       const data = {
         email: userEmail,
         password: pwd,
