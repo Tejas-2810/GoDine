@@ -272,12 +272,12 @@ const Home = () => {
         <section className="pt-5 pb-5">
           <div className="container">
             <div className="row">
-              <div className="col-md-3 mb-3">
+              <div className="col-md-3 my-3 ">
                 <div
-                  className="card border border-3 border-warning rounded-lg shadow-lg type"
+                  className="card border  border-3 border-warning rounded-lg shadow-lg type"
                   onClick={handleBuffetClick} // Using the new function here
                 >
-                  <div className="card-body d-flex flex-row">
+                  <div className="card-body  d-flex flex-row">
                     <div>
                       <h5 className="card-title">Buffet</h5>
                       <p className="card-text">
@@ -287,7 +287,7 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3 mb-3">
+              <div className="col-md-3 my-3 ">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
                   <div
                     className="card-body d-flex flex-row"
@@ -303,7 +303,7 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3 mb-3">
+              <div className="col-md-3 my-3 ">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
                   <div
                     className="card-body d-flex flex-row"
@@ -319,7 +319,7 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3 mb-3">
+              <div className="col-md-3 my-3 ">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
                   <div
                     className="card-body d-flex flex-row"
@@ -335,7 +335,7 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3 mb-3">
+              <div className="col-md-3 my-3 ">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
                   <div
                     className="card-body d-flex flex-row"
@@ -350,7 +350,7 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3 mb-3">
+              <div className="col-md-3 my-3 ">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
                   <div
                     className="card-body d-flex flex-row"
@@ -366,7 +366,7 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3 mb-3">
+              <div className="col-md-3 my-3 ">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
                   <div
                     className="card-body d-flex flex-row"
@@ -382,7 +382,7 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3 mb-3">
+              <div className="col-md-3 my-3 ">
                 <div className="card border border-3 border-warning rounded-lg shadow-lg type">
                   <div
                     className="card-body d-flex flex-row"
