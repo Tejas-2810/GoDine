@@ -161,7 +161,7 @@ const Reserve = () => {
                 }
                 else if(error.response.status === 401 || error.response.status === 403){
                     alert("Please login to create a reservation.");
-                    navigate("/signin", {state: {from: location}, replace: true});
+                    // navigate("/signin", {state: {from: location}, replace: true});
                 }
                 return;
             }
