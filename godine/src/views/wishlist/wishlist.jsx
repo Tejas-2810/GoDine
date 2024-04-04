@@ -35,6 +35,7 @@ const WishList = () => {
             `${server_url}/api/restaurants/${restaurantId}/reviews`,
             {
               cancelToken: cancelRequestRef.current.token,
+              withCredentials: true
             }
           )
         );
@@ -44,7 +45,8 @@ const WishList = () => {
           axios.get(
             `${server_url}/api/restaurants/${restaurantId}`,
             {
-              cancelToken: cancelRequestRef.current.token,
+              cancelToken: cancelRequestRef.current?.token,
+              withCredentials: true
             }
           )
         );
