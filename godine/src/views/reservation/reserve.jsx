@@ -1,6 +1,7 @@
 import React,{useEffect, useState, useRef} from "react";
 import Carousel from "react-bootstrap/Carousel";
 import Card from "react-bootstrap/Card";
+import Modal from "react-bootstrap/Modal";
 import "./reserve.css";
 import useAuth from '../../hooks/useAuth';
 import axios, { isAxiosError } from 'axios';
@@ -104,6 +105,16 @@ const Reserve = () => {
         );
     })
 
+    const [show, setShow] = useState(false);
+    const [selectedImg, setSelectedImg] = useState(null);
+
+    const handleShow = (imgSrc) => {
+        setSelectedImg(imgSrc);
+        setShow(true);
+    };
+
+    const handleClose = () => setShow(false);
+
     const respics = pics.map((pics) =>{
         return(
             <Carousel.Item>
@@ -140,6 +151,8 @@ const Reserve = () => {
             await axios.post("http://localhost:8080/api/user-reservation/book", reservationData, { withCredentials: true });
             
             alert("Reservation created successfully!");
+            navigate('/history');
+
         } catch (error) {
             console.error("Error creating reservation:", error);
             if(isAxiosError(error)){
@@ -153,6 +166,7 @@ const Reserve = () => {
                 return;
             }
             alert("Error creating reservation. Please try again.");
+            
         }
     };
     return (
@@ -170,7 +184,8 @@ const Reserve = () => {
                                     key={1}
                                     className="menu mx-3"
                                     src={menupics}
-                                    alt={`Slide ${1 + 1}`}
+                                    alt={`Slide ${index + 1}`}
+                                    onClick={() => handleShow(menupics)}
                                 />
                             ))} 
                             </div>
@@ -203,6 +218,11 @@ const Reserve = () => {
                         </Card.Footer>
                     </Card>
                 </div>
+                <Modal show={show} onHide={handleClose} size="lg" centered>
+                <Modal.Body>
+                    <img src={selectedImg} className="w-100" alt="Menu" />
+                </Modal.Body>
+               </Modal>
                 <div className="col-md-4 mx-5">
                     <form className="m-5 fcontainer " onSubmit={handleSubmit}>
                         <h4 className="text-center text-capitalize">Reservation Form</h4>
