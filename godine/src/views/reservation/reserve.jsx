@@ -148,7 +148,13 @@ const Reserve = () => {
                 reservationTime: formData.time,
                 noOfGuests: formData.guests
             };
-            await axios.post("http://localhost:8080/api/user-reservation/book", reservationData, { withCredentials: true });
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
+        const resturant_endpoint = process.env.REACT_APP_PROFILE_ENDPOINT || "api/user-reservation/book";
+      
+        const endpoint = `${server_url}/${resturant_endpoint}`;
+        const response = await axios.post(endpoint, reservationData,{ signal: cancelRequestRef.current?.signal, withCredentials: true })
+        .then((response) => response)
+        .catch((err) => err);
             
             alert("Reservation created successfully!");
             navigate('/history');
@@ -261,7 +267,7 @@ const Reserve = () => {
                             </div>
                         </div>
                         <div className="m-5 text-center">
-                            <button type="submit" className="btn btn-primary">Submit</button>
+                          <button type="submit" className="btn btn-primary">Submit</button>  
                         </div>
                         </form>
                 </div>
