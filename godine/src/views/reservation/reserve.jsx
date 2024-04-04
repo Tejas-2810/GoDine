@@ -6,7 +6,7 @@ import "./reserve.css";
 import useAuth from '../../hooks/useAuth';
 import axios, { isAxiosError } from 'axios';
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import { useSearchParams , useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 
 const Reserve = () => {
     const { getUserId } = useAuth();
@@ -15,7 +15,8 @@ const Reserve = () => {
     const [restaurantData, setRestaurantData] = useState(null);
     const [reviewData, setReviewData] = useState(null);
     const userId = getUserId();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
@@ -70,10 +71,6 @@ const Reserve = () => {
         } = restaurantData;
         pics = photos
         menupics = menu
-
-        // Use the variables above in your JSX code
-        // Example: <h1>{restaurantName}</h1>
-        console.log("Restaurant Data: ", pics);
     }
     var reviewList = [];
     if (reviewData) {
@@ -84,14 +81,6 @@ const Reserve = () => {
             reviews
         } = reviewData;
         reviewList = reviews;
-
-
-        // Use the variables above in your JSX code
-        // Example: <h1>{restaurantName}</h1>
-        console.log("Review Data: ", reviews);
-        console.log("Review Data: ", averageRating);
-        console.log("Review Data: ", reviewCount);
-
 
     }
     if (reviewList) {
@@ -113,8 +102,6 @@ const Reserve = () => {
                     <p class="card-text review-text my-3">{reviewList.review}</p>
                 </div>
             </div>
-
-
         );
     })
 
@@ -161,13 +148,23 @@ const Reserve = () => {
                 reservationTime: formData.time,
                 noOfGuests: formData.guests
             };
-            console.log(reservationData);
             await axios.post("http://localhost:8080/api/user-reservation/book", reservationData, { withCredentials: true });
+            
             alert("Reservation created successfully!");
             navigate('/history');
 
         } catch (error) {
             console.error("Error creating reservation:", error);
+            if(isAxiosError(error)){
+                if(error.response.status === 400){
+                    alert("Please provide all required fields.");
+                }
+                else if(error.response.status === 401 || error.response.status === 403){
+                    alert("Please login to create a reservation.");
+                    navigate("/signin", {state: {from: location}, replace: true});
+                }
+                return;
+            }
             alert("Error creating reservation. Please try again.");
             
         }

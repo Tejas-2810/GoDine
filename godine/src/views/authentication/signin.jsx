@@ -54,7 +54,7 @@ function Signin() {
 
     const userEmail = email;
     const pwd = password;
-    const from = location.state;
+    const from = location?.state?.from;
 
     const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
     const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
@@ -100,7 +100,6 @@ function Signin() {
         const role = response.data.role;
 
         setAuthData(token, role);
-        console.log("TOKEN", token);
 
         // navigate to respective webpages as per role
         if (role === "user") {
