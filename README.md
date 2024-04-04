@@ -27,207 +27,140 @@
 
 ## Built With
 
-- [React](https://legacy.reactjs.org/docs/getting-started.html/) - Web Framework used
-- [npm](https://docs.npmjs.com//) - Dependency Package Manager
-- [Bootstrap](https://getbootstrap.com/docs/4.1/getting-started/introduction/) - Styling Framework used with React
+- [React](https://legacy.reactjs.org/docs/getting-started.html/) - Web Framework used.
+- [npm](https://docs.npmjs.com//) - Dependency Package Manager.
+- [Bootstrap](https://getbootstrap.com/docs/4.1/getting-started/introduction/) - Styling Framework used with React.
+- [Node](https://nodejs.org/en) - Backend server developed using.
+
+## Features Developed
+
+- **Home Page**
+- **Search Bar and Navigation**
+- **Filter For Seacrh Result**
+- **NavBar wiht HandburgerMenu**
+- **Footer**
+- **FAQ**
+- ***
 
 ## Sources Used
 
 ### File 1 : Slide.jsx
 
-#### Path: /src/components/slider/slide.jsx
+#### Path: /godine/src/components/slider/slide.jsx
 
-\*Lines **55 - 81\***
+\*Lines **55 - 164\***
 
 ```
-  superLargeDesktop: {
-        // the naming can be any, depends on you.
-        breakpoint: { max: 4000, min: 3000 },
-        items: 5
-      },
+const latestrestarants = latestRestaurants?.map((restaurant) => {
+    return (
+      <div className="cards home-c" onClick={() => restaurantid(restaurant._id)}>
+        <div className="" >
+          <img
+            className="img-bottom"
+            alt="Card image"
+            src={restaurant.photos[0]}
+          />
+        </div>
+        <div className="p-3">
+          <div className="d-flex">
+            <h5 className="card-title m-0">{restaurant.restaurantName}</h5>
+          </div>
+          <p className="">
+            <b>Address : </b>
+            {restaurant.restaurantAddress}
+          </p>
+          <div className="d-flex m-0 p-0">
+            <p className="">
+              <b>Cusine : </b> {restaurant.cuisine}{" "}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  });
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 3000 },
+      items: 5,
+    },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
       items: 3,
       slidesToSlide: 3,
-      partialVisibilityGutter: 40 // optional, default to 1.
+      partialVisibilityGutter: 40, // optional, default to 1.
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
       items: 2,
       slidesToSlide: 2,
-      partialVisibilityGutter: 30 // optional, default to 1.
+      partialVisibilityGutter: 30, // optional, default to 1.
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
       items: 1,
       slidesToSlide: 1,
-      partialVisibilityGutter: 30 // optional, default to 1.
-    }
+      partialVisibilityGutter: 30, // optional, default to 1.
+    },
   };
-return(
-<Carousel
-additionalTransfrom={0}
-arrows
-autoPlaySpeed={1000}
-centerMode={true}
-className=""
-containerClass="container-with-dots"
-dotListClass=""
-draggable
-focusOnSelect={false}
-infinite
-itemClass=""
-keyBoardControl
-minimumTouchDrag={80}
-pauseOnHover
-renderArrowsWhenDisabled={false}
-renderButtonGroupOutside={false}
-renderDotsOutside={false}
-responsive={{
-  desktop: {
-    breakpoint: {
-      max: 3000,
-      min: 1024
-    },
-    items: 3,
-    partialVisibilityGutter: 40
-  },
-  mobile: {
-    breakpoint: {
-      max: 464,
-      min: 0
-    },
-    items: 1,
-    partialVisibilityGutter: 30
-  },
-  tablet: {
-    breakpoint: {
-      max: 1024,
-      min: 464
-    },
-    items: 2,
-    partialVisibilityGutter: 30
-  }
-}}
-rewind={false}
-rewindWithAnimation={false}
-rtl={false}
-shouldResetAutoplay
-showDots={false}
-sliderClass=""
-slidesToSlide={1}
-swipeable
->
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i1} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i2} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i3} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i1} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i2} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i3} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i1} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i2} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i3} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i1} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i2} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-<div className="card">
-  <div className="card-img-top">
-      <img className="img-fluid" alt="Card image" src={i3} />
-  </div>
-  <div className="card-body">
-      <h5 className="card-title">Item 1</h5>
-      <p className="card-text">Item 1 details</p>
-  </div>
-</div>
-</Carousel>
-);
+  return (
+    <Carousel
+      additionalTransfrom={0}
+      arrows
+      autoPlaySpeed={1000}
+      centerMode={true}
+      className=""
+      containerClass="container-with-dots"
+      dotListClass=""
+      draggable
+      focusOnSelect={false}
+      infinite
+      itemClass=""
+      keyBoardControl
+      minimumTouchDrag={80}
+      pauseOnHover
+      renderArrowsWhenDisabled={false}
+      renderButtonGroupOutside={false}
+      renderDotsOutside={false}
+      responsive={{
+        desktop: {
+          breakpoint: {
+            max: 3000,
+            min: 1024,
+          },
+          items: 3,
+          partialVisibilityGutter: 40,
+        },
+        mobile: {
+          breakpoint: {
+            max: 464,
+            min: 0,
+          },
+          items: 1,
+          partialVisibilityGutter: 30,
+        },
+        tablet: {
+          breakpoint: {
+            max: 1024,
+            min: 464,
+          },
+          items: 2,
+          partialVisibilityGutter: 30,
+        },
+      }}
+      rewind={false}
+      rewindWithAnimation={false}
+      rtl={false}
+      shouldResetAutoplay
+      showDots={false}
+      sliderClass=""
+      slidesToSlide={1}
+      swipeable
+    >
+      {latestrestarants}
+      <div></div>
+    </Carousel>
+  );
 
 ```
 
@@ -296,7 +229,7 @@ _How Code was modified ?_
 
 #### Path: /src/components/navbar/navbar.jsx
 
-\*Lines **33 - 49\***
+\*Lines **33 - 49**,**110-165\***
 
 ```
   <Navbar className='navbar' bg="transparent" variant="dark" expand="lg">

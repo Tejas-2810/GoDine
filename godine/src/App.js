@@ -19,9 +19,8 @@ import Dashboard from "./views/dashboard/dashboard";
 import Unauthorized from "./views/authentication/unauthorized";
 import RequireAuth from "./utils/RequireAuth";
 import Newsletter from "./views/newsletter/newsletter";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 
-// current roles
 const ROLES = {
   USER: "user",
   RESTAURANT_OWNER: "restaurant owner",

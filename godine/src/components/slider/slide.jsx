@@ -161,6 +161,29 @@ const Slide = () => {
       swipeable
     >
       {latestrestarants}
+      {/* <div className="cards home-c">
+        <div className="">
+          <img
+            className="img-bottom"
+            alt="Card image"
+            src={data.photos[0]}
+          />
+        </div>
+        <div className="p-3">
+          <div className="d-flex">
+            <h5 className="card-title m-0">{data.restaurantName}</h5>
+          </div>
+          <p className="">
+            <b>Address : </b>
+            {data.restaurantAddress}
+          </p>
+          <div className="d-flex m-0 p-0">
+            <p className="">
+              <b>Cusine : </b> {data.cuisine}{" "}
+            </p>
+          </div>
+        </div>
+      </div> */}
       <div></div>
     </Carousel>
   );
