@@ -3,54 +3,59 @@ import RestaurantsList from "../../components/wishlist/RestaurantsList";
 import "../../components/wishlist/RestaurantCard.css";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
-
+ 
 const WishList = () => {
+  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
+  const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
   const { getUserId } = useAuth();
   const userId = getUserId();
   console.log(userId);
   const cancelRequestRef = useRef(null);
   const [restaurantsData, setRestaurantsData] = useState([]);
-
+ 
   useEffect(() => {
     const fetchWishlistAndDetails = async () => {
-      const endpoint = `http://localhost:8080/users/wishlist/${userId}`;
-
+      const endpoint = `${server_url}:${server_port}/users/wishlist/${userId}`;
+ 
       try {
         cancelRequestRef.current?.cancel(
           "Operation canceled due to new request."
         );
         cancelRequestRef.current = axios.CancelToken.source();
-
+ 
         const response = await axios.get(endpoint, {
           cancelToken: cancelRequestRef.current.token,
           withCredentials: true,
         });
-
+ 
         console.log(response.data); // Log the data to verify
-
+ 
         // Fetch ratings for each restaurant ID in the response
         const ratingsPromises = response.data.map((restaurantId) =>
           axios.get(
-            `http://127.0.0.1:8080/api/restaurants/${restaurantId}/reviews`,
+            `${server_url}:${server_port}/api/restaurants/${restaurantId}/reviews`,
             {
               cancelToken: cancelRequestRef.current.token,
             }
           )
         );
-
+ 
         // Fetch additional details for each restaurant in the wishlist
         const detailsPromises = response.data.map((restaurantId) =>
-          axios.get(`http://127.0.0.1:8080/api/restaurants/${restaurantId}`, {
-            cancelToken: cancelRequestRef.current.token,
-          })
+          axios.get(
+            `${server_url}:${server_port}/api/restaurants/${restaurantId}`,
+            {
+              cancelToken: cancelRequestRef.current.token,
+            }
+          )
         );
-
+ 
         // Wait for all promises to complete
         const [ratingsResponses, detailsResponses] = await Promise.all([
           Promise.all(ratingsPromises),
           Promise.all(detailsPromises),
         ]);
-
+ 
         // Construct data with details and ratings
         const wishlistDataWithDetailsAndRatings = response.data.map(
           (restaurantId, index) => {
@@ -65,7 +70,7 @@ const WishList = () => {
             const location = details.address
               ? details.address.split(",")[1].trim()
               : "Unknown";
-
+ 
             return {
               id: restaurantId,
               imageUrl:
@@ -80,7 +85,7 @@ const WishList = () => {
             };
           }
         );
-
+ 
         setRestaurantsData(wishlistDataWithDetailsAndRatings);
       } catch (error) {
         if (axios.isAxiosError(error) && !axios.isCancel(error)) {
@@ -88,53 +93,30 @@ const WishList = () => {
         }
       }
     };
-
+ 
     fetchWishlistAndDetails();
-
+ 
     return () => {
       cancelRequestRef.current?.cancel(
         "Component unmounted, operation canceled"
       );
     };
   }, [userId]);
-  // const removeRestaurantFromWishlist = async (restaurantId) => {
-  //   const url = `http://localhost:8080/users/wishlist/remove/${userId}?restaurantID=${restaurantId}`;
-  //   try {
-  //     await axios.delete(url, { withCredentials: true });
-  //     // Filter out the removed restaurant and update state
-  //     setRestaurantsData(
-  //       restaurantsData.filter((item) => item.id !== restaurantId)
-  //     );
-  //   } catch (error) {
-  //     console.error("Error removing restaurant from wishlist:", error);
-  //   }
-  // };
   const removeRestaurantFromWishlist = async (restaurantId) => {
-    // Construct the URL for removing a restaurant from the wishlist
     console.log("rest id", restaurantId);
-    const url = `http://localhost:8080/users/wishlist/remove/${userId}?restaurantID=${restaurantId}`;
-
+    const url = `${server_url}:${server_port}/users/wishlist/remove/${userId}?restaurantID=${restaurantId}`;
+ 
     try {
-      // Send a DELETE request to the backend
       const response = await axios.delete(url, { withCredentials: true });
-
-      // Log the response from the server for debugging
       console.log("Response from removing restaurant:", response.data);
-
-      // Filter out the removed restaurant from the state
-      // This updates the UI to no longer show the removed restaurant
       setRestaurantsData(
         restaurantsData.filter((item) => item.id !== restaurantId)
       );
-
-      // Optionally, you can check the response before updating the UI
-      // to ensure the backend successfully processed the request
     } catch (error) {
-      // Log any error that occurs during the API call
       console.error("Error removing restaurant from wishlist:", error);
-      // Optionally, handle the error in the UI, such as showing a message to the user
     }
   };
+  
   return (
     <div className="pcontainer">
       <h1 className="wishlist-header">Wishlist Restaurants</h1>

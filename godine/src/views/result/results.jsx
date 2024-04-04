@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "./results.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useSearchParams, useNavigate, createSearchParams} from "react-router-dom";
+import {
+  useSearchParams,
+  useNavigate,
+  createSearchParams,
+} from "react-router-dom";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
-
+ 
 const Results = () => {
+  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
+  const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState([]);
@@ -23,7 +29,7 @@ const Results = () => {
   });
   const [favorites, setFavorites] = useState({});
   const { getUserId } = useAuth();
-
+ 
   let cuisineFirst = searchParams.get("c") || "";
   if (cuisineFirst === "Any Cuisine") {
     cuisineFirst = "";
@@ -33,19 +39,20 @@ const Results = () => {
     locationFirst = "";
   }
   let keywordFirst = searchParams.get("K") || "";
-
-
+ 
   const restaurantid = (id) => {
     navigate({
       pathname: "/reserve",
       search: createSearchParams({
-        id : id,
+        id: id,
       }).toString(),
     });
   };
   const fetchRatings = (restaurantsData) => {
     restaurantsData.forEach((restaurant) => {
-      fetch(`http://127.0.0.1:8080/api/restaurants/${restaurant._id}/reviews`)
+      fetch(
+        `${server_url}:${server_port}/api/restaurants/${restaurant._id}/reviews`
+      )
         .then((response) => response.json())
         .then((data) => {
           setRatings((prevRatings) => ({
@@ -56,17 +63,16 @@ const Results = () => {
         .catch((error) => console.error("Error fetching ratings:", error));
     });
   };
-
+ 
   const userId = getUserId();
   useEffect(() => {
     const fetchData = async () => {
-      const wishlisturl = `http://localhost:8080/users/wishlist/${userId}`;
+      const wishlisturl = `${server_url}:${server_port}/users/wishlist/${userId}`;
       try {
         const [wishlistResponse] = await Promise.all([
           axios.get(wishlisturl, { withCredentials: true }),
         ]);
         const wishlistData = wishlistResponse.data;
-        // Filter out null values and convert the array to an object
         const favoritesObj = wishlistData.reduce((acc, curr) => {
           if (curr !== null) {
             // Check to ensure null values are not included
@@ -81,26 +87,28 @@ const Results = () => {
     };
     fetchData();
     const fetchRestaurants = async () => {
-      const response = await fetch("http://localhost:8080/api/restaurants/");
+      const response = await fetch(
+        `${server_url}:${server_port}/api/restaurants/`
+      );
       const data = await response.json();
       setRestaurants(data);
       fetchRatings(data);
     };
-
+ 
     console.log(restaurants);
-
+ 
     const fetchDiscounts = async () => {
       const response = await fetch(
-        "http://127.0.0.1:8080/api/discountsPromotions/discounts"
+        `${server_url}:${server_port}/api/discountsPromotions/discounts`
       );
       const data = await response.json();
       setDiscounts(data);
     };
-
+ 
     fetchRestaurants().catch(console.error);
     fetchDiscounts().catch(console.error);
   }, []);
-
+ 
   useEffect(() => {
     setInitiallyFilteredRestaurants(
       restaurants.filter((restaurant) => {
@@ -116,7 +124,7 @@ const Results = () => {
       })
     );
   }, [restaurants, cuisineFirst, locationFirst, keywordFirst]); // Initial filter effect
-
+ 
   const applyFilters = (restaurant) => {
     const restaurantLocation = restaurant.restaurantAddress
       .split(",")[1]
@@ -135,12 +143,12 @@ const Results = () => {
     const matchesDiscount = selectedFilters.discount
       ? discount === selectedFilters.discount
       : true;
-
+ 
     return (
       matchesLocation && matchesCuisine && matchesRating && matchesDiscount
     );
   };
-
+ 
   const findDiscountForRestaurant = (restaurantId) => {
     if (!Array.isArray(discounts)) {
       console.warn("Discounts is not an array", discounts);
@@ -159,28 +167,28 @@ const Results = () => {
     } else {
       newValue = value;
     }
-
+ 
     setSelectedFilters((prevFilters) => ({
       ...prevFilters,
       [filter]: newValue,
     }));
   };
-
+ 
   const toggleFavorite = async (restaurantId) => {
     const userId = getUserId(); // Assuming getUserId() is a function that returns the current user's ID
     console.log("User ID:", userId);
-
+ 
     const isFavorite = !!favorites[restaurantId]; // Assuming 'favorites' is an object tracking the favorite status
     console.log(
       `Is favorite before action: ${isFavorite} for restaurantId: ${restaurantId}`
     );
-
+ 
     const action = isFavorite ? "remove" : "add";
     const method = isFavorite ? "DELETE" : "POST";
     const url =
-      `http://localhost:8080/users/wishlist/${action}/${userId}` +
+      `${server_url}:${server_port}/users/wishlist/${action}/${userId}` +
       (action === "remove" ? `?restaurantID=${restaurantId}` : "");
-
+ 
     try {
       await axios({
         method: method,
@@ -190,12 +198,12 @@ const Results = () => {
           data: { restaurantID: restaurantId },
         }),
       });
-
+ 
       setFavorites((prevFavorites) => ({
         ...prevFavorites,
         [restaurantId]: !isFavorite,
       }));
-
+ 
       console.log(
         `Restaurant successfully ${action === "add" ? "added to" : "removed from"} wishlist.`
       );
@@ -214,7 +222,7 @@ const Results = () => {
       }
     }
   };
-
+ 
   const showAllRestaurants = () => {
     setSelectedFilters({
       location: "",
@@ -222,10 +230,10 @@ const Results = () => {
       rating: 0,
       discount: 0,
     });
-
+ 
     setInitiallyFilteredRestaurants(null);
   };
-
+ 
   const displayedRestaurants = initiallyFilteredRestaurants || restaurants;
   const filteredRestaurants = displayedRestaurants.filter(applyFilters);
   const uniqueCuisines = [

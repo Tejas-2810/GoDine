@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./history.css";
 import useAuth from "../../hooks/useAuth";
-
+ 
 const History = () => {
   const { getUserId } = useAuth();
-
+ 
   const userId = getUserId();
-
+ 
   const [data, setData] = useState([]);
   const [restaurantDetails, setRestaurantDetails] = useState([]);
   const [currentReviewDetails, setCurrentReviewDetails] = useState({
@@ -21,11 +21,13 @@ const History = () => {
     comment: "",
   });
   const [showModal, setShowModal] = useState(false);
-
+  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
+  const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+ 
   useEffect(() => {
     const fetchData = async () => {
-      const historyUrl = `http://localhost:8080/api/user-reservation/history/${userId}`;
-      const restaurantsUrl = `http://localhost:8080/api/restaurants/`;
+      const historyUrl = `${server_url}:${server_port}/api/user-reservation/history/${userId}`;
+      const restaurantsUrl = `${server_url}:${server_port}/api/restaurants/`;
       try {
         const [reservationsResponse, restaurantsResponse] = await Promise.all([
           axios.get(historyUrl, { withCredentials: true }),
@@ -39,14 +41,14 @@ const History = () => {
     };
     fetchData();
   }, [userId]);
-
+ 
   const handleCancel = async (userId, reservationId) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to cancel this reservation?"
     );
     if (isConfirmed) {
       try {
-        const deleteUrl = `http://localhost:8080/api/user-reservation/delete/${userId}/${reservationId}`;
+        const deleteUrl = `${server_url}:${server_port}/api/user-reservation/delete/${userId}/${reservationId}`;
         await axios.delete(deleteUrl, { withCredentials: true });
         setData(data.filter((item) => item._id !== reservationId));
       } catch (error) {
@@ -56,7 +58,7 @@ const History = () => {
       console.log("Reservation cancellation aborted by the user.");
     }
   };
-
+ 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setReview((prevReview) => ({
@@ -64,12 +66,12 @@ const History = () => {
       [name]: value,
     }));
   };
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { reservationId, restaurantId } = currentReviewDetails;
-    const reviewUrl = `http://localhost:8080/api/user-reservation/review/${userId}/${reservationId}`;
-
+    const reviewUrl = `${server_url}:${server_port}/api/user-reservation/review/${userId}/${reservationId}`;
+ 
     try {
       await axios.post(
         reviewUrl,
@@ -85,7 +87,7 @@ const History = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
-
+ 
       alert("Review submitted successfully!");
       setShowModal(false);
       setReview({ rating: "", recommendation: "", comment: "" });
