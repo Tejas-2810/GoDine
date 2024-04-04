@@ -42,8 +42,7 @@ const Newsletter = () => {
   const [selectedNewsletterId, setSelectedNewsletterId] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { getUserId } = useAuth();
-  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
-  const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
  
   const userId = getUserId();
  
@@ -51,7 +50,7 @@ const Newsletter = () => {
     const fetchSubscriptions = async () => {
       try {
         const response = await axios.get(
-          `${server_url}:${server_port}/api/newsletter/`,
+          `${server_url}/api/newsletter/`,
           { userID: userId },
           {
             withCredentials: true,
@@ -71,7 +70,7 @@ const Newsletter = () => {
   const handleSubscribe = async () => {
     try {
       await axios.post(
-        `${server_url}:${server_port}/api/newsletter/subscribe`,
+        `${server_url}/api/newsletter/subscribe`,
         { userID: userId },
         {
           withCredentials: true,
@@ -89,7 +88,7 @@ const Newsletter = () => {
   const handleUnsubscribe = async () => {
     try {
       await axios.post(
-        `${server_url}:${server_port}/api/newsletter/unsubscribe`,
+        `${server_url}/api/newsletter/unsubscribe`,
         { userID: userId },
         {
           withCredentials: true,

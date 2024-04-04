@@ -53,8 +53,7 @@ function ResetPassword() {
         const pwd = newPassword;
         console.log(`token: ${token}`);
 
-        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
-        const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
         const reset_password_endpoint =
             process.env.REACT_APP_RESET_PASSWORD_ENDPOINT || "api/auth/resetPassword";
 
@@ -62,7 +61,7 @@ function ResetPassword() {
         reqCancelRef.current = new AbortController();
 
         if (pwd !== "" && validNewPassword && passwordMatched) {
-            const url = `${server_url}:${server_port}/${reset_password_endpoint}/${token}`;
+            const url = `${server_url}/${reset_password_endpoint}/${token}`;
             const data = { password: pwd };
             const response = await axios
                 .patch(url, data, { signal: reqCancelRef.current?.signal })

@@ -121,14 +121,13 @@ function Signup() {
         reqCancelRef.current?.abort();
         reqCancelRef.current = new AbortController();
 
-        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
-        const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
         const signup_endpoint = process.env.REACT_APP_SIGNUP_ENDPOINT || "api/auth/signup";
 
         if (firstName !== '' && lastName !== '' && email !== '' && password !== '' && phoneNumber !== ''
             && validFirstName && validLastName && validEmail && validPassword && passwordMatch && validPhoneNumber) {
 
-            const url = `${server_url}:${server_port}/${signup_endpoint}`;
+            const url = `${server_url}/${signup_endpoint}`;
             const data = {
                 firstName: firstName,
                 lastName: lastName,

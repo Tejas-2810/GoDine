@@ -21,11 +21,10 @@ const Home = () => {
     cancelRequestRef.current = new AbortController();
     const fetchTopRestaurants = async () => {
       try {
-        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
-        const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
         const resturant_endpoint = process.env.REACT_APP_PROFILE_ENDPOINT || "api/restaurants/toprestaurants";
       
-        const endpoint = `${server_url}:${server_port}/${resturant_endpoint}`;
+        const endpoint = `${server_url}/${resturant_endpoint}`;
         const response = await axios.get(endpoint, { signal: cancelRequestRef.current?.signal, withCredentials: true })
         .then((response) => response)
         .catch((err) => err);

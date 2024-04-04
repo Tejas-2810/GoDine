@@ -11,8 +11,7 @@ import useAuth from "../../hooks/useAuth";
 import axios from "axios";
  
 const Results = () => {
-  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
-  const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState([]);
@@ -51,7 +50,7 @@ const Results = () => {
   const fetchRatings = (restaurantsData) => {
     restaurantsData.forEach((restaurant) => {
       fetch(
-        `${server_url}:${server_port}/api/restaurants/${restaurant._id}/reviews`
+        `${server_url}/api/restaurants/${restaurant._id}/reviews`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -67,7 +66,7 @@ const Results = () => {
   const userId = getUserId();
   useEffect(() => {
     const fetchData = async () => {
-      const wishlisturl = `${server_url}:${server_port}/users/wishlist/${userId}`;
+      const wishlisturl = `${server_url}/users/wishlist/${userId}`;
       try {
         const [wishlistResponse] = await Promise.all([
           axios.get(wishlisturl, { withCredentials: true }),
@@ -88,7 +87,7 @@ const Results = () => {
     fetchData();
     const fetchRestaurants = async () => {
       const response = await fetch(
-        `${server_url}:${server_port}/api/restaurants/`
+        `${server_url}/api/restaurants/`
       );
       const data = await response.json();
       setRestaurants(data);
@@ -99,7 +98,7 @@ const Results = () => {
  
     const fetchDiscounts = async () => {
       const response = await fetch(
-        `${server_url}:${server_port}/api/discountsPromotions/discounts`
+        `${server_url}/api/discountsPromotions/discounts`
       );
       const data = await response.json();
       setDiscounts(data);
@@ -186,7 +185,7 @@ const Results = () => {
     const action = isFavorite ? "remove" : "add";
     const method = isFavorite ? "DELETE" : "POST";
     const url =
-      `${server_url}:${server_port}/users/wishlist/${action}/${userId}` +
+      `${server_url}/users/wishlist/${action}/${userId}` +
       (action === "remove" ? `?restaurantID=${restaurantId}` : "");
  
     try {

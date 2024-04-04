@@ -5,8 +5,7 @@ import useAuth from "../../hooks/useAuth";
 import axios from "axios";
  
 const WishList = () => {
-  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
-  const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
   const { getUserId } = useAuth();
   const userId = getUserId();
   console.log(userId);
@@ -15,7 +14,7 @@ const WishList = () => {
  
   useEffect(() => {
     const fetchWishlistAndDetails = async () => {
-      const endpoint = `${server_url}:${server_port}/users/wishlist/${userId}`;
+      const endpoint = `${server_url}/users/wishlist/${userId}`;
  
       try {
         cancelRequestRef.current?.cancel(
@@ -33,7 +32,7 @@ const WishList = () => {
         // Fetch ratings for each restaurant ID in the response
         const ratingsPromises = response.data.map((restaurantId) =>
           axios.get(
-            `${server_url}:${server_port}/api/restaurants/${restaurantId}/reviews`,
+            `${server_url}/api/restaurants/${restaurantId}/reviews`,
             {
               cancelToken: cancelRequestRef.current.token,
             }
@@ -43,7 +42,7 @@ const WishList = () => {
         // Fetch additional details for each restaurant in the wishlist
         const detailsPromises = response.data.map((restaurantId) =>
           axios.get(
-            `${server_url}:${server_port}/api/restaurants/${restaurantId}`,
+            `${server_url}/api/restaurants/${restaurantId}`,
             {
               cancelToken: cancelRequestRef.current.token,
             }
@@ -104,7 +103,7 @@ const WishList = () => {
   }, [userId]);
   const removeRestaurantFromWishlist = async (restaurantId) => {
     console.log("rest id", restaurantId);
-    const url = `${server_url}:${server_port}/users/wishlist/remove/${userId}?restaurantID=${restaurantId}`;
+    const url = `${server_url}/users/wishlist/remove/${userId}?restaurantID=${restaurantId}`;
  
     try {
       const response = await axios.delete(url, { withCredentials: true });
