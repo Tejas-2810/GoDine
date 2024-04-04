@@ -18,22 +18,22 @@ const Navb = () => {
       case "2":
         navigate("/wishlist");
         break;
-      case "4":
+      case "3":
         navigate("/contact");
         break;
-      case "5":
+      case "4":
         navigate("/faq");
         break;
-      case "6":
+      case "5":
         navigate("/history");
         break;
-      case "7":
+      case "6":
         navigate("/dashboard");
         break;
-      case "8":
+      case "7":
         navigate("/signin");
         break;
-      case "9":
+      case "8":
         navigate("/newsletter");
         break;
       default:
@@ -66,7 +66,7 @@ const Navb = () => {
               Profile
             </Nav.Link>
           ) : null}
-          <Nav.Link onClick={() => redirect("4")} className="tw">
+          <Nav.Link onClick={() => redirect("3")} className="tw">
             Contact
           </Nav.Link>
           {getAuthData()?.role === "user" ? (
@@ -78,30 +78,30 @@ const Navb = () => {
           ) : null}
           {getAuthData()?.role === "user" ? (
             isSessionValid() ? (
-              <Nav.Link onClick={() => redirect("9")} className="tw">
+              <Nav.Link onClick={() => redirect("8")} className="tw">
                 Newsletter
               </Nav.Link>
             ) : null
           ) : null}
           {getAuthData()?.role === "restaurant owner" ? (
             isSessionValid() ? (
-              <Nav.Link onClick={() => redirect("7")} className="tw">
+              <Nav.Link onClick={() => redirect("6")} className="tw">
                 Dashboard
               </Nav.Link>
             ) : null
           ) : null}
           {getAuthData()?.role === "user" ? (
             isSessionValid() ? (
-              <Nav.Link onClick={() => redirect("6")} className="tw">
+              <Nav.Link onClick={() => redirect("5")} className="tw">
                 My Bookings
               </Nav.Link>
             ) : null
           ) : null}
-          <Nav.Link onClick={() => redirect("5")} className="tw">
+          <Nav.Link onClick={() => redirect("4")} className="tw">
             FAQ
           </Nav.Link>
           {!isSessionValid() ? (
-            <Nav.Link onClick={() => redirect("6")} className="tw">
+            <Nav.Link onClick={() => redirect("7")} className="tw">
               Sign in
             </Nav.Link>
           ) : (
