@@ -9,7 +9,7 @@ import newsletter3 from "./../../images/newsletter3.webp";
 import newsletter4 from "./../../images/newsletter4.webp";
 import newsletter5 from "./../../images/newsletter5.webp";
 import newsletter6 from "./../../images/newsletter6.webp";
-
+ 
 const newsletterContents = {
   1: `As the leaves change color and the air turns crisp, our menu undergoes its own transformation. This season, we're thrilled to introduce an array of dishes inspired by autumn's rich palette and flavors. Dive into the comforting embrace of our pumpkin spice risotto, or savor the delicate balance of our roasted duck with a cranberry glaze. Each dish is crafted with locally sourced ingredients, bringing the harvest to your table. Join us for a culinary journey that celebrates the very essence of fall. Don't wait to reserve your table — these seasonal specialties are here for a limited time only.`,
   2: `This month, we're giving you a peek behind the curtain with an exclusive recipe from our esteemed Chef Maria. Known for her innovative use of traditional ingredients, Chef Maria shares her secret to the perfect beef bourguignon, a comforting dish that's perfect for the cooler weather. With a detailed guide and expert tips, you'll be able to recreate a taste of our kitchen in your own home. Impress your guests or treat your family to this sumptuous meal. Don't forget, the secret ingredient is always a pinch of love!`,
@@ -18,7 +18,7 @@ const newsletterContents = {
   4: `At the heart of our culinary philosophy is a commitment to supporting local farmers and producers. This month, we're excited to spotlight the heroes who supply us with the freshest and finest ingredients. Join us for a special farm-to-table experience, where each dish tells the story of local agriculture and sustainable farming practices. Our specially curated menu highlights the flavors of the region, showcasing the dedication and hard work of our farming partners. Book your table now and be part of a dining experience that honors the local land and its bounty.`,
   6: `Join us for an exclusive evening dedicated to the art of wine. Our upcoming wine tasting event features a selection of exquisite wines from around the globe, carefully paired with artisanal cheeses and gourmet bites. Led by our sommelier, this intimate gathering is an opportunity to deepen your appreciation of wine, learn about different varietals, and discover the stories behind the labels. Spaces for this special event are limited, ensuring a personalized experience for each of our guests. Reserve your spot now and raise a glass to an unforgettable journey through the world of wine.`,
 };
-
+ 
 const newsletterImages = {
   1: newsletter1,
   2: newsletter2,
@@ -27,7 +27,7 @@ const newsletterImages = {
   5: newsletter5,
   6: newsletter6,
 };
-
+ 
 const names = {
   1: "Harvest Delights",
   2: "Behind the Apron",
@@ -36,20 +36,22 @@ const names = {
   5: "Green Gourmet",
   6: "Vines & Vintages",
 };
-
+ 
 const Newsletter = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedNewsletterId, setSelectedNewsletterId] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { getUserId } = useAuth();
-
+  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
+  const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
+ 
   const userId = getUserId();
-
+ 
   useEffect(() => {
     const fetchSubscriptions = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/newsletter/`,
+          `${server_url}:${server_port}/api/newsletter/`,
           { userID: userId },
           {
             withCredentials: true,
@@ -62,14 +64,14 @@ const Newsletter = () => {
         console.error("Error fetching subscriptions:", error);
       }
     };
-
+ 
     fetchSubscriptions();
   }, [userId]);
-
+ 
   const handleSubscribe = async () => {
     try {
       await axios.post(
-        `http://localhost:8080/api/newsletter/subscribe`,
+        `${server_url}:${server_port}/api/newsletter/subscribe`,
         { userID: userId },
         {
           withCredentials: true,
@@ -83,11 +85,11 @@ const Newsletter = () => {
       alert("An error occurred while subscribing.");
     }
   };
-
+ 
   const handleUnsubscribe = async () => {
     try {
       await axios.post(
-        `http://localhost:8080/api/newsletter/unsubscribe`,
+        `${server_url}:${server_port}/api/newsletter/unsubscribe`,
         { userID: userId },
         {
           withCredentials: true,
@@ -101,7 +103,7 @@ const Newsletter = () => {
       alert("An error occurred while unsubscribing.");
     }
   };
-
+ 
   const handleCardClick = (id) => {
     setSelectedNewsletterId(id);
     setShowModal(true);
