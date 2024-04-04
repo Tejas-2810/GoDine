@@ -72,6 +72,7 @@ const Reserve = () => {
         pics = photos
         menupics = menu
     }
+    console.log("pics", menupics)
     var reviewList = [];
     if (reviewData) {
  
@@ -172,7 +173,7 @@ const Reserve = () => {
     return (
         <div className="pcontainer container ">
             <div className="row" >
-                <div className="container col-md-6">
+                <div className="col-md-6">
                     <Card className="card-reserve">
                         <Card.Body  className="cbody">
                             <Carousel className=" border-bottom">
@@ -223,28 +224,28 @@ const Reserve = () => {
                     <img src={selectedImg} className="w-100" alt="Menu" />
                 </Modal.Body>
                </Modal>
-                <div className="col-md-4 mx-5">
+                <div className="col-6">
                     <form className="m-5 fcontainer " onSubmit={handleSubmit}>
                         <h4 className="text-center text-capitalize">Reservation Form</h4>
                         <div className="form-group">
                             <label htmlFor="nameInput">Name</label>
-                            <input type="text" className="form-control" id="nameInput" placeholder="Enter name" required/>
+                            <input type="text" className="form-control control-p " id="nameInput" placeholder="Enter name" required/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="emailInput">Email</label>
-                            <input type="email" className="form-control" id="emailInput" placeholder="Enter email" required/>
+                            <input type="email" className="form-control control-p " id="emailInput" placeholder="Enter email" required/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="phoneInput">Phone</label>
-                            <input type="number" className="form-control" id="phoneInput" placeholder="Enter phone" required/>
+                            <input type="number" className="form-control control-p " id="phoneInput" placeholder="Enter phone" required/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="dateInput">Date</label>
-                            <input type="date" className="form-control text-center" id="dateInput" placeholder="Enter date" required/>
+                            <input type="date" className="form-control control-p  text-center" id="dateInput" placeholder="Enter date" required/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="timeInput">Time</label>
-                            <input type="time" className="form-control text-center" id="timeInput" placeholder="Enter time" required/>
+                            <input type="time" className="form-control control-p  text-center" id="timeInput" placeholder="Enter time" required/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="guestsInput">Number of guests (max 5)</label>
@@ -266,9 +267,9 @@ const Reserve = () => {
                 </div>
             </div>
 
-            <div className="review mx-5">
+            <div className="review">
 
-                <div class="card mx-5">
+                <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                     <div> <b>Ratings & Reviews </b></div>
                     {reviewData && <div> <b>Number Of Reviews:</b> {reviewData.reviewCount} </div>}
