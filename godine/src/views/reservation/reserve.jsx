@@ -226,7 +226,8 @@ const Reserve = () => {
                </Modal>
                 <div className="col-6">
                     <form className="m-5 fcontainer " onSubmit={handleSubmit}>
-                        <h4 className="text-center text-capitalize">Reservation Form</h4>
+                        <h4 className="text-center text-capitalize"><b>Reservation Form</b></h4>
+                        <hr/> 
                         <div className="form-group">
                             <label htmlFor="nameInput">Name</label>
                             <input type="text" className="form-control control-p " id="nameInput" placeholder="Enter name" required/>
