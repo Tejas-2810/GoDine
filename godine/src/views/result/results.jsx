@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "./results.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useSearchParams, useNavigate, createSearchParams} from "react-router-dom";
+import {
+  useSearchParams,
+  useNavigate,
+  createSearchParams,
+} from "react-router-dom";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 
 const Results = () => {
+  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost";
+  const server_port = process.env.REACT_APP_SERVER_PORT || "8080";
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState([]);
@@ -34,18 +40,19 @@ const Results = () => {
   }
   let keywordFirst = searchParams.get("K") || "";
 
-
   const restaurantid = (id) => {
     navigate({
       pathname: "/reserve",
       search: createSearchParams({
-        id : id,
+        id: id,
       }).toString(),
     });
   };
   const fetchRatings = (restaurantsData) => {
     restaurantsData.forEach((restaurant) => {
-      fetch(`http://127.0.0.1:8080/api/restaurants/${restaurant._id}/reviews`)
+      fetch(
+        `${server_url}:${server_port}/api/restaurants/${restaurant._id}/reviews`
+      )
         .then((response) => response.json())
         .then((data) => {
           setRatings((prevRatings) => ({
@@ -60,13 +67,12 @@ const Results = () => {
   const userId = getUserId();
   useEffect(() => {
     const fetchData = async () => {
-      const wishlisturl = `http://localhost:8080/users/wishlist/${userId}`;
+      const wishlisturl = `${server_url}:${server_port}/users/wishlist/${userId}`;
       try {
         const [wishlistResponse] = await Promise.all([
           axios.get(wishlisturl, { withCredentials: true }),
         ]);
         const wishlistData = wishlistResponse.data;
-        // Filter out null values and convert the array to an object
         const favoritesObj = wishlistData.reduce((acc, curr) => {
           if (curr !== null) {
             // Check to ensure null values are not included
@@ -81,7 +87,9 @@ const Results = () => {
     };
     fetchData();
     const fetchRestaurants = async () => {
-      const response = await fetch("http://localhost:8080/api/restaurants/");
+      const response = await fetch(
+        `${server_url}:${server_port}/api/restaurants/`
+      );
       const data = await response.json();
       setRestaurants(data);
       fetchRatings(data);
@@ -91,7 +99,7 @@ const Results = () => {
 
     const fetchDiscounts = async () => {
       const response = await fetch(
-        "http://127.0.0.1:8080/api/discountsPromotions/discounts"
+        `${server_url}:${server_port}/api/discountsPromotions/discounts`
       );
       const data = await response.json();
       setDiscounts(data);
@@ -178,7 +186,7 @@ const Results = () => {
     const action = isFavorite ? "remove" : "add";
     const method = isFavorite ? "DELETE" : "POST";
     const url =
-      `http://localhost:8080/users/wishlist/${action}/${userId}` +
+      `${server_url}:${server_port}/users/wishlist/${action}/${userId}` +
       (action === "remove" ? `?restaurantID=${restaurantId}` : "");
 
     try {
@@ -323,9 +331,18 @@ const Results = () => {
               onClick={() => console.log("Restaurant ID:", restaurant._id)}
             >
               <div className="card mb-3">
-                <img src={restaurant.photos[0] || "https://via.placeholder.com/150"} className="card-img-top" alt={restaurant.restaurantName}                />
+                <img
+                  src={
+                    restaurant.photos[0] || "https://via.placeholder.com/150"
+                  }
+                  className="card-img-top"
+                  alt={restaurant.restaurantName}
+                />
                 <div className="card-body">
-                  <div className="favorite-icon" onClick={(e) => { e.stopPropagation();
+                  <div
+                    className="favorite-icon"
+                    onClick={(e) => {
+                      e.stopPropagation();
                       toggleFavorite(restaurant._id);
                     }}
                   >
@@ -354,7 +371,12 @@ const Results = () => {
                       ? ratings[restaurant._id]
                       : "Not Rated"}
                   </p>
-                  <button className="btn btn-primary" onClick={() => restaurantid(restaurant._id)} >Book</button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => restaurantid(restaurant._id)}
+                  >
+                    Book
+                  </button>
                 </div>
               </div>
             </div>
