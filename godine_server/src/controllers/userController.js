@@ -130,17 +130,13 @@ exports.removeRestaurantFromWishlist = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Capture the initial length of the wishlist
     const initialLength = user.wishlist.length;
 
-    // Safely filter the wishlist, avoiding errors on null values
     user.wishlist = user.wishlist.filter(
       (item) => item && item.toString() !== restaurantID.toString()
     );
 
-    // Check if the wishlist length has changed after the filter operation
     if (initialLength === user.wishlist.length) {
-      // If lengths are equal, the restaurant ID was not found in the wishlist
       return res
         .status(404)
         .json({ message: "Restaurant does not exist in wishlist" });
@@ -150,7 +146,7 @@ exports.removeRestaurantFromWishlist = async (req, res) => {
 
     res.json({ message: "Restaurant removed from wishlist" });
   } catch (err) {
-    console.error(err); // Log the error for detailed debugging
+    console.error(err);
     res.status(500).json({
       message:
         "An error occurred while removing the restaurant from the wishlist.",

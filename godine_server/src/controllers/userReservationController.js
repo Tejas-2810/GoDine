@@ -2,8 +2,6 @@ const Reservation = require("../models/reservations");
 const Review = require("../models/review");
 var mongoose = require("mongoose");
 
-console.log("INSIDEEEEE");
-// return true
 exports.getReservationHistory = async (req, res) => {
   const userId = req.params.userId;
 

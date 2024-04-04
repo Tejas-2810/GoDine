@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const router = express.Router();
 const restaurantController = require("../controllers/restaurantController");
-const cloudinary = require('../config/cloudinaryConfig');
+const cloudinary = require("../config/cloudinaryConfig");
 
 const FILE_TYPE_MAP = {
   "image/png": "png",
@@ -24,7 +24,7 @@ const upload = multer({ storage: storage });
 
 // Restaurant Dashboard
 router.post(
-  "/createRestaurants",
+  "createRestaurants/",
   upload.fields([
     { name: "menu", maxCount: 3 },
     { name: "photos", maxCount: 5 },
