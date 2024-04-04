@@ -40,7 +40,7 @@ const Profile = () => {
     function validateNameAndSet(e) {
         const inputName = e.target.value;
         const name = inputName.trim();
-        const nameRegex = /^[a-zA-Z ]+$/;
+        const nameRegex = /^[a-zA-Z\s]+$/;
 
         if (nameRegex.test(name)) {
             setValidName(true);
@@ -168,7 +168,7 @@ const Profile = () => {
             return;
         }
 
-        const server_url = process.env.SERVER_URL || "http://localhost:8080";
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
         const profile_edit_endpoint = process.env.PROFILE_EDIT_ENDPOINT || "users/edit";
         const userId = getUserId();
 
