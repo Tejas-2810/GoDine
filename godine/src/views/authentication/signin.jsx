@@ -75,15 +75,7 @@ function Signin() {
       const response = await axios
         .post(url, data, { signal: requestCancelRef.current?.signal })
         .then((response) => response)
-        .catch((err) => {
-          if (axios.isCancel(err)) {
-            return err;
-          }
-          if (axios.isAxiosError(err)) {
-            return err.response;
-          }
-          return err;
-        });
+        .catch((err) => err);
 
       // when request is aborted
       if (axios.isCancel(response)) {
@@ -91,11 +83,29 @@ function Signin() {
         return;
       }
 
-      if (
-        response.status === 200 &&
+      if (axios.isAxiosError(response)) {
+        const err = response;
+        if(err.message === "Network Error") {
+          alert("Please check your internet connection");
+          window.location.reload();
+          return;
+        }
+        if (err.response.status === 401) {
+          alert("Invalid email or password");
+        }
+        else if (err.response.status === 500) {
+          alert("Please again later after sometime!");
+        }
+        else {
+          alert("Something went wrong! Please try again later.");
+        }
+        window.location.reload();
+        return;
+      }
+
+      if (response.status === 200 &&
         response.data?.token &&
-        response.data?.role
-      ) {
+        response.data?.role) {
         const token = response.data.token;
         const role = response.data.role;
 
@@ -112,16 +122,13 @@ function Signin() {
           navigate("/", { replace: true });
         }
         return;
-      } else if (response.status === 401) {
-        alert(response.data.message);
-      } else if (response.status === 500) {
-        alert("Internal server error!");
       } else {
         alert("Please again later after sometime!");
       }
     } else {
       alert("Invalid email or password");
     }
+    window.location.reload();
   }
 
   return (
