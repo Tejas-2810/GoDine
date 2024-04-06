@@ -9,7 +9,7 @@ const newsletterRoutes = require("./routes/newsletterRoutes"); // Import the new
 const restaurantRoutes = require("./routes/restaurantRoutes"); // Import the restaurantRoutes
 const paymentRoutes = require("./routes/paymentRoutes");
 const userReservationRoutes = require("./routes/userReservationRoutes");
-const discountPromotionsRoutes = require("./routes/discountsPromotionsRoutes");
+const discountRoutes = require("./routes/discountsRoutes");
 const contactFormRoutes = require("./routes/contactFormRoutes");
 const cookieParser = require("cookie-parser");
 const { ensureUploadsDirectoryExists } = require("./init");
@@ -42,7 +42,7 @@ async function startServer() {
     app.use("/api/restaurants", restaurantRoutes); // Create a base URL for the restaurant routes
     app.use("/api/user-reservation", checkAuth,userReservationRoutes);
     app.use("/api/payments", checkAuth,paymentRoutes);
-    app.use("/api/discountsPromotions", discountPromotionsRoutes);
+    app.use("/api/discounts", discountRoutes);
     app.use("/public/upload", express.static("public/upload"));
     app.use("/contact", contactFormRoutes);
 

@@ -158,3 +158,19 @@ exports.getTopRestaurantsBySeatingCapacity = async (req, res) => {
       .json({ message: "Error fetching top restaurants by seating capacity" });
   }
 };
+
+exports.deleteRestaurantById = async (req, res) => {
+  try {
+    const restaurantId = req.body.restaurantID;
+    const restaurant = await Restaurant.findById(restaurantId);
+
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    await Restaurant.findByIdAndDelete(restaurantId);
+    res.status(200).json({ message: "Restaurant deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

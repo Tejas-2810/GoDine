@@ -41,6 +41,12 @@ const userSchema = new mongoose.Schema(
         ref: "Restaurants",
       },
     ],
+    restaurants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Restaurants",
+      },
+    ],
 
     passwordResetToken: String,
     passwordResetExpires: Date,
