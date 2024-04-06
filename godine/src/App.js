@@ -21,6 +21,7 @@ import RequireAuth from "./utils/RequireAuth";
 import Newsletter from "./views/newsletter/newsletter";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
 
+// current roles
 const ROLES = {
   USER: "user",
   RESTAURANT_OWNER: "restaurant owner",

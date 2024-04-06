@@ -68,8 +68,13 @@ const Results = () => {
     const fetchData = async () => {
       const wishlisturl = `${server_url}/users/wishlist/${userId}`;
       try {
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
         const [wishlistResponse] = await Promise.all([
-          axios.get(wishlisturl, { withCredentials: true }),
+          axios.get(wishlisturl, { headers: headers}),
         ]);
         const wishlistData = wishlistResponse.data;
         const favoritesObj = wishlistData.reduce((acc, curr) => {
@@ -189,10 +194,15 @@ const Results = () => {
       (action === "remove" ? `?restaurantID=${restaurantId}` : "");
  
     try {
+      const token = sessionStorage.getItem("token");
+      const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      }
       await axios({
         method: method,
         url: url,
-        withCredentials: true,
+        headers: headers,
         ...(method === "POST" && {
           data: { restaurantID: restaurantId },
         }),
