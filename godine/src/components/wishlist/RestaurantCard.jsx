@@ -59,7 +59,6 @@ const RestaurantCard = ({ restaurant, onRemove }) => {
             />
           </div>
           <p className="card-text c-t">Rating: {restaurant.rating}</p>
-          <p className="card-text c-t">Location: {restaurant.location}</p>
           <div className="card-text c-t">
             {restaurant.tags.map((tag, index) => (
               <span
