@@ -26,7 +26,6 @@ const Slide = () => {
         const response = await axios
           .get(endpoint, {
             signal: cancelRequestRef.current?.signal,
-            withCredentials: true,
           })
           .then((response) => response)
           .catch((err) => err);

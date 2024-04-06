@@ -21,13 +21,17 @@ const WishList = () => {
           "Operation canceled due to new request."
         );
         cancelRequestRef.current = axios.CancelToken.source();
- 
+        
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+
         const response = await axios.get(endpoint, {
           cancelToken: cancelRequestRef.current.token,
-          withCredentials: true,
+          headers: headers,
         });
- 
-        console.log(response.data); // Log the data to verify
  
         // Fetch ratings for each restaurant ID in the response
         const ratingsPromises = response.data.map((restaurantId) =>
@@ -35,7 +39,7 @@ const WishList = () => {
             `${server_url}/api/restaurants/${restaurantId}/reviews`,
             {
               cancelToken: cancelRequestRef.current.token,
-              withCredentials: true
+              headers: headers,
             }
           )
         );
@@ -46,7 +50,7 @@ const WishList = () => {
             `${server_url}/api/restaurants/${restaurantId}`,
             {
               cancelToken: cancelRequestRef.current?.token,
-              withCredentials: true
+              headers: headers,
             }
           )
         );
@@ -108,7 +112,12 @@ const WishList = () => {
     const url = `${server_url}/users/wishlist/remove/${userId}?restaurantID=${restaurantId}`;
  
     try {
-      const response = await axios.delete(url, { withCredentials: true });
+      const token = sessionStorage.getItem("token");
+      const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      };
+      const response = await axios.delete(url, {headers: headers});
       console.log("Response from removing restaurant:", response.data);
       setRestaurantsData(
         restaurantsData.filter((item) => item.id !== restaurantId)
