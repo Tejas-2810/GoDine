@@ -4,8 +4,7 @@ const User = require("../models/users");
 // authenticating using token cookie
 const checkAuth = async (req, res, next) => {
   try {
-    const cookies = req.cookies;
-    const token = cookies?.token
+    const token = req.headers.authorization.split(" ")[1];
     if (!token) {
       return res.status(403).json({ message: "No token provided" });
     }

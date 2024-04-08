@@ -68,8 +68,13 @@ const Results = () => {
     const fetchData = async () => {
       const wishlisturl = `${server_url}/users/wishlist/${userId}`;
       try {
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
         const [wishlistResponse] = await Promise.all([
-          axios.get(wishlisturl, { withCredentials: true }),
+          axios.get(wishlisturl, { headers: headers}),
         ]);
         const wishlistData = wishlistResponse.data;
         const favoritesObj = wishlistData.reduce((acc, curr) => {
@@ -189,10 +194,15 @@ const Results = () => {
       (action === "remove" ? `?restaurantID=${restaurantId}` : "");
  
     try {
+      const token = sessionStorage.getItem("token");
+      const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      }
       await axios({
         method: method,
         url: url,
-        withCredentials: true,
+        headers: headers,
         ...(method === "POST" && {
           data: { restaurantID: restaurantId },
         }),
@@ -332,7 +342,7 @@ const Results = () => {
               <div className="card mb-3">
                 <img src={restaurant.photos[0] || "https://via.placeholder.com/150"} className="card-img-top" alt={restaurant.restaurantName}                />
                 <div className="card-body">
-                  <div className="favorite-icon" onClick={(e) => { e.stopPropagation();
+                  <div className="favorite-icon"  onClick={(e) => { e.stopPropagation();
                       toggleFavorite(restaurant._id);
                     }}
                   >
@@ -342,11 +352,7 @@ const Results = () => {
                       <AiOutlineHeart size={24} />
                     )}
                   </div>
-                  <h5 className="card-title">{restaurant.restaurantName}</h5>
-                  <p className="m-0">
-                    Description:{" "}
-                    {restaurant.description || "No description available"}
-                  </p>
+                  <h5 className="card-title border-bottom">{restaurant.restaurantName}</h5>
                   <p className="m-0">
                     Discount: {findDiscountForRestaurant(restaurant._id) || "0"}
                     %

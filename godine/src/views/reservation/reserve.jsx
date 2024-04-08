@@ -30,7 +30,12 @@ const Reserve = () => {
         cancelRequestRef.current = new AbortController();
         const fetchData = async () => {
             try {
-                const response = await axios.get(endpoint, { signal: cancelRequestRef.current?.signal, withCredentials: true })
+                const token = sessionStorage.getItem("token");
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+                const response = await axios.get(endpoint, { signal: cancelRequestRef.current?.signal, headers: headers})
                 .then((response) => response)
                 .catch((err) => err);
 
@@ -41,7 +46,12 @@ const Reserve = () => {
         };
         const fetchReview = async () => {
             try {
-                const response = await axios.get(`${endpoint}/${review}`, { signal: cancelRequestRef.current?.signal, withCredentials: true })
+                const token = sessionStorage.getItem("token");
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+                const response = await axios.get(`${endpoint}/${review}`, { signal: cancelRequestRef.current?.signal, headers: headers})
                 .then((response) => response)
                 .catch((err) => err);
                 setReviewData(response.data);
@@ -148,7 +158,18 @@ const Reserve = () => {
                 reservationTime: formData.time,
                 noOfGuests: formData.guests
             };
-            await axios.post("http://localhost:8080/api/user-reservation/book", reservationData, { withCredentials: true });
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
+        const resturant_endpoint = process.env.REACT_APP_PROFILE_ENDPOINT || "api/user-reservation/book";
+            
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+        const endpoint = `${server_url}/${resturant_endpoint}`;
+        const response = await axios.post(endpoint, reservationData,{ signal: cancelRequestRef.current?.signal, headers: headers})
+        .then((response) => response)
+        .catch((err) => err);
             
             alert("Reservation created successfully!");
             navigate('/history');
@@ -261,7 +282,7 @@ const Reserve = () => {
                             </div>
                         </div>
                         <div className="m-5 text-center">
-                            <button type="submit" className="btn btn-primary">Submit</button>
+                          <button type="submit" className="btn btn-primary">Submit</button>  
                         </div>
                         </form>
                 </div>

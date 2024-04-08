@@ -101,8 +101,14 @@ const Profile = () => {
         cancelRequestRef.current?.abort();
         cancelRequestRef.current = new AbortController();
 
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+
         const fetchUserProfile = async () => {
-            const response = await axios.get(endpoint, { signal: cancelRequestRef.current?.signal, withCredentials: true })
+            const response = await axios.get(endpoint, { headers: headers, signal: cancelRequestRef.current?.signal})
                 .then((response) => response)
                 .catch((err) => err);
 
@@ -185,7 +191,13 @@ const Profile = () => {
             address: address
         };
 
-        const response = await axios.put(endpoint, data, { signal: cancelRequestRef.current?.signal, withCredentials: true })
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+
+        const response = await axios.put(endpoint, data, { signal: cancelRequestRef.current?.signal, headers: headers})
             .then((response) => response)
             .catch((err) => err);
 

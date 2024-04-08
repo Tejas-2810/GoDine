@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { jwtDecode } from 'jwt-decode'
-import Cookies from 'js-cookie'
 
 // it will hold all auth related data
 const AuthContext = React.createContext({});
@@ -31,7 +30,7 @@ export const AuthProvider = ({ children }) => {
             role: role
         };
 
-        Cookies.set(TOKEN, token, { expires: expiry });
+        sessionStorage.setItem(TOKEN, token);
         setUserState(state);
         sessionStorage.setItem(USER_STATE, JSON.stringify(state));
     }
@@ -40,7 +39,7 @@ export const AuthProvider = ({ children }) => {
     const clearAuthData = () => {
         setUserState(null);
         sessionStorage.removeItem(USER_STATE);
-        Cookies.remove(TOKEN);
+        sessionStorage.removeItem(TOKEN);
     }
 
     // fetch current auth data of the user
