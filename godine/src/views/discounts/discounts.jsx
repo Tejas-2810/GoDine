@@ -113,7 +113,7 @@ const Discounts = () => {
                       <p className="">
                         Expiry: {(new Date(discount.expiry)).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
                       </p>
-                      <span className="badge badge-pill bg-dark">
+                      <span className="badge badge-pill text-black" style={{ backgroundColor: "#B0C4DE" }}>
                         {discount.type}
                       </span>
                     </div>
@@ -146,7 +146,7 @@ const Discounts = () => {
                       <p>
                         <b>Restaurant: {promotion.restaurant.restaurantName}</b>
                       </p>
-                      <span className="badge badge-pill bg-dark">
+                      <span className="badge badge-pill text-black" style={{ backgroundColor: "#DCDCDC" }}>
                         {promotion.type}
                       </span>
                     </div>
