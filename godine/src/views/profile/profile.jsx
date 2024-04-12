@@ -8,6 +8,8 @@ import axios, { isAxiosError } from 'axios';
 
 const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
+    const [initialValues, setInitialValues] = useState({});
+
     const [name, setName] = useState("");
     const [validName, setValidName] = useState(true);
 
@@ -22,7 +24,6 @@ const Profile = () => {
 
     const [address, setAddress] = useState("");
 
-    const [allFieldsPresent, setAllFieldsPresent] = useState(false);
     const { getUserId } = useAuth();
     const cancelRequestRef = useRef(null);
 
@@ -37,10 +38,8 @@ const Profile = () => {
         return true;
     }
 
-    function validateNameAndSet(e) {
-        const inputName = e.target.value;
-        const name = inputName.trim();
-        const nameRegex = /^[a-zA-Z ]+$/;
+    function validateNameAndSet(name) {
+        const nameRegex = /^[a-zA-Z\s]+$/;
 
         if (nameRegex.test(name)) {
             setValidName(true);
@@ -50,9 +49,7 @@ const Profile = () => {
         setName(name);
     }
 
-    function validateEmailAndSet(e) {
-        const inputEmail = e.target.value;
-
+    function validateEmailAndSet(inputEmail) {
         const email = inputEmail.trim();
         // email is an email
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -66,8 +63,8 @@ const Profile = () => {
         setEmail(email);
     }
 
-    function validatePhoneNumberAndSet(e) {
-        const phoneNumber = (e.target.value).trim();
+    function validatePhoneNumberAndSet(number) {
+        const phoneNumber = number;
         const phoneNumberRegex = /^(\+[1]\s?)?\d{3}[\s.-]?\d{3}[\s.-]?\d{4}$/;
 
         if (phoneNumberRegex.test(phoneNumber)) {
@@ -81,7 +78,7 @@ const Profile = () => {
 
     function updateDobAndAge(dobString) {
         setDob(dobString);
-        if (!dobString) {
+        if (dobString) {
             const dobDate = new Date(dobString);
             const currentDate = new Date();
             const diffInMillis = currentDate - dobDate;
@@ -104,12 +101,17 @@ const Profile = () => {
         cancelRequestRef.current?.abort();
         cancelRequestRef.current = new AbortController();
 
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+
         const fetchUserProfile = async () => {
-            const response = await axios.get(endpoint, { signal: cancelRequestRef.current?.signal, withCredentials: true })
+            const response = await axios.get(endpoint, { headers: headers, signal: cancelRequestRef.current?.signal})
                 .then((response) => response)
                 .catch((err) => err);
 
-            console.log(response);
             if (axios.isCancel(response)) {
                 return;
             }
@@ -132,6 +134,8 @@ const Profile = () => {
             else if (response.status === 200 && response.data) {
 
                 const { name, email, phoneNumber, dateOfBirth, address } = response.data;
+                const initialValues = { name, email, phoneNumber, dateOfBirth, address };
+                setInitialValues(initialValues);
 
                 setName(name);
                 setEmail(email);
@@ -157,6 +161,7 @@ const Profile = () => {
     }, []);
 
     const handleEditClick = () => {
+        setInitialValues({ name, email, phone, dob, address });
         setIsEditing(true);
     };
 
@@ -168,7 +173,7 @@ const Profile = () => {
             return;
         }
 
-        const server_url = process.env.SERVER_URL || "http://localhost:8080";
+        const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
         const profile_edit_endpoint = process.env.PROFILE_EDIT_ENDPOINT || "users/edit";
         const userId = getUserId();
 
@@ -186,11 +191,16 @@ const Profile = () => {
             address: address
         };
 
-        const response = await axios.put(endpoint, data, { signal: cancelRequestRef.current?.signal, withCredentials: true })
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+
+        const response = await axios.put(endpoint, data, { signal: cancelRequestRef.current?.signal, headers: headers})
             .then((response) => response)
             .catch((err) => err);
 
-        console.log(response);
         if (axios.isCancel(response)) {
             console.log("Profile update aborted");
             return;
@@ -218,6 +228,15 @@ const Profile = () => {
 
         setIsEditing(false);
         window.location.reload();
+    };
+
+    const handleCancelClick = () => {
+        validateNameAndSet(initialValues.name);
+        validateEmailAndSet(initialValues.email);
+        validatePhoneNumberAndSet(initialValues.phone);
+        updateDobAndAge(initialValues.dob);
+        setAddress(initialValues.address);
+        setIsEditing(false);
     };
 
     return (
@@ -283,13 +302,13 @@ const Profile = () => {
                                 <div className="col-md-5">
                                     {isEditing ? (
                                         <>
-                                            <input type="text-dark" className="form-control form-control-p" value={name} onChange={(e) => validateNameAndSet(e)} />
+                                            <input type="text-dark" className="form-control form-control-p" value={name} onChange={(e) => validateNameAndSet(e.target.value)} />
                                             {validName ? null : <small style={{ color: 'red' }}>Enter a valid name</small>}
                                             <input type="text-dark" className="form-control form-control-p" value={dob} onChange={(e) => updateDobAndAge(e.target.value)} />
-                                            <div className="form-control form-control-p" style={{"background-color": "#f2f2f2", "opacity": "0.7"}}>{age}</div>
-                                            <input type="text-dark" className="form-control form-control-p" value={email} onChange={(e) => validateEmailAndSet(e)} />
+                                            <div className="form-control form-control-p" style={{ "background-color": "#f2f2f2", "opacity": "0.7" }}>{age}</div>
+                                            <input type="text-dark" className="form-control form-control-p" value={email} onChange={(e) => validateEmailAndSet(e.target.value)} />
                                             {validEmail ? null : <small style={{ color: 'red' }}>Enter valid email</small>}
-                                            <input type="text-dark" className="form-control form-control-p" value={phone} onChange={(e) => validatePhoneNumberAndSet(e)} />
+                                            <input type="text-dark" className="form-control form-control-p" value={phone} onChange={(e) => validatePhoneNumberAndSet(e.target.value)} />
                                             {validPhoneNumber ? null : <small style={{ color: 'red' }}>Enter valid phone number</small>}
                                             <input type="text-dark" className="form-control form-control-p" value={address} onChange={(e) => setAddress(e.target.value)} />
                                         </>
@@ -309,7 +328,7 @@ const Profile = () => {
                                 {isEditing ? (
                                     <>
                                         <button className="btn btn-primary m-3" onClick={handleSaveClick}>Save</button>
-                                        <button className="btn btn-primary m-3" onClick={() => setIsEditing(false)}>Cancel</button>
+                                        <button className="btn btn-primary m-3" onClick={handleCancelClick}>Cancel</button>
                                     </>
                                 ) : (
                                     <button className="btn btn-primary" onClick={handleEditClick}>Edit</button>

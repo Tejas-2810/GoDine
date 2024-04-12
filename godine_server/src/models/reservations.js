@@ -26,6 +26,10 @@ const reservationSchema = new mongoose.Schema(
       enum: ["Active", "Cancel"],
       default: "Active",
     },
+    modeOfBooking: {
+      type: String,
+      required: true,
+    },
   },
   { collection: "Reservations" }
 );

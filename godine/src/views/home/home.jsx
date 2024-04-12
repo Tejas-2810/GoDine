@@ -24,8 +24,13 @@ const Home = () => {
         const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
         const resturant_endpoint = process.env.REACT_APP_PROFILE_ENDPOINT || "api/restaurants/toprestaurants";
       
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
         const endpoint = `${server_url}/${resturant_endpoint}`;
-        const response = await axios.get(endpoint, { signal: cancelRequestRef.current?.signal, withCredentials: true })
+        const response = await axios.get(endpoint, { signal: cancelRequestRef.current?.signal, headers: headers})
         .then((response) => response)
         .catch((err) => err);
 

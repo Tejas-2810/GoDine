@@ -36,6 +36,9 @@ const Navb = () => {
       case "8":
         navigate("/newsletter");
         break;
+      case "discounts":
+        navigate("/discounts");
+        break;
       default:
         navigate("/");
         break;
@@ -60,6 +63,9 @@ const Navb = () => {
         <Nav className="m-4 h6 text-center ">
           <Nav.Link onClick={() => redirect()} className="tw">
             Home
+          </Nav.Link>
+          <Nav.Link onClick={() => redirect("discounts")} className="tw">
+            Discounts
           </Nav.Link>
           {isSessionValid() ? (
             <Nav.Link onClick={() => redirect("1")} className="tw">

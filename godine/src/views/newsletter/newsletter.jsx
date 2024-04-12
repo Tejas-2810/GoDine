@@ -49,12 +49,16 @@ const Newsletter = () => {
   useEffect(() => {
     const fetchSubscriptions = async () => {
       try {
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
         const response = await axios.get(
           `${server_url}/api/newsletter/`,
           { userID: userId },
           {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
+            headers: headers,
           }
         );
         const subscriptions = response.data;
@@ -69,12 +73,17 @@ const Newsletter = () => {
  
   const handleSubscribe = async () => {
     try {
+      const token = sessionStorage.getItem("token");
+      const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      };
       await axios.post(
         `${server_url}/api/newsletter/subscribe`,
         { userID: userId },
         {
           withCredentials: true,
-          headers: { "Content-Type": "application/json" },
+          headers: headers,
         }
       );
       setIsSubscribed(true);
@@ -87,12 +96,17 @@ const Newsletter = () => {
  
   const handleUnsubscribe = async () => {
     try {
+      const token = sessionStorage.getItem("token");
+      const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      };
       await axios.post(
         `${server_url}/api/newsletter/unsubscribe`,
         { userID: userId },
         {
           withCredentials: true,
-          headers: { "Content-Type": "application/json" },
+          headers: headers,
         }
       );
       setIsSubscribed(false);

@@ -28,9 +28,14 @@ const History = () => {
       const historyUrl = `${server_url}/api/user-reservation/history/${userId}`;
       const restaurantsUrl = `${server_url}/api/restaurants/`;
       try {
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
         const [reservationsResponse, restaurantsResponse] = await Promise.all([
-          axios.get(historyUrl, { withCredentials: true }),
-          axios.get(restaurantsUrl, { withCredentials: true }),
+          axios.get(historyUrl, { headers: headers }),
+          axios.get(restaurantsUrl, { headers: headers }),
         ]);
         setData(reservationsResponse.data.reservations);
         setRestaurantDetails(restaurantsResponse.data);
@@ -47,8 +52,13 @@ const History = () => {
     );
     if (isConfirmed) {
       try {
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
         const deleteUrl = `${server_url}/api/user-reservation/delete/${userId}/${reservationId}`;
-        await axios.delete(deleteUrl, { withCredentials: true });
+        await axios.delete(deleteUrl, { headers: headers });
         setData(data.filter((item) => item._id !== reservationId));
       } catch (error) {
         console.error("Failed to delete the reservation:", error);
@@ -72,6 +82,11 @@ const History = () => {
     const reviewUrl = `${server_url}/api/user-reservation/review/${userId}/${reservationId}`;
  
     try {
+      const token = sessionStorage.getItem("token");
+      const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      };
       await axios.post(
         reviewUrl,
         {
@@ -82,8 +97,7 @@ const History = () => {
           review: review.comment,
         },
         {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
+          headers: headers,
         }
       );
  

@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const router = express.Router();
 const restaurantController = require("../controllers/restaurantController");
+const restaurantDashboardController = require("../controllers/restaurantDashboardController");
 const cloudinary = require('../config/cloudinaryConfig');
 
 const FILE_TYPE_MAP = {
@@ -31,6 +32,41 @@ router.post(
     { name: "photos", maxCount: 5 },
   ]),
   restaurantController.createRestaurant
+);
+
+// Get paid and free bookings percentage for user's restaurants - pie chart
+router.get(
+  "/bookingpercentages/:userId",
+  restaurantDashboardController.getBookingPercentagesForUserRestaurants
+);
+
+// Route to get all restaurants owned by a specific user
+router.get(
+  '/ownerrestaurants/:userId',
+  restaurantDashboardController.getRestaurantsByOwner
+);
+
+// Route to get booking data for each of a user's restaurants - line chart 
+router.get(
+  '/numberOfrestaurantbookings/:userId',
+  restaurantDashboardController.getRestaurantBookings
+);
+
+// Route to get overall review of all user restaurants
+router.get(
+  '/overall-averagerating/:userId',
+  restaurantDashboardController.getOverallAverageRatingForUserRestaurants
+);
+
+// Route to get average ratings for each of a user's restaurants - bar chart 
+router.get(
+  '/restaurantratings/:userId',
+  restaurantDashboardController.getUserRestaurantsAverageRating
+);
+
+router.get(
+  '/total-bookings/:userId',
+  restaurantDashboardController.getAverageBookingsForUserRestaurants
 );
 
 //Top 3 restaurants
