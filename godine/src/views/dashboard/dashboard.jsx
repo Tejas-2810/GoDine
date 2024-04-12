@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import CanvasJSReact from "@canvasjs/react-charts";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
+const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
 
 const Dashboard = () => {
   const { getUserId } = useAuth();
@@ -27,7 +28,35 @@ const Dashboard = () => {
       },
     ],
   };
-
+  const [data, setData] = useState([]);
+  const [restaurantDetails, setRestaurantDetails] = useState([]);
+  const [currentReviewDetails, setCurrentReviewDetails] = useState({
+    userId: null,
+    reservationId: null,
+    restaurantId: null,
+  });
+  const handleCancel = async (userId, reservationId) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to cancel this reservation?"
+    );
+    if (isConfirmed) {
+      try {
+        const token = sessionStorage.getItem("token");
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+        const deleteUrl = `${server_url}/api/user-reservation/delete/${userId}/${reservationId}`;
+        await axios.delete(deleteUrl, { headers: headers });
+        setData(data.filter((item) => item._id !== reservationId));
+      } catch (error) {
+        console.error("Failed to delete the reservation:", error);
+      }
+    } else {
+      console.log("Reservation cancellation aborted by the user.");
+    }
+  };
+  const [showModal, setShowModal] = useState(false);
   const pieOptions = {
     backgroundColor: null,
     exportEnabled: true,
@@ -118,7 +147,8 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="col-md-6 p-5">
-          <form className="form">
+          <div className="border p-5 glass">          
+            <form className="form">
             <h1 className="text-center">Add A Restaurant</h1>
             <div className="form-group">
               <label htmlFor="restaurantName">Restaurant Name</label>
@@ -177,6 +207,62 @@ const Dashboard = () => {
               </button>
             </div>
           </form>
+          </div>
+          <div className="my-5">
+            <h1 className="text-center">Your Restaurants</h1>
+          <table className="table table-hover">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th className="">Restaurant name</th>
+            <th>Delete Restaurant</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.isArray(data) &&
+            data.map((item, index) => {
+              const date = new Date(item.reservationDateTime);
+              const formattedDate = date.toLocaleDateString("en-US");
+              const formattedTime = date.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              });
+
+              return (
+                <tr
+                  key={index}
+                  className={
+                    item.status === "Completed"
+                      ? "table-success"
+                      : item.status === "Pending"
+                        ? "table-primary"
+                        : "table-light-blue"
+                  }
+                >
+                  <td>{index + 1}</td>
+                  <td>
+                    {
+                      restaurantDetails.find(
+                        (rest) => rest._id === item.restaurantID
+                      )?.restaurantName
+                    }
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      className="btn btn-danger"
+                      onClick={() => handleCancel(getUserId(), item._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+        </tbody>
+      </table>
+          </div>
         </div>
       </div>
     </div>
