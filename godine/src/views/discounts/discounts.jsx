@@ -1,40 +1,66 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, createSearchParams } from "react-router-dom";
 import "./discounts.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 
 const Discounts = () => {
   const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
   const [discounts, setDiscounts] = useState([]);
-  const [discountsAndPromotions, setDiscountsAndPromotions] = useState([]);
+  const [promotions, setPromotions] = useState([]);
 
   const [selectedOption, setSelectedOption] = useState("all");
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const fetchDiscounts = async () => {
+
+    const fetchDiscountsAndPromotions = async () => {
       try {
         const endpoint = `${server_url}/api/discounts`;
         const response = await axios.get(endpoint);
         let discounts = response.data.map((discount) => { discount.type = "Discount"; return discount; });
 
         console.log("discounts: ", discounts);
-        setDiscountsAndPromotions(discounts);
+        setDiscounts(discounts);
       } catch (error) {
         console.error("Error fetching discounts:", error);
       }
-    };
 
-    fetchDiscounts();
+      try {
+        const endpoint = `${server_url}/api/promotions`;
+        const response = await axios.get(endpoint);
+        let promotions = response.data.map((promotion) => { promotion.type = "Promotion"; return promotion; });
+
+        console.log("promotions: ", promotions);
+        setPromotions(promotions);
+      } catch (error) {
+        console.error("Error fetching promotions:", error);
+      }
+
+    }
+
+    fetchDiscountsAndPromotions();
   }, [server_url]);
 
   const handleCheckSelection = (e) => {
     setSelectedOption(e.target.value);
   }
 
+  // to copy discount code to clipboard
   const copyCode = (text) => {
     console.log("Copying code:", text);
     navigator.clipboard.writeText(text);
+  }
+
+
+  const handleReserveButton = (restaurant) => {
+    navigate({
+      pathname: "/reserve",
+      search: createSearchParams({
+        id: restaurant._id,
+      }).toString(),
+    });
   }
 
   return (
@@ -46,7 +72,7 @@ const Discounts = () => {
           <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
 
-        <div className="d-flex">
+        <div className="d-flex my-2">
           <div className="form-check form-check-inline">
             <input className="form-check-input" type="radio" value="all" checked={selectedOption === "all"} onChange={(e) => handleCheckSelection(e)} id="allCheck"></input>
             <label className="form-check-label" htmlFor="allCheck">All</label>
@@ -62,75 +88,78 @@ const Discounts = () => {
         </div>
       </div>
 
-      {/* <div className="cards home-c d-cards glass text-white">
-        <div className="p-3">
-          <div className="d-flex">
-            <h3 className="card-title m-0">Discount Name</h3>
-          </div>
-          <div className="d-flex flex-column my-3 p-0">
-            <p className="">
-              <b>Discount : 50% </b>
-              { }
-            </p>
-            <p className="">
-              <b>Code: ABC-XYZ</b> { }{" "}
-            </p>
-            <p className="">
-              <b>Expiry: ABC-XYZ</b> { }{" "}
-            </p>
-          </div>
-          <div className="text-center">
-            <button className="btn btn-success">Copy Code</button>
-          </div>
-        </div>
-        </div> */}
-
-      {
-        // discounts section
-        <section>
-          <div className="row">
-            {
-              discountsAndPromotions.map((discount, idx) => {
-                if (selectedOption === "all" || discount.type.toLowerCase() === selectedOption.toLowerCase()) {
-                  return (
-                    <div key={idx} className="col-sm-4 my-5">
-                      <div className="cards items-c d-cards glass text-white">
-                        <div className="p-3">
-                          <div className="d-flex">
-                            <h3 className="card-title m-0">{discount.name}</h3>
-                          </div>
-                          <div className="d-flex flex-column my-3 p-0">
-                            <p className="">
-                              <b>Discount : {discount.discountPercentage}%</b>
-                              { }
-                            </p>
-                            <p className="">
-                              <b>Code: {discount.code}</b>
-                            </p>
-                            <p className="">
-                              <b>Expiry: {(new Date(discount.expiry)).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</b>
-                            </p>
-                            <span className="badge badge-pill bg-dark">
-                              {discount.type}
-                            </span>
-                          </div>
-                          <div className="text-center">
-                            <button className="btn btn-success" onClick={() => copyCode(discount.code)}>Copy Code</button>
-                          </div>
-                        </div>
-                      </div>
+      <section>
+        <div className="row">
+          {
+            // discounts section
+            (selectedOption === "all" || selectedOption === "discount") &&
+            discounts.map((discount, idx) => (
+              <div key={idx} className="col-sm-4 my-5">
+                <div className="cards items-c d-cards glass text-white">
+                  <div className="p-3">
+                    <div className="d-flex">
+                      <h3 className="card-title m-0">{discount.name}</h3>
                     </div>
-                  );
-                }
-              })}
-          </div>
-        </section>
-      }
+                    <div className="d-flex flex-column my-3 p-0">
+                      <p>
+                        {discount.description}
+                      </p>
+                      <p className="">
+                        Discount : {discount.discountPercentage}%
+                      </p>
+                      <p className="">
+                        Code: {discount.code}
+                      </p>
+                      <p className="">
+                        Expiry: {(new Date(discount.expiry)).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+                      </p>
+                      <span className="badge badge-pill bg-dark">
+                        {discount.type}
+                      </span>
+                    </div>
+                    <div className="text-center">
+                      <button className="btn btn-success" onClick={() => copyCode(discount.code)}>Copy Code</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
 
-      {
-        // promotions section
-        (selectedOption === "promotions") && null
-      }
+          {
+            // promotions section
+            (selectedOption === "all" || selectedOption === "promotion") &&
+            promotions.map((promotion, idx) => (
+              <div key={idx} className="col-sm-4 my-5">
+                <div className="cards items-c d-cards glass text-white">
+                  <div className="p-3">
+                    <div className="d-flex">
+                      <h3 className="card-title m-0">{promotion.name}</h3>
+                    </div>
+                    <div className="d-flex flex-column my-3 p-0">
+                      <p>
+                        Description: {promotion.description}
+                      </p>
+                      <p>
+                        Until: {(new Date(promotion.until)).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+                      </p>
+                      <p>
+                        <b>Restaurant: {promotion.restaurant.restaurantName}</b>
+                      </p>
+                      <span className="badge badge-pill bg-dark">
+                        {promotion.type}
+                      </span>
+                    </div>
+                    <div className="text-center">
+                      <button className="btn btn-success" onClick={() => handleReserveButton(promotion.restaurant)}>Make reservation</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </section>
     </div>
   );
 }
