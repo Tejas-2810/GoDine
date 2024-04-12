@@ -1,0 +1,77 @@
+.App {
+  height: 100vh;
+  width: 100vw;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-card {
+  background: whitesmoke;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 300px; /* Adjust the width as needed */
+}
+
+input {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+  font-size: 0.8rem;
+}
+
+.order-info-link {
+  display: block; /* or inline-block, depending on your design */
+  /* margin: 10px 0; Adjust margin as needed */
+  color: #007bff; /* Example color */
+  text-decoration: none; /* To remove underline */
+  /* Add more styles as needed */
+  text-align: center;
+  padding-top: 0px;
+  margin-top: 0px;
+}
+
+.section {
+  text-align: left;
+  font-size: 1.2rem;
+
+  font-weight: bold;
+}
+.section1 {
+  padding: 10px;
+}
+
+.total-price {
+  font-size: 1.2rem;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.cards_image {
+  display: flex;
+  overflow: hidden;
+  height: 52px;
+}
+.main {
+  text-align: center;
+  font-size: 4rem;
+  font-weight: bold;
+}
