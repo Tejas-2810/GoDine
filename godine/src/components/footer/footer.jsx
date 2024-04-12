@@ -8,32 +8,32 @@ const Footer = () =>{
       <footer className="bg-dark text-white">
       <Container className='mt-2 p-4'>
           <Row>
-          <div class="py-5 d-md-flex justify-content-around">
+          <div className="py-5 d-md-flex justify-content-around">
   <img className="logo" src={logo} alt="logo"/ >
-  <ul class="ul">
+  <ul className="ul">
     <p>Features</p>
-    <li class="li">Our Features</li>
-    <li class="li">Pricing</li>
-    <li class="li">Affiliate Program</li>
-    <li class="li">Press Kit</li>
+    <li className="li">Our Features</li>
+    <li className="li">Pricing</li>
+    <li className="li">Affiliate Program</li>
+    <li className="li">Press Kit</li>
   </ul>
-  <ul class="ul">
+  <ul className="ul">
     <p>Support</p>
-    <li class="li">Account</li>
-    <li class="li">Help</li>
-    <li class="li">Contact us</li>
+    <li className="li">Account</li>
+    <li className="li">Help</li>
+    <li className="li">Contact us</li>
   </ul>
-  <ul class="ul">
+  <ul className="ul">
     <p>Legal</p>
-    <li class="li">Privacy Policy</li>
-    <li class="li">Terms of Use</li>
+    <li className="li">Privacy Policy</li>
+    <li className="li">Terms of Use</li>
   </ul>
-  <ul class="ul">
+  <ul className="ul">
     <p>Social Media</p>
-    <li class="li">Twitter</li>
-    <li class="li">Product Hunt</li>
-    <li class="li">Instagram</li>
-    <li class="li">Github</li>
+    <li className="li">Twitter</li>
+    <li className="li">Product Hunt</li>
+    <li className="li">Instagram</li>
+    <li className="li">Github</li>
   </ul>
 </div>
           </Row>
