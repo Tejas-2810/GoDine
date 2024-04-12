@@ -44,7 +44,7 @@ async function startServer() {
     app.use("/api/user-reservation", checkAuth, userReservationRoutes);
     app.use("/api/payments", checkAuth, paymentRoutes);
     app.use("/api/discounts", discountRoutes);
-    // app.use("/api/promotions", promotionRoutes);
+    app.use("/api/promotions", promotionRoutes);
     app.use("/public/upload", express.static("public/upload"));
     app.use("/contact", contactFormRoutes);
 
