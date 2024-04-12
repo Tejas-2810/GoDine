@@ -29,7 +29,8 @@ const discountSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true,
+    collection: "Discounts"}
 );
 
 const Discount = mongoose.model("Discount", discountSchema);
