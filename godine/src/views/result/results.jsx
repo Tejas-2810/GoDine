@@ -342,7 +342,7 @@ const Results = () => {
               <div className="card mb-3">
                 <img src={restaurant.photos[0] || "https://via.placeholder.com/150"} className="card-img-top" alt={restaurant.restaurantName}                />
                 <div className="card-body">
-                  <div className="favorite-icon"  onClick={(e) => { e.stopPropagation();
+                  <div className="favorite-icon" onClick={(e) => { e.stopPropagation();
                       toggleFavorite(restaurant._id);
                     }}
                   >
@@ -352,7 +352,11 @@ const Results = () => {
                       <AiOutlineHeart size={24} />
                     )}
                   </div>
-                  <h5 className="card-title border-bottom">{restaurant.restaurantName}</h5>
+                  <h5 className="card-title">{restaurant.restaurantName}</h5>
+                  <p className="m-0">
+                    Description:{" "}
+                    {restaurant.description || "No description available"}
+                  </p>
                   <p className="m-0">
                     Discount: {findDiscountForRestaurant(restaurant._id) || "0"}
                     %
