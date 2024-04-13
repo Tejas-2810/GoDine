@@ -28,7 +28,6 @@ const reservationSchema = new mongoose.Schema(
     },
     modeOfBooking: {
       type: String,
-      required: true,
     },
   },
   { collection: "Reservations" }
