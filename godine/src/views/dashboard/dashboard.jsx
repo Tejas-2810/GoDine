@@ -12,15 +12,25 @@ const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
 const Dashboard = () => {
   const { getUserId } = useAuth();
   const userId = getUserId();
-  // const userId = "660e2a0646c439afcb241d1e";
   const cancelRequestRef = useRef(null);
-  const [searchParams] = useSearchParams();
   const [rdata, setRdata] = useState([]);
   const [bdata, setBdata] = useState([]);
   const [pdata, setPdata] = useState([]);
   const navigate = useNavigate();
   const [ar, setAr] = useState(0);
   const [tb, setTb] = useState(0);
+  const [restaurantDetails, setRestaurantDetails] = useState([]);
+
+  // fields for creating a new restaurant
+  const [restaurantName, setRestaurantName] = useState("");
+  const [address, setAddress] = useState("");
+  const [pricing, setPricing] = useState("");
+  const [cuisines, setCuisines] = useState("");
+  const [workingHours, setWorkingHours] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [seatingCapacity, setSeatingCapacity] = useState("");
+  const [menu, setMenu] = useState(null);
+  const [photos, setPhotos] = useState(null);
 
 
   useEffect(() => {
@@ -34,8 +44,7 @@ const Dashboard = () => {
     axios.get(etb).then((response) => {
       const tb = response.data.totalBookings;
       setTb(tb);
-    });
-    
+    }, []);
     
     cancelRequestRef.current?.abort();
     cancelRequestRef.current = new AbortController();
@@ -105,12 +114,30 @@ const Dashboard = () => {
       }
     };
 
+    const fetchRestaurants = async () => {
+      const endpoint = `${server_url}/api/restaurants/ownerrestaurants/${userId}`;
+      try {
+        const token = sessionStorage.getItem("token");
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+        const response = await axios.get(endpoint, { headers: headers });
+        if(isAxiosError(response)) {
+          console.error("Error fetching user's restaurants:", response.message);
+          return;
+        }
+        setRestaurantDetails(response.data);
+      } catch (error) {
+        console.error("Error fetching user's restaurants:", error.message);
+      }
+    }
 
     fetchData();
     fetchData2();
     fetchData3();
+    fetchRestaurants();
   }, []);
-  console.log("data----"+ar, tb)
 
   var gone = [];
   var gtwo = [];
@@ -147,16 +174,75 @@ const Dashboard = () => {
       },
     ],
   };
-  const [data, setData] = useState([]);
-  const [restaurantDetails, setRestaurantDetails] = useState([]);
-  const [currentReviewDetails, setCurrentReviewDetails] = useState({
-    userId: null,
-    reservationId: null,
-    restaurantId: null,
-  });
-  const handleCancel = async (userId, reservationId) => {
+
+  // to upload file
+  const handleFile = (type, e) => {
+    const file = e.target.files[0];
+    if(type === "menu") {
+      setMenu(file);
+    } else {
+      setPhotos(file);
+    }
+  }
+
+  // adding a restaurant
+  const handAddRestaurant = async (e) => {
+    e.preventDefault();
+    if(!restaurantName || restaurantName === "" 
+        || !address || address === "" 
+        || !pricing || pricing === "" 
+        || !cuisines || cuisines === "" 
+        || !workingHours || workingHours === "" 
+        || !contactNumber || contactNumber === "" 
+        || !seatingCapacity || seatingCapacity === "") {
+
+      alert("Please fill all the fields");
+      return;
+    }
+
+    try{
+      const token = sessionStorage.getItem("token");
+      const headers = {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
+      };
+
+      const form = new FormData();
+      const data = {
+        restaurantName: restaurantName,
+        restaurantAddress: address,
+        pricing: pricing,
+        cuisine: cuisines,
+        operatingHours: workingHours,
+        contactNumber: contactNumber,
+        seatingCapacity: seatingCapacity
+      };
+
+      form.append('menu', menu);
+      form.append('photos', photos);
+      form.append('data', JSON.stringify(data));
+
+      const addRestuarantUrl = `${server_url}/api/restaurants/createRestaurants`;
+      const response = await axios.post(addRestuarantUrl, form, { headers: headers })
+      .then((response) => response)
+      .catch((err) => err);
+
+      if(isAxiosError(response)) {
+        alert("Error adding restaurant");
+        console.error("Error adding restaurant:", response.message);
+        return;
+      }
+
+      console.log("response: ", response.data);
+    } catch(err){
+      console.log("error in adding restaurant: ", err);
+    }
+
+  }
+
+  const handleCancel = async (userId, restaurantId) => {
     const isConfirmed = window.confirm(
-      "Are you sure you want to cancel this reservation?"
+      "Are you sure you want to delete this restaurant?"
     );
     if (isConfirmed) {
       try {
@@ -165,17 +251,21 @@ const Dashboard = () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         }
-        const deleteUrl = `${server_url}/api/user-reservation/delete/${userId}/${reservationId}`;
+
+        // delete restaurant in collection
+        const deleteUrl = `${server_url}/api/user-reservation/delete/${userId}/${restaurantId}`;
         await axios.delete(deleteUrl, { headers: headers });
-        setData(data.filter((item) => item._id !== reservationId));
+
+        // delete restaurant in owner object
+        setRestaurantDetails(restaurantDetails.filter((restaurant) => restaurant._id !== restaurantId));
       } catch (error) {
-        console.error("Failed to delete the reservation:", error);
+        console.error("Failed to delete the restaurant:", error.message);
       }
     } else {
-      console.log("Reservation cancellation aborted by the user.");
+      console.log("Restaurant deletion aborted by the user.");
     }
   };
-  const [showModal, setShowModal] = useState(false);
+
   const pieOptions = {
     backgroundColor: null,
     exportEnabled: true,
@@ -215,33 +305,6 @@ const Dashboard = () => {
       },
     ],
   };
-  const lineOptions = {
-    backgroundColor: null,
-    animationEnabled: true,
-    exportEnabled: true,
-    title: {
-      text: "Number of Bookings",
-    },
-    axisY: {
-      title: "Number of Bookings",
-    },
-    data: [
-      {
-        type: "area",
-        xValueFormatString: "YYYY",
-        yValueFormatString: "#,##0.## Million",
-        dataPoints: [
-          { x: new Date(2017, 0), y: 7.6 },
-          { x: new Date(2016, 0), y: 7.3 },
-          { x: new Date(2015, 0), y: 6.4 },
-          { x: new Date(2014, 0), y: 5.3 },
-          { x: new Date(2013, 0), y: 4.5 },
-          { x: new Date(2012, 0), y: 3.8 },
-          { x: new Date(2011, 0), y: 3.2 },
-        ],
-      },
-    ],
-  };
 
   return (
     <div className="cb">
@@ -274,25 +337,31 @@ const Dashboard = () => {
             <CanvasJSChart options={barOptions2} />
           </div>
         </div>
+
+
         <div className="col-md-6 p-5">
           <div className="border p-5 glass">          
             <form className="form">
             <h1 className="text-center">Add A Restaurant</h1>
             <div className="form-group">
               <label htmlFor="restaurantName">Restaurant Name</label>
-              <input type="text" className="form-control" id="restaurantName" />
+              <input type="text" value={restaurantName} className="form-control" id="restaurantName" onChange={(e) => setRestaurantName(e.target.value)} />
             </div>
             <div className="form-group">
               <label htmlFor="address">Address</label>
-              <input type="text" className="form-control" id="address" />
+              <input type="text" value={address} className="form-control" id="address" onChange={(e) => setAddress(e.target.value)}/>
+            </div>
+            <div className="form-group">
+              <label htmlFor="pricing">Pricing</label>
+              <input type="text" placeholder= "Pricing for two" value={pricing} className="form-control" id="pricing" onChange={(e) => setPricing(e.target.value)} />
             </div>
             <div className="form-group">
               <label htmlFor="cuisines">Cuisines</label>
-              <input type="text" className="form-control" id="cuisines" />
+              <input type="text" value={cuisines} onChange={(e) => setCuisines(e.target.value)} className="form-control" id="cuisines" />
             </div>
             <div className="form-group">
               <label htmlFor="workingHours">Working Hours</label>
-              <input type="text" className="form-control" id="workingHours" />
+              <input type="text" placeholder="Opening to closing time" onChange={(e) => setWorkingHours(e.target.value)} value={workingHours} className="form-control" id="workingHours" />
             </div>
             <div className="form-group">
               <label htmlFor="contactNumber">Contact Number</label>
@@ -309,6 +378,8 @@ const Dashboard = () => {
                 <input
                   type="text"
                   className="form-control"
+                  value={contactNumber}
+                  onChange={(e) => setContactNumber(e.target.value)}
                   id="contactNumber"
                 />
               </div>
@@ -318,22 +389,25 @@ const Dashboard = () => {
               <input
                 type="text"
                 className="form-control"
-                id="seatingCapacity"
-              />
+                value={seatingCapacity}
+                onChange={(e) => setSeatingCapacity(e.target.value)}
+                id="seatingCapacity"/>
             </div>
             <div className="form-group">
               <label htmlFor="menu">Upload Menu</label>
-              <input type="file" className="form-control-file" id="menu" />
+              <input type="file" onChange={(e) => handleFile("menu", e)} className="form-control-file" id="menu" />
             </div>
             <div className="form-group">
               <label htmlFor="photos">Upload Photos</label>
-              <input type="file" className="form-control-file" id="photos" />
+              <input type="file" onChange={(e) => handleFile("photos", e)} className="form-control-file" id="photos" />
             </div>
             <div className="form-group text-center">
-              <button type="submit" className="btn btn-primary">
+              <button onClick={(e) => handAddRestaurant(e)} className="btn btn-primary">
                 Add Restaurant
               </button>
             </div>
+
+          
           </form>
           </div>
           <div className="my-5">
@@ -347,47 +421,28 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(data) &&
-            data.map((item, index) => {
-              const date = new Date(item.reservationDateTime);
-              const formattedDate = date.toLocaleDateString("en-US");
-              const formattedTime = date.toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: true,
-              });
-
-              return (
+          {Array.isArray(restaurantDetails) &&
+            restaurantDetails.map((restaurant, index) => (
                 <tr
                   key={index}
-                  className={
-                    item.status === "Completed"
-                      ? "table-success"
-                      : item.status === "Pending"
-                        ? "table-primary"
-                        : "table-light-blue"
-                  }
                 >
                   <td>{index + 1}</td>
                   <td>
                     {
-                      restaurantDetails.find(
-                        (rest) => rest._id === item.restaurantID
-                      )?.restaurantName
+                      restaurant.restaurantName
                     }
                   </td>
                   <td>
                     <button
                       type="button"
                       className="btn btn-danger"
-                      onClick={() => handleCancel(getUserId(), item._id)}
+                      onClick={() => handleCancel(userId, restaurant._id)}
                     >
                       Delete
                     </button>
                   </td>
                 </tr>
-              );
-            })}
+              ))}
         </tbody>
       </table>
           </div>
