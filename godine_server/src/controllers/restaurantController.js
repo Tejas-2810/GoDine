@@ -177,7 +177,7 @@ exports.getTopRestaurantsBySeatingCapacity = async (req, res) => {
 
 exports.deleteRestaurantById = async (req, res) => {
   try {
-    const restaurantId = req.body.restaurantID;
+    const restaurantId = req.params.restaurantId;
     const restaurant = await Restaurant.findById(restaurantId);
 
     if (!restaurant) {
