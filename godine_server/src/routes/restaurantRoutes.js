@@ -79,7 +79,7 @@ router.get(
 );
 
 //delete restaurant by id
-router.delete("/delete/:userId", restaurantController.deleteRestaurantById);
+router.delete("/delete/:restaurantId", restaurantController.deleteRestaurantById);
 
 //delete restaurant from user data
 router.delete("/delete/:userId/:restaurantId", restaurantDashboardController.deleteRestaurantFromUser);
