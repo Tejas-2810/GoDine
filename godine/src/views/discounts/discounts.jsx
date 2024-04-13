@@ -7,7 +7,11 @@ import axios from "axios";
 const Discounts = () => {
   const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
   const [discounts, setDiscounts] = useState([]);
+  const [filteredDiscounts, setFilteredDiscounts] = useState([]);
+
   const [promotions, setPromotions] = useState([]);
+  const [filteredPromotions, setFilteredPromotions] = useState([]);
+  const [search, setSearch] = useState("");
 
   const [selectedOption, setSelectedOption] = useState("all");
 
@@ -23,6 +27,7 @@ const Discounts = () => {
 
         console.log("discounts: ", discounts);
         setDiscounts(discounts);
+        setFilteredDiscounts(discounts);
       } catch (error) {
         console.error("Error fetching discounts:", error);
       }
@@ -34,6 +39,7 @@ const Discounts = () => {
 
         console.log("promotions: ", promotions);
         setPromotions(promotions);
+        setFilteredPromotions(promotions);
       } catch (error) {
         console.error("Error fetching promotions:", error);
       }
@@ -63,14 +69,31 @@ const Discounts = () => {
     });
   }
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setFilteredDiscounts(discounts.filter((discount) => discount.name.toLowerCase().includes(search.toLowerCase())));
+    setFilteredPromotions(promotions.filter((promotion) => promotion.name.toLowerCase().includes(search.toLowerCase())));
+  }
+
+  const clearFilters = (e) => {
+    e.preventDefault();
+
+    setSelectedOption("all");
+    setSearch("");
+    setFilteredDiscounts(discounts);
+    setFilteredPromotions(promotions);
+  }
+
   return (
     <div className="pcontainer discounts-container d-flex flex-column align-items-center">
       <div className="d-flex flex-column align-items-center">
         <h1 className="text-center">Discounts and Promotions</h1>
         <form className="form-inline my-lg-0 my-3">
-          <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-          <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
+          <button className="btn btn-outline-success m-2 my-sm-0" onClick={(e) => handleSearch(e)}>Search</button>
+          <button className="btn btn-outline-danger m-2 my-sm-0" onClick={(e) => clearFilters(e)}>Reset Filters</button>
         </form>
+
 
         <div className="d-flex my-2">
           <div className="form-check form-check-inline">
@@ -86,6 +109,7 @@ const Discounts = () => {
             <label className="form-check-label" htmlFor="promotionCheck">Promotions Only</label>
           </div>
         </div>
+
       </div>
 
       <section>
@@ -93,8 +117,8 @@ const Discounts = () => {
           {
             // discounts section
             (selectedOption === "all" || selectedOption === "discount") &&
-            discounts.map((discount, idx) => (
-              <div key={idx} className="col-sm-4 my-5">
+            filteredDiscounts.map((discount, idx) => (
+              <div key={idx} className="col-4 my-5">
                 <div className="cards items-c d-cards glass text-white">
                   <div className="p-3">
                     <div className="d-flex">
@@ -129,7 +153,7 @@ const Discounts = () => {
           {
             // promotions section
             (selectedOption === "all" || selectedOption === "promotion") &&
-            promotions.map((promotion, idx) => (
+            filteredPromotions.map((promotion, idx) => (
               <div key={idx} className="col-sm-4 my-5">
                 <div className="cards items-c d-cards glass text-white">
                   <div className="p-3">

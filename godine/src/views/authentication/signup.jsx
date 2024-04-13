@@ -39,7 +39,7 @@ function Signup() {
 
     function validateFirstNameAndSet(e) {
         const inputFn = e.target.value;
-        const fName = inputFn.trim();
+        const fName = inputFn;
         const fNameRegex = /^[a-zA-Z ]+$/;
 
         if (fNameRegex.test(fName)) {
@@ -52,7 +52,7 @@ function Signup() {
 
     function validateLastNameAndSet(e) {
         const inputLn = e.target.value;
-        const lName = inputLn.trim();
+        const lName = inputLn;
         const lNameRegex = /^[a-zA-Z ]+$/;
 
         if (lNameRegex.test(lName)) {
@@ -66,7 +66,7 @@ function Signup() {
     function validateEmailAndSet(e) {
         const inputEmail = e.target.value;
 
-        const email = inputEmail.trim();
+        const email = inputEmail;
         // email is an email
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
@@ -103,7 +103,7 @@ function Signup() {
     }
 
     function validatePhoneNumberAndSet(e) {
-        const phoneNumber = (e.target.value).trim();
+        const phoneNumber = (e.target.value);
         const phoneNumberRegex = /^(\+[1]\s?)?\d{3}[\s.-]?\d{3}[\s.-]?\d{4}$/;
         
         if (phoneNumberRegex.test(phoneNumber)) {
