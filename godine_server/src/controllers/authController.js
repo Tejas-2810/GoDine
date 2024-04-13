@@ -1,10 +1,9 @@
-const bcrypt = require("bcryptjs"); // Import the bcryptjs module to hash passwords
-const jwt = require("jsonwebtoken"); // Import the jsonwebtoken module to create and verify tokens
-const User = require("../models/users"); // Import the User model
-const transporter = require("../config/nodemailer"); // Import the nodemailer transporter
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const User = require("../models/users");
+const transporter = require("../config/nodemailer");
 const { v4: uuidv4 } = require("uuid");
 
-//Create a new user
 exports.signup = async (req, res) => {
   const uniqueId = uuidv4();
   const { firstName, lastName, email, password, phoneNumber, role } = req.body;
@@ -23,24 +22,21 @@ exports.signup = async (req, res) => {
       email,
       password,
       phoneNumber,
-      role
+      role,
     });
 
-    // Send the token and the user data in the response
-    res.status(201).json({ user: newUser , message: "Successfully created a user"});
+    res
+      .status(201)
+      .json({ user: newUser, message: "Successfully created a user" });
   } catch (err) {
-    // If there is an error, send the error message in the response
     res.status(500).json({ message: err.message });
   }
 };
 
-//Check if the user exists and the password is correct
 exports.signin = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email }).select("+password");
-    // If the user does not exist or the password is incorrect, send a 401 status code and a message
-    //Compare the hashed version of the present password with the hashed password in the database
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Incorrect email or password" });
     }
@@ -55,18 +51,18 @@ exports.signin = async (req, res) => {
   }
 };
 
-//Forgot password
 exports.forgotPassword = async (req, res) => {
+  const server_url = "https://godine.netlify.app/" || "http://localhost:3000";
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
   const resetToken = user.createPasswordResetToken();
-  //Bypass the validation of the user model
+
   await user.save({ validateBeforeSave: false });
 
-  //Change the resetURL to the frontend URL
-  const resetURL = `http://localhost:3000/reset-password/${resetToken}`;
+  const resetURL = `${server_url}/reset-password/${resetToken}`;
+
   const message = `Reset your password: ${resetURL}.`;
 
   try {
@@ -90,13 +86,17 @@ exports.forgotPassword = async (req, res) => {
 
 //Reset password
 exports.resetPassword = async (req, res) => {
-  try{
+  try {
     const resetToken = req.params.token;
-    let user = await User.findOne({ passwordResetExpires: { $gt: Date.now() } });
+    let user = await User.findOne({
+      passwordResetExpires: { $gt: Date.now() },
+    });
 
     // Find user by comparing hashed tokens
     if (!user || !(await bcrypt.compare(resetToken, user.passwordResetToken))) {
-      return res.status(400).json({ message: "Token is invalid or has expired" });
+      return res
+        .status(400)
+        .json({ message: "Token is invalid or has expired" });
     }
 
     user.password = req.body.password;
@@ -106,7 +106,7 @@ exports.resetPassword = async (req, res) => {
     user.save({ validateBeforeSave: false });
 
     res.status(200).json({ message: "Successfully updated the password!" });
-  } catch (err){
+  } catch (err) {
     res.status(500).json({ message: "Error in resetting password" });
   }
 };
