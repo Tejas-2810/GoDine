@@ -9,9 +9,10 @@ import {
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
- 
+
 const Results = () => {
-  const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
+  const server_url =
+    process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState([]);
@@ -28,7 +29,7 @@ const Results = () => {
   });
   const [favorites, setFavorites] = useState({});
   const { getUserId } = useAuth();
- 
+
   let cuisineFirst = searchParams.get("c") || "";
   if (cuisineFirst === "Any Cuisine") {
     cuisineFirst = "";
@@ -38,7 +39,7 @@ const Results = () => {
     locationFirst = "";
   }
   let keywordFirst = searchParams.get("K") || "";
- 
+
   const restaurantid = (id) => {
     navigate({
       pathname: "/reserve",
@@ -49,9 +50,7 @@ const Results = () => {
   };
   const fetchRatings = (restaurantsData) => {
     restaurantsData.forEach((restaurant) => {
-      fetch(
-        `${server_url}/api/restaurants/${restaurant._id}/reviews`
-      )
+      fetch(`${server_url}/api/restaurants/${restaurant._id}/reviews`)
         .then((response) => response.json())
         .then((data) => {
           setRatings((prevRatings) => ({
@@ -62,7 +61,7 @@ const Results = () => {
         .catch((error) => console.error("Error fetching ratings:", error));
     });
   };
- 
+
   const userId = getUserId();
   useEffect(() => {
     const fetchData = async () => {
@@ -70,16 +69,15 @@ const Results = () => {
       try {
         const token = sessionStorage.getItem("token");
         const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
         const [wishlistResponse] = await Promise.all([
-          axios.get(wishlisturl, { headers: headers}),
+          axios.get(wishlisturl, { headers: headers }),
         ]);
         const wishlistData = wishlistResponse.data;
         const favoritesObj = wishlistData.reduce((acc, curr) => {
           if (curr !== null) {
-            // Check to ensure null values are not included
             acc[curr] = true;
           }
           return acc;
@@ -91,28 +89,27 @@ const Results = () => {
     };
     fetchData();
     const fetchRestaurants = async () => {
-      const response = await fetch(
-        `${server_url}/api/restaurants/`
-      );
+      const response = await fetch(`${server_url}/api/restaurants/`);
       const data = await response.json();
       setRestaurants(data);
       fetchRatings(data);
     };
- 
+
     console.log(restaurants);
- 
+
     const fetchDiscounts = async () => {
       const response = await fetch(
         `${server_url}/api/discountsPromotions/discounts`
       );
       const data = await response.json();
+      console.log(data);
       setDiscounts(data);
     };
- 
+
     fetchRestaurants().catch(console.error);
     fetchDiscounts().catch(console.error);
   }, []);
- 
+
   useEffect(() => {
     setInitiallyFilteredRestaurants(
       restaurants.filter((restaurant) => {
@@ -128,7 +125,7 @@ const Results = () => {
       })
     );
   }, [restaurants, cuisineFirst, locationFirst, keywordFirst]); // Initial filter effect
- 
+
   const applyFilters = (restaurant) => {
     const restaurantLocation = restaurant.restaurantAddress
       .split(",")[1]
@@ -147,15 +144,14 @@ const Results = () => {
     const matchesDiscount = selectedFilters.discount
       ? discount === selectedFilters.discount
       : true;
- 
+
     return (
       matchesLocation && matchesCuisine && matchesRating && matchesDiscount
     );
   };
- 
+
   const findDiscountForRestaurant = (restaurantId) => {
     if (!Array.isArray(discounts)) {
-      console.warn("Discounts is not an array", discounts);
       return 0;
     }
     const discount = discounts.find(
@@ -171,34 +167,34 @@ const Results = () => {
     } else {
       newValue = value;
     }
- 
+
     setSelectedFilters((prevFilters) => ({
       ...prevFilters,
       [filter]: newValue,
     }));
   };
- 
+
   const toggleFavorite = async (restaurantId) => {
     const userId = getUserId(); // Assuming getUserId() is a function that returns the current user's ID
     console.log("User ID:", userId);
- 
+
     const isFavorite = !!favorites[restaurantId]; // Assuming 'favorites' is an object tracking the favorite status
     console.log(
       `Is favorite before action: ${isFavorite} for restaurantId: ${restaurantId}`
     );
- 
+
     const action = isFavorite ? "remove" : "add";
     const method = isFavorite ? "DELETE" : "POST";
     const url =
       `${server_url}/users/wishlist/${action}/${userId}` +
       (action === "remove" ? `?restaurantID=${restaurantId}` : "");
- 
+
     try {
       const token = sessionStorage.getItem("token");
       const headers = {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-      }
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
       await axios({
         method: method,
         url: url,
@@ -207,12 +203,12 @@ const Results = () => {
           data: { restaurantID: restaurantId },
         }),
       });
- 
+
       setFavorites((prevFavorites) => ({
         ...prevFavorites,
         [restaurantId]: !isFavorite,
       }));
- 
+
       console.log(
         `Restaurant successfully ${action === "add" ? "added to" : "removed from"} wishlist.`
       );
@@ -231,7 +227,7 @@ const Results = () => {
       }
     }
   };
- 
+
   const showAllRestaurants = () => {
     setSelectedFilters({
       location: "",
@@ -239,10 +235,10 @@ const Results = () => {
       rating: 0,
       discount: 0,
     });
- 
+
     setInitiallyFilteredRestaurants(null);
   };
- 
+
   const displayedRestaurants = initiallyFilteredRestaurants || restaurants;
   const filteredRestaurants = displayedRestaurants.filter(applyFilters);
   const uniqueCuisines = [
@@ -315,7 +311,7 @@ const Results = () => {
               <option value="5">5 Stars</option>
             </select>
           </div>
-          <div className="filter-group">
+          {/* <div className="filter-group">
             <label htmlFor="discount-filter">Discount</label>
             <select
               id="discount-filter"
@@ -327,7 +323,7 @@ const Results = () => {
               <option value="20">20% Off</option>
               <option value="30">30% Off</option>
             </select>
-          </div>
+          </div> */}
         </div>
       )}
 
@@ -340,9 +336,18 @@ const Results = () => {
               onClick={() => console.log("Restaurant ID:", restaurant._id)}
             >
               <div className="card mb-3">
-                <img src={restaurant.photos[0] || "https://via.placeholder.com/150"} className="card-img-top" alt={restaurant.restaurantName}                />
+                <img
+                  src={
+                    restaurant.photos[0] || "https://via.placeholder.com/150"
+                  }
+                  className="card-img-top"
+                  alt={restaurant.restaurantName}
+                />
                 <div className="card-body">
-                  <div className="favorite-icon" onClick={(e) => { e.stopPropagation();
+                  <div
+                    className="favorite-icon"
+                    onClick={(e) => {
+                      e.stopPropagation();
                       toggleFavorite(restaurant._id);
                     }}
                   >
@@ -357,10 +362,10 @@ const Results = () => {
                     Description:{" "}
                     {restaurant.description || "No description available"}
                   </p>
-                  <p className="m-0">
+                  {/* <p className="m-0">
                     Discount: {findDiscountForRestaurant(restaurant._id) || "0"}
                     %
-                  </p>
+                  </p> */}
                   <p className="m-0">
                     Location: {restaurant.restaurantAddress.split(",")[1]}
                   </p>
@@ -371,7 +376,12 @@ const Results = () => {
                       ? ratings[restaurant._id]
                       : "Not Rated"}
                   </p>
-                  <button className="btn btn-primary" onClick={() => restaurantid(restaurant._id)} >Book</button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => restaurantid(restaurant._id)}
+                  >
+                    Book
+                  </button>
                 </div>
               </div>
             </div>
