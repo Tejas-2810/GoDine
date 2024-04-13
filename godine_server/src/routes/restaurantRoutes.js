@@ -78,6 +78,12 @@ router.get(
   restaurantController.getTopRestaurantsBySeatingCapacity
 );
 
+//delete restaurant by id
+router.delete("/delete/:id", restaurantController.deleteRestaurantById);
+
+//delete restaurant from user data
+router.delete("/delete/:userId/:restaurantId", restaurantController.deleteRestaurantFromUser);
+
 // Restaurant Page
 router.get("/:id", restaurantController.getRestaurantById);
 
