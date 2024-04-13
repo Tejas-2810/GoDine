@@ -52,7 +52,7 @@ exports.signin = async (req, res) => {
 };
 
 exports.forgotPassword = async (req, res) => {
-  const server_url = "https://godine.netlify.app/" || "http://localhost:3000";
+  const server_url = "https://godine.netlify.app" || "http://localhost:3000";
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
     return res.status(404).json({ message: "User not found" });
