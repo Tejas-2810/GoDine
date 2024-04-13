@@ -20,6 +20,7 @@ import Unauthorized from "./views/authentication/unauthorized";
 import RequireAuth from "./utils/RequireAuth";
 import Newsletter from "./views/newsletter/newsletter";
 import Discounts from "./views/discounts/discounts";
+import Payment from "./views/payment/payment";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
 
 const ROLES = {
@@ -47,13 +48,22 @@ function App() {
             <Route path="/history" element={<History />} />
             <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/wishlist" element={<WishList />} />
+            <Route path="/payment" element={<Payment />} />
           </Route>
           {/* restaurant owner route */}
-          <Route element={<RequireAuth allowedRoles={[ROLES.RESTAURANT_OWNER]} />}>
+          <Route
+            element={<RequireAuth allowedRoles={[ROLES.RESTAURANT_OWNER]} />}
+          >
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
           {/* common routes */}
-          <Route element={<RequireAuth allowedRoles={[ROLES.USER, ROLES.RESTAURANT_OWNER, ROLES.ADMIN]} />}>
+          <Route
+            element={
+              <RequireAuth
+                allowedRoles={[ROLES.USER, ROLES.RESTAURANT_OWNER, ROLES.ADMIN]}
+              />
+            }
+          >
             <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="/discounts" element={<Discounts />} />
