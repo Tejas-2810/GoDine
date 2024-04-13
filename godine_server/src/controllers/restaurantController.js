@@ -3,12 +3,17 @@ const Review = require("../models/review");
 const path = require("path");
 const mongoose = require("mongoose");
 const cloudinary = require("../config/cloudinaryConfig");
+const User = require("../models/users");
 
 exports.createRestaurant = async (req, res) => {
   try {
-    const jsonData = JSON.parse(req.body.data);
+    const { userId, data } = req.body; // Destructure userId and data from req.body
+
+    // Parse the restaurant data
+    const jsonData = JSON.parse(data);
     console.log(jsonData);
 
+    // Upload menu and photos to Cloudinary
     const uploadMenuPromises = req.files["menu"].map((file) =>
       cloudinary.uploader.upload(file.path)
     );
@@ -24,7 +29,18 @@ exports.createRestaurant = async (req, res) => {
       photos: photosUploadResults.map((result) => result.secure_url),
     };
 
+
     const newRestaurant = await Restaurant.create(restaurantData);
+
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    user.restaurants.push(newRestaurant._id);
+    await user.save();
+
     res.status(201).json({ success: true, data: newRestaurant });
   } catch (error) {
     console.error("Failed to create restaurant:", error);
