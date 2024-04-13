@@ -8,7 +8,7 @@ exports.getRestaurantsByOwner = async (req, res) => {
       const ownerId = req.params.userId;
       const owner = await User.findById(ownerId).populate('restaurants');
       if (!owner) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(200).json({ message: "No restaurants for the particular restaurant owner yet" });
       }
       res.json(owner.restaurants);
     } catch (error) {
@@ -22,7 +22,7 @@ exports.getRestaurantsByOwner = async (req, res) => {
       const userId = req.params.userId;
       const user = await User.findById(userId).populate('restaurants');
       if (!user || user.restaurants.length === 0) {
-        return res.status(404).json({ message: "User or user's restaurants not found" });
+        return res.status(200).json({ message: "No restaurants for the particular restaurant owner yet" });
       }
   
       const restaurantIds = user.restaurants.map(restaurant => restaurant._id);
@@ -35,7 +35,7 @@ exports.getRestaurantsByOwner = async (req, res) => {
       const freeBookings = reservations.filter(reservation => reservation.modeOfBooking === 'free').length;
   
       if (totalReservations === 0) {
-        return res.status(404).json({ message: "No reservations found for user's restaurants" });
+        return res.status(200).json({ message: "No reservations found for user's restaurants" });
       }
   
       const paidBookingPercentage = (paidBookings / totalReservations) * 100;
@@ -58,7 +58,7 @@ exports.getRestaurantBookings = async (req, res) => {
     const user = await User.findById(userId).populate('restaurants');
 
     if (!user || user.restaurants.length === 0) {
-      return res.status(404).json({ message: "User or user's restaurants not found" });
+      return res.status(200).json({ message: "No restaurants for the particular restaurant owner yet" });
     }
 
     const bookingData = await Promise.all(user.restaurants.map(async (restaurant) => {
@@ -82,7 +82,7 @@ exports.getUserRestaurantsAverageRating = async (req, res) => {
       const user = await User.findById(userId).populate('restaurants');
   
       if (!user || user.restaurants.length === 0) {
-        return res.status(404).json({ message: "User or user's restaurants not found" });
+        return res.status(200).json({ message: "No restaurants for the particular restaurant owner yet" });
       }
   
       const restaurantsRatings = await Promise.all(user.restaurants.map(async (restaurant) => {
@@ -116,7 +116,7 @@ exports.getOverallAverageRatingForUserRestaurants = async (req, res) => {
       const user = await User.findById(userId).populate('restaurants');
   
       if (!user || user.restaurants.length === 0) {
-        return res.status(404).json({ message: "User or user's restaurants not found" });
+        return res.status(200).json({ message: "No restaurants for the particular restaurant owner yet" });
       }
   
       let totalAverageRating = 0;
@@ -153,7 +153,7 @@ exports.getOverallAverageRatingForUserRestaurants = async (req, res) => {
         const user = await User.findById(userId).populate('restaurants');
 
         if (!user || user.restaurants.length === 0) {
-            return res.status(404).json({ message: "User or user's restaurants not found" });
+            return res.status(200).json({ message: "No restaurants for the particular restaurant owner yet" });
         }
 
         const bookingCounts = await Promise.all(user.restaurants.map(async (restaurant) => {
@@ -170,4 +170,29 @@ exports.getOverallAverageRatingForUserRestaurants = async (req, res) => {
     }
 };
 
-  
+
+exports.deleteRestaurantFromUser = async (req, res) => {
+  const { userId, restaurantId } = req.params;
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Remove the restaurant ID from the user's restaurants array
+    user.restaurants = user.restaurants.filter(id => id.toString() !== restaurantId);
+
+    // Save the updated user
+    await user.save();
+
+    return res.status(200).json({ success: true, message: "Restaurant deleted from user's list" });
+  } catch (error) {
+    console.error("Failed to delete restaurant from user:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+
