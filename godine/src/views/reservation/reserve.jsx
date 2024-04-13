@@ -178,9 +178,18 @@ const Reserve = () => {
           })
           .then((response) => response)
           .catch((err) => err);
+        navigate("/history");
+      } else {
+        const response = await axios
+          .post(endpoint, reservationData, {
+            signal: cancelRequestRef.current?.signal,
+            headers: headers,
+          })
+          .then((response) => response)
+          .catch((err) => err);
+        navigate("/payment");
       }
       alert("Reservation created successfully!");
-      navigate("/history");
     } catch (error) {
       console.error("Error creating reservation:", error);
       if (isAxiosError(error)) {
