@@ -32,11 +32,10 @@ const Dashboard = () => {
   const [menu, setMenu] = useState(null);
   const [photos, setPhotos] = useState(null);
 
-
   useEffect(() => {
     const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
     const ear = `${server_url}/api/restaurants/overall-averagerating/${userId}`;
-    const etb = `${server_url}/api/restaurants/total-bookings/${userId}`;    
+    const etb = `${server_url}/api/restaurants/total-bookings/${userId}`;
     axios.get(ear).then((response) => {
       const ar = response.data.overallAverageRating;
       setAr(ar);
@@ -45,7 +44,7 @@ const Dashboard = () => {
       const tb = response.data.totalBookings;
       setTb(tb);
     }, []);
-    
+
     cancelRequestRef.current?.abort();
     cancelRequestRef.current = new AbortController();
     const fetchData = async () => {
@@ -123,7 +122,7 @@ const Dashboard = () => {
           Authorization: `Bearer ${token}`,
         };
         const response = await axios.get(endpoint, { headers: headers });
-        if(isAxiosError(response)) {
+        if (isAxiosError(response)) {
           console.error("Error fetching user's restaurants:", response.message);
           return;
         }
@@ -178,7 +177,7 @@ const Dashboard = () => {
   // to upload file
   const handleFile = (type, e) => {
     const file = e.target.files[0];
-    if(type === "menu") {
+    if (type === "menu") {
       setMenu(file);
     } else {
       setPhotos(file);
@@ -188,23 +187,35 @@ const Dashboard = () => {
   // adding a restaurant
   const handAddRestaurant = async (e) => {
     e.preventDefault();
-    if(!restaurantName || restaurantName === "" 
-        || !address || address === "" 
-        || !pricing || pricing === "" 
-        || !cuisines || cuisines === "" 
-        || !workingHours || workingHours === "" 
-        || !contactNumber || contactNumber === "" 
-        || !seatingCapacity || seatingCapacity === "") {
+    if (!restaurantName || restaurantName === ""
+      || !address || address === ""
+      || !pricing || pricing === ""
+      || !cuisines || cuisines === ""
+      || !workingHours || workingHours === ""
+      || !contactNumber || contactNumber === ""
+      || !seatingCapacity || seatingCapacity === "") {
 
       alert("Please fill all the fields");
       return;
     }
 
-    try{
+    const phoneNumberRegex = /^\d{3}[\s.-]?\d{3}[\s.-]?\d{4}$/;
+
+    if (!phoneNumberRegex.test(contactNumber) || contactNumber.length !== 10) {
+      alert("Please enter a valid phone number");
+      return;
+    }
+
+    if (Number(seatingCapacity) <= 0) {
+      alert("Please enter a valid seating capacity");
+      return;
+    }
+
+    try {
       const token = sessionStorage.getItem("token");
       const headers = {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`
       };
 
       const form = new FormData();
@@ -221,26 +232,28 @@ const Dashboard = () => {
       form.append('menu', menu);
       form.append('photos', photos);
       form.append('data', JSON.stringify(data));
+      form.append('userId', userId);
 
-      const addRestuarantUrl = `${server_url}/api/restaurants/createRestaurants`;
-      const response = await axios.post(addRestuarantUrl, form, { headers: headers })
-      .then((response) => response)
-      .catch((err) => err);
+      const addRestaurantUrl = `${server_url}/api/restaurants/createRestaurants`;
+      const response = await axios.post(addRestaurantUrl, form, { headers: headers })
+        .then((response) => response)
+        .catch((err) => err);
 
-      if(isAxiosError(response)) {
+      if (isAxiosError(response)) {
         alert("Error adding restaurant");
         console.error("Error adding restaurant:", response.message);
         return;
       }
 
       console.log("response: ", response.data);
-    } catch(err){
+      
+    } catch (err) {
       console.log("error in adding restaurant: ", err);
     }
 
   }
 
-  const handleCancel = async (userId, restaurantId) => {
+  const handleDeleteRestaurant = async (userId, restaurantId) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this restaurant?"
     );
@@ -248,15 +261,18 @@ const Dashboard = () => {
       try {
         const token = sessionStorage.getItem("token");
         const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         }
 
         // delete restaurant in collection
-        const deleteUrl = `${server_url}/api/user-reservation/delete/${userId}/${restaurantId}`;
-        await axios.delete(deleteUrl, { headers: headers });
+        const deleteRestaurantUrl = `${server_url}/api/restaurants/delete/${restaurantId}`;
+        await axios.delete(deleteRestaurantUrl, { headers: headers });
 
         // delete restaurant in owner object
+        const deleteUrl = `${server_url}/api/restaurants/delete/${userId}/${restaurantId}`;
+        await axios.delete(deleteUrl, { headers: headers });
+
         setRestaurantDetails(restaurantDetails.filter((restaurant) => restaurant._id !== restaurantId));
       } catch (error) {
         console.error("Failed to delete the restaurant:", error.message);
@@ -340,111 +356,111 @@ const Dashboard = () => {
 
 
         <div className="col-md-6 p-5">
-          <div className="border p-5 glass">          
+          <div className="border p-5 glass">
             <form className="form">
-            <h1 className="text-center">Add A Restaurant</h1>
-            <div className="form-group">
-              <label htmlFor="restaurantName">Restaurant Name</label>
-              <input type="text" value={restaurantName} className="form-control" id="restaurantName" onChange={(e) => setRestaurantName(e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="address">Address</label>
-              <input type="text" value={address} className="form-control" id="address" onChange={(e) => setAddress(e.target.value)}/>
-            </div>
-            <div className="form-group">
-              <label htmlFor="pricing">Pricing</label>
-              <input type="text" placeholder= "Pricing for two" value={pricing} className="form-control" id="pricing" onChange={(e) => setPricing(e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="cuisines">Cuisines</label>
-              <input type="text" value={cuisines} onChange={(e) => setCuisines(e.target.value)} className="form-control" id="cuisines" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="workingHours">Working Hours</label>
-              <input type="text" placeholder="Opening to closing time" onChange={(e) => setWorkingHours(e.target.value)} value={workingHours} className="form-control" id="workingHours" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="contactNumber">Contact Number</label>
-              <div className="input-group">
-                <div className="input-group-prepend">
-                  <select className="custom-select">
-                    <option value="+1">+1</option>
-                    <option value="+91">+91</option>
-                    <option value="+111">+111</option>
-                    <option value="+71">+71</option>
-                    <option value="+60">+60</option>
-                  </select>
+              <h1 className="text-center">Add A Restaurant</h1>
+              <div className="form-group">
+                <label htmlFor="restaurantName">Restaurant Name</label>
+                <input type="text" value={restaurantName} className="form-control" id="restaurantName" onInput={(e) => setRestaurantName(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="address">Address</label>
+                <input type="text" value={address} className="form-control" id="address" onInput={(e) => setAddress(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="pricing">Pricing</label>
+                <input type="text" placeholder="Pricing for two" value={pricing} className="form-control" id="pricing" onInput={(e) => setPricing(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="cuisines">Cuisines</label>
+                <input type="text" value={cuisines} onInput={(e) => setCuisines(e.target.value)} className="form-control" id="cuisines" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="workingHours">Working Hours</label>
+                <input type="text" placeholder="Opening to closing time" onInput={(e) => setWorkingHours(e.target.value)} value={workingHours} className="form-control" id="workingHours" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="contactNumber">Contact Number</label>
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <select className="custom-select">
+                      <option value="+1">+1</option>
+                      <option value="+91">+91</option>
+                      <option value="+111">+111</option>
+                      <option value="+71">+71</option>
+                      <option value="+60">+60</option>
+                    </select>
+                  </div>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={contactNumber}
+                    onInput={(e) => setContactNumber(e.target.value)}
+                    id="contactNumber"
+                  />
                 </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="seatingCapacity">Seating Capacity</label>
                 <input
                   type="text"
                   className="form-control"
-                  value={contactNumber}
-                  onChange={(e) => setContactNumber(e.target.value)}
-                  id="contactNumber"
-                />
+                  value={seatingCapacity}
+                  onInput={(e) => setSeatingCapacity(e.target.value)}
+                  id="seatingCapacity" />
               </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="seatingCapacity">Seating Capacity</label>
-              <input
-                type="text"
-                className="form-control"
-                value={seatingCapacity}
-                onChange={(e) => setSeatingCapacity(e.target.value)}
-                id="seatingCapacity"/>
-            </div>
-            <div className="form-group">
-              <label htmlFor="menu">Upload Menu</label>
-              <input type="file" onChange={(e) => handleFile("menu", e)} className="form-control-file" id="menu" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="photos">Upload Photos</label>
-              <input type="file" onChange={(e) => handleFile("photos", e)} className="form-control-file" id="photos" />
-            </div>
-            <div className="form-group text-center">
-              <button onClick={(e) => handAddRestaurant(e)} className="btn btn-primary">
-                Add Restaurant
-              </button>
-            </div>
+              <div className="form-group">
+                <label htmlFor="menu">Upload Menu</label>
+                <input type="file" onChange={(e) => handleFile("menu", e)} className="form-control-file" id="menu" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="photos">Upload Photos</label>
+                <input type="file" onChange={(e) => handleFile("photos", e)} className="form-control-file" id="photos" />
+              </div>
+              <div className="form-group text-center">
+                <button onClick={(e) => handAddRestaurant(e)} className="btn btn-primary">
+                  Add Restaurant
+                </button>
+              </div>
 
-          
-          </form>
+
+            </form>
           </div>
           <div className="my-5">
             <h1 className="text-center">Your Restaurants</h1>
-          <table className="table table-hover">
-        <thead>
-          <tr>
-            <th>S.No</th>
-            <th className="">Restaurant name</th>
-            <th>Delete Restaurant</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.isArray(restaurantDetails) &&
-            restaurantDetails.map((restaurant, index) => (
-                <tr
-                  key={index}
-                >
-                  <td>{index + 1}</td>
-                  <td>
-                    {
-                      restaurant.restaurantName
-                    }
-                  </td>
-                  <td>
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => handleCancel(userId, restaurant._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th className="">Restaurant name</th>
+                  <th>Delete Restaurant</th>
                 </tr>
-              ))}
-        </tbody>
-      </table>
+              </thead>
+              <tbody>
+                {Array.isArray(restaurantDetails) &&
+                  restaurantDetails.map((restaurant, index) => (
+                    <tr
+                      key={index}
+                    >
+                      <td>{index + 1}</td>
+                      <td>
+                        {
+                          restaurant.restaurantName
+                        }
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn btn-danger"
+                          onClick={() => handleDeleteRestaurant(userId, restaurant._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
