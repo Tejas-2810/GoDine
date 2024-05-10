@@ -72,6 +72,7 @@ const Dashboard = () => {
           .then((response) => response)
           .catch((err) => err);
         setRdata(response.data);
+        console.log(rdata);
       } catch (error) {
         console.error("Error fetching restaurant data:", error);
       }
@@ -94,6 +95,7 @@ const Dashboard = () => {
           .then((response) => response)
           .catch((err) => err);
         setBdata(response.data);
+        console.log(bdata);
       } catch (error) {
         console.error("Error fetching restaurant data:", error);
       }
@@ -116,6 +118,7 @@ const Dashboard = () => {
           .then((response) => response)
           .catch((err) => err);
         setPdata(response.data);
+        console.log(pdata);
       } catch (error) {
         console.error("Error fetching restaurant data:", error);
       }
@@ -135,6 +138,7 @@ const Dashboard = () => {
           return;
         }
         setRestaurantDetails(response.data);
+
       } catch (error) {
         console.error("Error fetching user's restaurants:", error.message);
       }
@@ -149,20 +153,31 @@ const Dashboard = () => {
   var gone = [];
   var gtwo = [];
   var gthree = [];
-  if (rdata) {
+  if (rdata && rdata.message !== 'No restaurants for the particular restaurant owner yet') {
+    console.log(rdata);
     gone = rdata.map((item) => {
       return { label: item.restaurantName, y: item.averageRating || 1 };
     });
+  } else {
+    gone = [{ label: "No restaurants", y: 1 }];
   }
-  if (bdata) {
+  if (bdata && bdata.message !== 'No restaurants for the particular restaurant owner yet') {
+    console.log(bdata);
     gtwo = bdata.map((item) => {
       return { label: item.restaurantName, y: item.numberOfBookings || 1 };
     });
+  } else {
+    gtwo = [{ label: "No restaurants", y: 1 }];
   }
   if (pdata) {
     gthree = [
       { label: "Paid Booking", y: parseFloat(pdata.paidBookingPercentage) || 1 },
       { label: "Free Booking", y: parseFloat(pdata.freeBookingPercentage) || 1 },
+    ];
+  } else {
+    gthree = [
+      { label: "Paid Booking", y: 1 },
+      { label: "Free Booking", y: 1 },
     ];
   }
 
