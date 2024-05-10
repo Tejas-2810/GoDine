@@ -16,7 +16,7 @@
 - [Venkata Sreenivas Prasad Kasibhatla](vn769140@dal.ca) - Copywriter and Documents Manager
 - [Jahnavi Gajjala](jh707761@dal.ca) - Copywriter and Documents Manager
 - [Priyatam Somagattu](priyatam.somagattu@dal.ca) - Designer and Developer
-- [Praveen Kumar Reddy Burla](pr441109@dal.ca) - Testing and Documents Manager
+- [Praveen Kumar Reddy Burla](pr441109@dal.ca) - Developer 
 
 ## Deployment
 
